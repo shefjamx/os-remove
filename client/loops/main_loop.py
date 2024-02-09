@@ -23,10 +23,10 @@ class MainLoop():
         self.running = False
         self.screen = screen
         self.clock = pygame.time.Clock()
-        self.current_scene: GenericScene = HomeScreen(screen)
+        self.current_scene: GenericScene = HomeScreen(screen, self)
 
     def change_scene(self, scene: GenericScene):
-        self.current_scene = scene
+        self.current_scene = scene(self.screen, self)
 
     def start(self) -> None:
         """

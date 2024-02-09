@@ -2,8 +2,9 @@ import pygame
 
 class GenericScene:
     """A Generic Scene class for all other scenes to inherit from"""
-    def __init__(self, screen) -> None:
+    def __init__(self, screen, main_loop) -> None:
         self.screen = screen
+        self.main_loop = main_loop
 
     def tick(self):
         """Re-render the scene"""
