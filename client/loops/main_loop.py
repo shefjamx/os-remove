@@ -37,7 +37,7 @@ class MainLoop():
         Parameters:
             key[int]: The python.locals keycode used for the key
             callback[callable]: The function to be called
-        TODO: Do we want there to be multiple callbacks for one keycode? Also add support for held keys!
+        TODO: Do we want there to be multiple callbacks for one keycode?
         """
         self.keyMap[key] = callback
 
