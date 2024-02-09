@@ -24,7 +24,7 @@ class LevelScene(GenericScene):
 
         self.__status = self.Status.COUNTDOWN
         self.__countdownStart = time.perf_counter()
-        self.font = pygame.font.Font("client\\assets\\fonts\\Abaddon Bold.ttf", 96)
+        self.font = pygame.font.Font("assets\\fonts\\Abaddon Bold.ttf", 96)
         self.__graphics_attributes = {}
     
     def __render(self):
