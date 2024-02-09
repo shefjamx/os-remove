@@ -1,5 +1,5 @@
-# ShefJam X - Monorepo
-To be changed
+# ShefJam X - OS, Remove?
+A game which delets your files...
 
 
 FONTS:
