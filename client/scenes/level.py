@@ -13,9 +13,9 @@ class LevelScene(GenericScene):
         PLAYING = 1
         FINISHED = 2
 
-    def __init__(self, screen, pathToLevel: str):
+    def __init__(self, screen, main_loop, pathToLevel: str):
         self.GRACE_PERIOD = 5 #countdown before the song plays in seconds
-        super().__init__(screen)
+        super().__init__(screen, main_loop)
         self.musicChannel = pygame.mixer.music
         self.level = Level(pathToLevel)
         self.musicChannel.load(self.level.getSongPath())
@@ -24,7 +24,7 @@ class LevelScene(GenericScene):
         self.countdownStart = time.perf_counter()
         self.font = pygame.font.Font("assets\\fonts\\Abaddon Bold.ttf", 96)
         self.graphics_attributes = {}
-    
+
     def render(self):
         self.screen.fill((0, 0, 0))
         if self.status == self.Status.COUNTDOWN:
