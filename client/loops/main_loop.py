@@ -22,7 +22,7 @@ class MainLoop():
         # self.current_scene: GenericScene = LevelScene(screen, self, "ascension-to-heaven")
 
     def change_scene(self, scene: GenericScene):
-        log(f"Chaning scenes to: {scene}", type="debug")
+        log(f"Changing scenes to: {scene}", type="debug")
         self.current_scene = scene(self.screen, self)
 
     def addKeyCallback(self, key: int, callback) -> None:
