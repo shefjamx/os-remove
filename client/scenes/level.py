@@ -13,7 +13,6 @@ class LevelScene(GenericScene):
         PLAYING = 1
         FINISHED = 2
 
-
     def __init__(self, screen, pathToLevel: str):
         self.GRACE_PERIOD = 5 #countdown before the song plays in seconds
         super().__init__(screen)
@@ -30,6 +29,7 @@ class LevelScene(GenericScene):
     def __render(self):
         self.screen.fill((0, 0, 0))
         if self.__status == self.Status.COUNTDOWN:
+            # Draw the countdown to the screen
             timeTillStart = "{:.2f}".format(self.GRACE_PERIOD - (time.perf_counter() - self.__countdownStart))
             _time = self.font.render(f"{timeTillStart}", False, "#FFFFFF")
             if "time-width" not in self.__graphics_attributes:
