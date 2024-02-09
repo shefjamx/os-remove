@@ -73,13 +73,13 @@ class MainLoop():
 
                 # call held down keys
                 for key in self.pressedKeys:
-                    self.dispatchKeyCallback(key)
+                    self.dispatchKeyCallback(event.key)
                 # Keydown / up commands
                 if event.type == KEYDOWN:
                     self.pressedKeys.append(event.key)
-                    self.dispatchKeyCallback(key)
+                    self.dispatchKeyCallback(event.key)
                 elif event.type == KEYUP:
-                    self.pressedKeys.remove(key)
+                    self.pressedKeys.remove(event.keykey)
 
 
             # Re-render the screen
