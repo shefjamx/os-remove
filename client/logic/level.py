@@ -69,7 +69,7 @@ class Level:
             f.write(saveString)
     
     def getHitTimings(self) -> list[HitTiming]:
-        return self.__timing_points
+        return self.timingPoints
     
     def addHitTiming(self, float) -> None:
         self.timingPoints.append(HitTiming(float))
