@@ -79,7 +79,7 @@ class MainLoop():
                     self.pressedKeys.append(event.key)
                     self.dispatchKeyCallback(event.key)
                 elif event.type == KEYUP:
-                    self.pressedKeys.remove(event.keykey)
+                    self.pressedKeys.remove(event.key)
 
 
             # Re-render the screen
