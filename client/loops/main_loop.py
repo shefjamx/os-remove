@@ -2,20 +2,13 @@ import pygame
 import sys
 
 from pygame.locals import (
-    K_w,  # Forwards
-    K_a,  # Left
-    K_s,  # Down
-    K_d,  # Right
-    K_k,  # Beat button 1
-    K_l,  # Beat button 2
     KEYDOWN,
     QUIT
 )
 
-from misc.pos import Pos
+from misc.logger import log
 from scenes.generic_scene import GenericScene
 from scenes.home import HomeScreen
-from scenes.level import LevelScene
 
 class MainLoop():
     """Main Loop class, this will handle all keyboard inputs and generic stuff (that i've not figured out yet)"""
@@ -25,10 +18,11 @@ class MainLoop():
         self.keyMap: dict = {}
         self.screen = screen
         self.clock = pygame.time.Clock()
-        #self.current_scene: GenericScene = HomeScreen(screen, self)
-        self.current_scene: GenericScene = LevelScene(screen, self, "ascension-to-heaven")
+        self.current_scene: GenericScene = HomeScreen(screen, self)
+        # self.current_scene: GenericScene = LevelScene(screen, self, "ascension-to-heaven")
 
     def change_scene(self, scene: GenericScene):
+        log(f"Changing scenes to: {scene}", type="debug")
         self.current_scene = scene(self.screen, self)
 
     def addKeyCallback(self, key: int, callback) -> None:
