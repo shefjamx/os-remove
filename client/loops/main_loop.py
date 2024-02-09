@@ -73,7 +73,7 @@ class MainLoop():
 
                 # call held down keys
                 for key in self.pressedKeys:
-                    self.dispatchKeyCallback(event.key)
+                    self.dispatchKeyCallback(key)
                 # Keydown / up commands
                 if event.type == KEYDOWN:
                     self.pressedKeys.append(event.key)
