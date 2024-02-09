@@ -24,6 +24,7 @@ class MainLoop():
     def change_scene(self, scene: GenericScene):
         log(f"Changing scenes to: {scene}", type="debug")
         self.current_scene = scene(self.screen, self)
+        pygame.display.flip()
 
     def addKeyCallback(self, key: int, callback) -> None:
         """
