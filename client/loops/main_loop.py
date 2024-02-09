@@ -49,7 +49,7 @@ class MainLoop():
         """
         del self.keyMap[key]
 
-
+    
     def start(self) -> None:
         """
         Start the main game loop:
