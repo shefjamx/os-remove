@@ -8,3 +8,10 @@ class GenericScene:
     def tick(self):
         """Re-render the scene"""
         pygame.display.flip()
+
+    def handle_click(self, mouse):
+        """
+        Handle a click.
+        Default implementation is to ignore a click
+        """
+        pass
