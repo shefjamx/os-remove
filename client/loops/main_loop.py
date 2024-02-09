@@ -72,14 +72,14 @@ class MainLoop():
                     self.current_scene.handle_click(pos)
 
                 # call held down keys
-                for key in self.pressedKeys:
-                    self.dispatchKeyCallback(key)
                 # Keydown / up commands
                 if event.type == KEYDOWN:
                     self.pressedKeys.append(event.key)
                     self.dispatchKeyCallback(event.key)
                 elif event.type == KEYUP:
                     self.pressedKeys.remove(event.key)
+                for key in self.pressedKeys:
+                    self.dispatchKeyCallback(key)
 
 
             # Re-render the screen
