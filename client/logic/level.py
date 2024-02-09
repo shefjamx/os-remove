@@ -71,12 +71,26 @@ class Level:
     def getHitTimings(self) -> list[HitTiming]:
         return self.timingPoints
     
+    def getNextHitTimings(self, currentTime: float, numTime: float) -> list[HitTiming]:
+        """
+        Gets the hit timings in between currentTime and currentTime + numTime
+
+        Parameters:
+            currentTime[float]: the time to start at in seconds
+            numTime[float]: the time to move forward by in seconds
+        
+        Returns: 
+            list of hit timings that fall within the desired range
+        """
+        return filter(lambda x: currentTime <= x.getTiming() < currentTime + numTime, self.timingPoints)
+    
     def addHitTiming(self, float) -> None:
         self.timingPoints.append(HitTiming(float))
         self.timingPoints.sort(key=lambda x: x.getTiming())
     
     def getSongPath(self) -> str:
         return self.songPath
+    
 
         
 if __name__ == "__main__":
