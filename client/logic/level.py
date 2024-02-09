@@ -23,6 +23,9 @@ class HitTiming:
         return f"{float(self.__timing)}"
     
 class Level:
+    """
+    Encapsulates the level object and the reading / writing to file
+    """
     def __init__(self, levelPath: str):
         self.__levelPath = levelPath
         self.songPath = ""
@@ -49,6 +52,14 @@ class Level:
     
 
     def saveToPath(self, path: str = "") -> None:
+        """
+        Saves this level so that it can be used in the future
+        Attributes:
+            path[str]: The path to save the level to (if this is empty then the path the level was loaded from will be used)
+
+        Returns:
+            None
+        """
         path = path or self.__levelPath
         with open(path, "w+") as f:
             saveString = ""
