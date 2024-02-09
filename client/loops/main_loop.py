@@ -61,6 +61,8 @@ class MainLoop():
         self.running = True
         while self.running:
             # Event loop
+            for key in self.pressedKeys:
+                self.dispatchKeyCallback(key)
             for event in pygame.event.get():
                 if event.type == QUIT:
                     self.running = False
@@ -78,8 +80,6 @@ class MainLoop():
                     self.dispatchKeyCallback(event.key)
                 elif event.type == KEYUP:
                     self.pressedKeys.remove(event.key)
-                for key in self.pressedKeys:
-                    self.dispatchKeyCallback(key)
 
 
             # Re-render the screen
