@@ -1,5 +1,7 @@
 import pygame
+import sys
 from tweener import Tween, Easing, EasingMode
+from misc.pos import Pos
 
 from scenes.generic_scene import GenericScene
 
@@ -27,7 +29,7 @@ class HomeScreen(GenericScene):
     def create_button_dict(self):
         """Create buttons and add them to the dictionary to be later used"""
         self.create_button(490, 320, 300, 60, "PLAY", 580, 330, None) 
-        self.create_button(490, 420, 300, 60, "LEAVE", 575, 430, None) 
+        self.create_button(490, 420, 300, 60, "LEAVE", 575, 430, sys.exit) 
 
     def create_button(self, x, y, w, h, text, tx, ty, callback):
         """
@@ -42,6 +44,11 @@ class HomeScreen(GenericScene):
         for button in self.buttons:
             pygame.draw.rect(self.screen, "#BED9E5", self.buttons[button][0])
             self.screen.blit(self.buttons[button][1][0], (self.buttons[button][1][1], self.buttons[button][1][2]))
+
+    def handle_click(self, mouse_pos):
+        for button in self.buttons:
+            if self.buttons[button][0].collidepoint(mouse_pos):
+                self.buttons[button][2]()
 
     def tick(self):
         # Background

@@ -12,6 +12,7 @@ from pygame.locals import (
     QUIT
 )
 
+from misc.pos import Pos
 from scenes.generic_scene import GenericScene
 from scenes.home import HomeScreen
 
@@ -24,6 +25,9 @@ class MainLoop():
         self.clock = pygame.time.Clock()
         self.current_scene: GenericScene = HomeScreen(screen)
 
+    def change_scene(self, scene: GenericScene):
+        self.current_scene = scene
+
     def start(self) -> None:
         """
         Start the main game loop:
@@ -34,7 +38,12 @@ class MainLoop():
             for event in pygame.event.get():
                 if event.type == QUIT:
                     self.running = False
-                    sys.exit()  # Stops the full python file - may fuck up stuff in future
+                    sys.exit()
+
+                # Clicks
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    pos = pygame.mouse.get_pos()
+                    self.current_scene.handle_click(pos)
 
                 # Keydown
                 if event.type == KEYDOWN:
