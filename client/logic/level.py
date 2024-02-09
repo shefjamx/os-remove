@@ -26,8 +26,8 @@ class Level:
     """
     Encapsulates the level object and the reading / writing to file
     """
-    def __init__(self, levelPath: str):
-        self.__levelPath = levelPath
+    def __init__(self, levelDir: str):
+        self.__levelPath = f"levels\\{levelDir}\\level.dat"
         self.songPath = ""
         self.timingPoints = []
         self.zones = []
@@ -36,7 +36,7 @@ class Level:
             "audio-path": ("songPath", lambda x: x),
             "timing-points": ("timingPoints", lambda x: [HitTiming(float(i)) for i in x.strip('][').split(', ')])
         }
-        self.__loadFromPath(levelPath)
+        self.__loadFromPath(self.__levelPath)
         
     
     def __loadFromPath(self, path: str) -> None:
