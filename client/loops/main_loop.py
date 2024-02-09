@@ -10,7 +10,7 @@ from pygame.locals import (
 from misc.logger import log
 from scenes.generic_scene import GenericScene
 from scenes.home import HomeScreen
-from scenes.level import LevelScene
+# from scenes.level import LevelScene
 
 class MainLoop():
     """Main Loop class, this will handle all keyboard inputs and generic stuff (that i've not figured out yet)"""
@@ -21,8 +21,8 @@ class MainLoop():
         self.pressedKeys = []
         self.screen = screen
         self.clock = pygame.time.Clock()
-        #self.current_scene: GenericScene = HomeScreen(screen, self)
-        self.current_scene: GenericScene = LevelScene(screen, self, "ascension-to-heaven")
+        self.current_scene: GenericScene = HomeScreen(screen, self)
+        # self.current_scene: GenericScene = LevelScene(screen, self, "ascension-to-heaven")
 
     def change_scene(self, scene: GenericScene):
         log(f"Changing scenes to: {scene}", type="debug")
