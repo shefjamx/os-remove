@@ -65,7 +65,7 @@ class Level:
             saveString = ""
             for attribute in self.__FILE_SCHEMA:
                 attrName = self.__FILE_SCHEMA[attribute][0]
-                saveString += f"{attribute}: {getattr(self, attrName)}\n"
+                saveString += f"{attribute}={getattr(self, attrName)}\n"
             f.write(saveString)
     
     def getHitTimings(self) -> list[HitTiming]:
