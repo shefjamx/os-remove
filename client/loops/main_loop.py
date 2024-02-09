@@ -79,7 +79,8 @@ class MainLoop():
                     self.pressedKeys.append(event.key)
                     self.dispatchKeyCallback(key)
                 elif event.type == KEYUP:
-                    self.pressedKeys[event.key] = False
+                    self.pressedKeys.remove(key)
+
 
             # Re-render the screen
             if self.current_scene is not None:
