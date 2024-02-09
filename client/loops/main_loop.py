@@ -29,7 +29,7 @@ class MainLoop():
         self.current_scene = scene(self.screen, self)
         pygame.display.flip()
 
-    def addKeyCallback(self, key: int, callback) -> None:
+    def add_key_callback(self, key: int, callback) -> None:
         """
         Registers a callback to be called when the given keycode is registered as pressed
         If there is already a callback registered then it is removed :D Dont care!!!
@@ -41,7 +41,7 @@ class MainLoop():
         """
         self.keyMap[key] = callback
 
-    def removeKeyCallback(self, key: int) -> None:
+    def remove_key_callback(self, key: int) -> None:
         """
         Removes a created callback function
         """
