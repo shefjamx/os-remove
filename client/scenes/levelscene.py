@@ -24,9 +24,19 @@ class LevelScene(GenericScene):
 
         self.__status = self.Status.COUNTDOWN
         self.__countdownStart = time.perf_counter()
+        self.font = pygame.font.Font("client\\assets\\fonts\\Abaddon Bold.ttf", 96)
+        self.__graphics_attributes = {}
     
     def __render(self):
-        pass
+        self.screen.fill((0, 0, 0))
+        if self.__status == self.Status.COUNTDOWN:
+            timeTillStart = "{:.2f}".format(self.GRACE_PERIOD - (time.perf_counter() - self.__countdownStart))
+            _time = self.font.render(f"{timeTillStart}", False, "#FFFFFF")
+            if "time-width" not in self.__graphics_attributes:
+                self.__graphics_attributes["time-width"] = _time.get_width() + 10
+            _text = self.font.render(f"s to Start", False, "#FFFFFF")
+            self.screen.blit(_time,(0, 0))
+            self.screen.blit(_text, (self.__graphics_attributes["time-width"], 0))
 
     def __startLevel(self):
         self.__status = self.Status.PLAYING
@@ -37,8 +47,8 @@ class LevelScene(GenericScene):
             timeTillStart = self.GRACE_PERIOD - (time.perf_counter() - self.__countdownStart)
             if timeTillStart <= 0:
                 self.__startLevel()
-        else:
-            pass
+        elif self.__status == self.Status.PLAYING:
+            currentSongTime = self.__musicChannel.get_pos()
 
     
     def tick(self):
