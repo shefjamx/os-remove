@@ -50,7 +50,8 @@ class Timeline:
 
         self.entitySprites = {
             "necromancer": pygame.image.load("assets\\images\\thumbnails\\necromancer.png").convert(),
-            "bod": pygame.image.load("assets\\images\\thumbnails\\bod.png").convert()
+            "bod": pygame.image.load("assets\\images\\thumbnails\\bod.png").convert(),
+            "skeleton": pygame.image.load("assets\\images\\thumbnails\\skeleton.png").convert()
         }
 
         self.graphicsData = {
