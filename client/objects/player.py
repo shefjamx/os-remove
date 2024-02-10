@@ -9,12 +9,17 @@ class Player(pygame.sprite.Sprite):
         # Tileset
         self.tilesets = {
             "idle": Tileset("assets/images/player/idle.png", (80, 80), 0, 8, upscale=3),
-            "run": Tileset("assets/images/player/run.png", (80, 80), 0, 5, upscale=3)
+            "run": Tileset("assets/images/player/run.png", (80, 80), 0, 5, upscale=3),
+            "attack": Tileset("assets/images/player/attack.png", (80, 80), 0, 11, upscale=3)
         }
-        self.tileset = self.tilesets["idle"]
-        self.tile_fps = 12
+        self.tile_fps = {
+            "idle": 12,
+            "run": 12,
+            "attack": 24
+        }
+        self.tileset = "idle"
         self.time_since_last_tile = 0
-        self.surf = self.tileset.increment()
+        self.surf = self.tilesets[self.tileset].increment()
         self.player_rect = self.surf.get_rect()
         self.x = 500
         self.y = 600
@@ -27,10 +32,12 @@ class Player(pygame.sprite.Sprite):
         self.main_loop.add_key_callback(pygame.locals.K_w, lambda: self.change_position(0, -self.speed, self.last_direction))
         self.main_loop.add_key_callback(pygame.locals.K_d, lambda: self.change_position(self.speed, 0, "right"))
         self.main_loop.add_key_callback(pygame.locals.K_a, lambda: self.change_position(-self.speed, 0, "left"))
+        self.main_loop.add_key_callback(pygame.locals.K_k, lambda: self.attack(), False)
+        self.main_loop.add_key_callback(pygame.locals.K_l, lambda: self.attack(), False)
         self.main_loop.add_keys_released_callback((pygame.locals.K_a, pygame.locals.K_d, pygame.locals.K_w, pygame.locals.K_s), lambda: self.set_tileset("idle"))
     
     def set_tileset(self, tileset) -> None:
-        self.tileset = self.tilesets[tileset]
+        self.tileset = tileset
 
     def change_position(self, x_diff, y_diff, direction):
         """
@@ -56,12 +63,18 @@ class Player(pygame.sprite.Sprite):
             self.last_direction = direction
             self.flipped = not self.flipped
 
-        if self.tileset != self.tilesets["run"]:
-            self.tileset = self.tilesets["run"]  
+        if self.tileset != "run":
+            self.tileset = "run" 
+
+    def attack(self):
+        """Run the attack animation to attack and send a message to any enemy in the collision area"""
+        if self.tileset == "attack":
+            self.tilesets[self.tileset].reset()
+        self.tileset = "attack"
 
     def tick(self):
         """Tick the player class, used to animate the player"""
         self.time_since_last_tile += self.main_loop.dt
-        if self.time_since_last_tile >= 1 / self.tile_fps:
+        if self.time_since_last_tile >= 1 / self.tile_fps[self.tileset]:
             self.time_since_last_tile = 0
-            self.surf = self.tileset.increment()
+            self.surf = self.tilesets[self.tileset].increment()

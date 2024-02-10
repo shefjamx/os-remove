@@ -14,11 +14,12 @@ class Tileset:
         self.file = file
         self.size = size
         self.upscale = (size[0] * upscale, size[1] * upscale)
+        self.start = start
+        self.stop = stop
+
         self.image = pygame.image.load(file)
         self.rect = self.image.get_rect()
         self.tiles = []
-        self.start = start
-        self.stop = stop
         self.current_tile_index = start
         self.setup()
 
@@ -44,3 +45,7 @@ class Tileset:
         else:
             self.current_tile_index = self.start
         return tile
+    
+    def reset(self):
+        """Reset the tileset animation back to the start"""
+        self.current_tile_index = self.start
