@@ -13,9 +13,9 @@ class PlayScene(GenericScene):
         rect = self.background_image.get_rect()
         rect.x -= 640
         rect.y -= 360
-        self.screen.blit(self.background_image, rect)
+        self.display.blit(self.background_image, rect)
 
         # Player
-        self.screen.blit(self.player.surf, self.player.player_rect)
+        self.display.blit(self.player.surf, self.player.player_rect)
 
         return super().tick()

@@ -11,6 +11,6 @@ class ConnectScene(GenericScene):
     def tick(self):
         # Background
         rect = self.background_image.get_rect()
-        self.screen.blit(self.background_image, rect)
+        self.display.blit(self.background_image, rect)
 
         return super().tick()

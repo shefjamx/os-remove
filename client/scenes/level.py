@@ -26,7 +26,7 @@ class LevelScene(GenericScene):
         self.graphics_attributes = {}
 
     def render(self):
-        self.screen.fill((0, 0, 0))
+        self.display.fill((0, 0, 0))
         if self.status == self.Status.COUNTDOWN:
             # Draw the countdown to the screen
             timeTillStart = "{:.2f}".format(self.GRACE_PERIOD - (time.perf_counter() - self.countdownStart))
@@ -34,8 +34,8 @@ class LevelScene(GenericScene):
             if "time-width" not in self.graphics_attributes:
                 self.graphics_attributes["time-width"] = _time.get_width() + 10
             _text = self.font.render(f"s to Start", False, "#FFFFFF")
-            self.screen.blit(_time,(0, 0))
-            self.screen.blit(_text, (self.graphics_attributes["time-width"], 0))
+            self.display.blit(_time,(0, 0))
+            self.display.blit(_text, (self.graphics_attributes["time-width"], 0))
 
     def startLevel(self):
         self.status = self.Status.PLAYING
