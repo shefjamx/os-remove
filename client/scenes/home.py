@@ -6,7 +6,6 @@ from scenes.generic_scene import GenericScene
 # from scenes.connect import ConnectScene
 from scenes.play import PlayScene
 
-from effects.particles.flame.flame_circle_effect import FlameCirle
 
 class HomeScreen(GenericScene):
     def __init__(self, screen, main_loop) -> None:
