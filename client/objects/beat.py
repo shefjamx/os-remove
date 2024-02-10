@@ -1,4 +1,5 @@
 import pygame
+from misc.settings import DIMENSIONS
 
 class BeatHitter:
     def __init__(self, mainLoop, screen) -> None:
@@ -8,5 +9,6 @@ class BeatHitter:
 
     def draw(self, screen=None):
         screen = self.screen if screen is None else screen
-        screen.blit(self.baseImage, pygame.Rect(0, 0, 100, 100))
+        baseImageRect = self.baseImage.get_rect()
+        screen.blit(self.baseImage, pygame.Rect(round(DIMENSIONS[0]/2) - round(baseImageRect.w/2), DIMENSIONS[1] - 100, baseImageRect.w, baseImageRect.h))
         
