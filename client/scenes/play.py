@@ -31,13 +31,13 @@ class PlayScene(GenericScene):
     def checkSpawnEnemy(self):
         currentPos_ms = self.musicChannel.get_pos()
         if currentPos_ms >= self.nextEnemySpawn:
-            self.enemies.append(Worm(self.player.x + (random.randint(0,100) - 50), (self.player.y + random.randint(0, 100)-50)))
+            self.enemies.append(Worm(self.player.x + (random.randint(0,100) - 50), (self.player.y + random.randint(0, 100)-50), self.core))
             self.nextEnemySpawn = currentPos_ms + self.STANDARD_SPAWN_TIMER
 
         self.pulse = PulseEffect(5, 0, 10, 10, 50)
 
     def tick(self):
-
+        self.checkSpawnEnemy()
         for e in self.enemies:
             e.update()
         # Background

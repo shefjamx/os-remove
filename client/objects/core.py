@@ -19,11 +19,17 @@ class Core:
         self.sprite = self.tilesets[self.tileset].increment()
         self.time_since_last_tile = 0
     
+    def getX(self) -> float:
+        return 2560 / 2 - self.sprite.get_width() / 2
+    
+    def getY(self) -> float:
+        return 1440 / 2 - self.sprite.get_height() / 1.5
+    
     def doDamage(self, damage: int) -> None:
         self.health -= damage
 
     def draw(self, surface: pygame.Surface, player):
-        posX, posY = 2560 / 2 - self.sprite.get_width() / 2, 1440 / 2 - self.sprite.get_height() / 1.5
+        posX, posY = self.getX(), self.getY()
         surface.blit(self.sprite, (posX - player.x, posY - player.y))
 
     def tick(self):

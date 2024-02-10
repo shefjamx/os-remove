@@ -5,12 +5,15 @@ import pygame
 
 class Worm(GenericEnemy):
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, desireableEntity):
         super().__init__(x, y, "assets\\images\\wum.jpg", 100, 1)
+        self.desireableEntity = desireableEntity
 
     def update(self):
-        self.pos[0] += (random.randint(0, 20) - 10)
-        self.pos[1] += (random.randint(0, 20) - 10)
+        # player pos vector
+        self.direction_vector = (self.pos[0] - self.desireableEntity.getX(), self.pos[1] - self.desireableEntity.getY())
+        self.pos[0] -= self.direction_vector[0]*0.015
+        self.pos[1] -= self.direction_vector[1]*0.015
 
-    def draw(self, surface: pygame.Surface) -> None:
-        surface.blit(self.sprite, (self.pos[0] - self.player_pos[0], self.pos[1] - self.player_pos[1]))
+    def draw(self, surface: pygame.Surface, playerPos) -> None:
+        surface.blit(self.sprite, (self.pos[0] - playerPos[0], self.pos[1] - playerPos[1]))
