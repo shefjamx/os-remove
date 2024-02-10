@@ -2,7 +2,7 @@ import socket
 import time
 
 
-test_message_join_party = '{"endpoint" : "join-party", "code" : "U65L" }'
+test_message_join_party = '{"endpoint" : "join-party", "code" : "X8HT" }'
 
 class Client():
     def __init__(self, host, port):
@@ -19,9 +19,9 @@ class Client():
 
     def run(self):
         while True:
-            time.sleep(1)
-            self.socket.send('{"endpoint": "test"}'.encode())
-            self.ping_num += 1
-
+            data = self.socket.recv(1024)
+            if data:
+                print(data.decode())
+                
 client = Client('192.168.0.109', 3000)
 client.run()
