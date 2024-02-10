@@ -1,10 +1,10 @@
 import pygame
 import random
 from typing import List
-from objects.enemy import GenericEnemy
-from objects.necromancer import Necromancer
-from objects.bringer_of_death import BringerOfDeath
-from objects.skeleton import Skeleton
+from objects.enemies.enemy import GenericEnemy
+from objects.enemies.necromancer import Necromancer
+from objects.enemies.bringer_of_death import BringerOfDeath
+from objects.enemies.skeleton import Skeleton
 from objects.zone import Zone
 
 class EnemyHandler:

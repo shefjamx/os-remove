@@ -1,5 +1,5 @@
-from objects.enemy import GenericEnemy
-from objects.ray import Ray
+from objects.enemies.enemy import GenericEnemy
+from objects.enemies.ray import Ray
 from misc.animator import Tileset
 import pygame
 

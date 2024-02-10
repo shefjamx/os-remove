@@ -1,17 +1,18 @@
-from objects.enemy import GenericEnemy
-from objects.ray import Ray
+from objects.enemies.enemy import GenericEnemy
+from objects.enemies.ray import Ray
 from misc.animator import Tileset
 import pygame
 
-class Skeleton(GenericEnemy):
-    def __init__(self, x: float, y: float, mainLoop, desireableEntity) -> None:
-        super().__init__(x, y, 100, 1, mainLoop)
-        self.pyro = 2.5
+class Necromancer(GenericEnemy):
+    def __init__(self, x, y, mainLoop, desireableEntity):
+        super().__init__(x, y, 200, 1, mainLoop)
+        self.enemyName = "necromancer"
+        self.pyro = 3
         self.mainLoop = mainLoop
         self.tilesets = {
-            "run": Tileset(mainLoop, "assets/images/skeleton/run.png", (64, 64), 0, 11, self.pyro),
-            "death": Tileset(mainLoop, "assets/images/skeleton/death.png", (64, 64), 0, 12, self.pyro),
-            "attack": Tileset(mainLoop, "assets/images/skeleton/attack.png", (64, 64), 0, 25, self.pyro)
+            "run": Tileset(mainLoop, "assets/images/necromancer/run.png", (160, 128), 0, 5, self.pyro),
+            "death": Tileset(mainLoop, "assets/images/necromancer/death.png", (160, 128), 0, 8, self.pyro),
+            "attack": Tileset(mainLoop, "assets/images/necromancer/attack.png", (160, 128), 0, 12, self.pyro)
         }
         self.tile_fps = {
             "run": 12,
@@ -19,7 +20,6 @@ class Skeleton(GenericEnemy):
             "attack": 12
         }
         self.tileset = "run"
-        self.speed = 1.1
 
         self.sprite = self.tilesets[self.tileset].increment()
         self.desireableEntity = desireableEntity
@@ -30,18 +30,18 @@ class Skeleton(GenericEnemy):
         self.targetPoint = (self.targetPoint[0], self.targetPoint[1])
 
     def tick(self):
+        # player pos vector
         centerPos = (self.pos[0] + self.sprite.get_width() / 2, self.pos[1] + self.sprite.get_height() / 2)
         directionVector = (centerPos[0] - self.targetPoint[0], centerPos[1] - self.targetPoint[1])
         distToEntity = (directionVector[0] ** 2 + directionVector[1] ** 2) ** 0.5
 
-        if distToEntity > 12:
+        if distToEntity > 15:
             self.pos[0] -= (directionVector[0] / distToEntity) * 100 * self.mainLoop.dt * self.speed
             self.pos[1] -= (directionVector[1] / distToEntity) * 100 * self.mainLoop.dt * self.speed
         else:
             self.attack(self.desireableEntity)
-
         return super().tick()
-    
+
     def setHealth(self, health):
         self.currentHealth = health
 
@@ -60,12 +60,13 @@ class Skeleton(GenericEnemy):
 
     def getBoundingBox(self) -> pygame.Rect:
         bbWidth = 80
-        bbHeight = 100
+        bbHeight = 150
         oldBoundingBox = super().getBoundingBox()
-        newBoundingBox = pygame.Rect(oldBoundingBox.x + bbWidth*0.25, 
-                                     oldBoundingBox.y + (oldBoundingBox.height - bbHeight)/2,
+        newBoundingBox = pygame.Rect(oldBoundingBox.x + (oldBoundingBox.width - bbWidth)/2, 
+                                     oldBoundingBox.y + (oldBoundingBox.height - bbHeight)*0.9,
                                        bbWidth, bbHeight)
         return newBoundingBox
+    
 
     def draw(self, surface: pygame.Surface, playerPos) -> None:
         surface.blit(self.sprite, (self.pos[0] - playerPos[0], self.pos[1] - playerPos[1]))
