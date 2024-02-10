@@ -106,8 +106,7 @@ class Player(pygame.sprite.Sprite):
             attack_rect = pygame.rect.Rect(self.x + 640 - (self.player_rect.w) - 25, self.y + 360 - (self.player_rect.h) - 25, self.player_rect.w + 50, self.player_rect.h + 50)
             enemies_hit = self.scene.enemyHandler.detect_hit(attack_rect)
             if len(enemies_hit) >= 1:
-                if isinstance(enemies_hit[0], Worm):
-                    enemies_hit[0].takeDamage(self.attack_amount)
+                enemies_hit[-1].takeDamage(self.attack_amount)
 
     def tick(self):
         """Tick the player class, used to animate the player"""
