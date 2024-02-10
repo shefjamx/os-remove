@@ -30,7 +30,7 @@ class Player(pygame.sprite.Sprite):
 
         # Attacking
         self.time_since_last_attack = 0
-        self.min_attack_time = 0.2
+        self.min_attack_time = 0.3
         self.attack_amount = 100
 
         # Movement callbacks
@@ -103,12 +103,11 @@ class Player(pygame.sprite.Sprite):
             self.speed = 200
             
             # Attempt to attack the enemies
-            attack_rect = pygame.rect.Rect(self.x + 640 - (self.player_rect.w / 2) - 50, self.y + 360 - (self.player_rect.h / 2) - 50, self.player_rect.w + 100, self.player_rect.h + 100)
+            attack_rect = pygame.rect.Rect(self.x + 640 - (self.player_rect.w / 2) - 25, self.y + 360 - (self.player_rect.h / 2) - 25, self.player_rect.w + 50, self.player_rect.h + 50)
             enemies_hit = self.scene.enemyHandler.detect_hit(attack_rect)
-            for enemy in enemies_hit:
-                if isinstance(enemy, Worm):
-                    enemy.takeDamage(self.attack_amount)
-
+            if len(enemies_hit) >= 1:
+                if isinstance(enemies_hit[0], Worm):
+                    enemies_hit[0].takeDamage(self.attack_amount)
 
     def tick(self):
         """Tick the player class, used to animate the player"""
