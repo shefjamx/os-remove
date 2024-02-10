@@ -1,5 +1,4 @@
 import pygame
-from logic.level import Level
 from misc.logger import log
 from scenes.generic_scene import GenericScene
 import time

@@ -1,5 +1,6 @@
 from __future__ import annotations
 import os
+from misc.logger import log
 
 class HitTiming:
 
@@ -27,8 +28,8 @@ class Level:
     """
     Encapsulates the level object and the reading / writing to file
     """
-    def __init__(self, levelDir: str):
-        self.__levelPath = f"levels\\{levelDir}\\level.dat"
+    def __init__(self, level_string: str):
+        self.__levelPath = f"levels\\{level_string}\\level.dat"
         self.songPath = ""
         self.timingPoints = []
         self.spawnRate = 0.0
@@ -44,6 +45,7 @@ class Level:
     
     def __loadFromPath(self, path: str) -> None:
         if not os.path.isfile(path):
+            log(f"File {path} not found!", "ERROR")
             raise FileNotFoundError("No Level Exists!")
         with open(path, "r") as f:
             attributes = f.read().split("\n")

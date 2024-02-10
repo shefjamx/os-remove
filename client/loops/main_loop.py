@@ -27,9 +27,10 @@ class MainLoop():
         # self.current_scene: GenericScene = LevelScene(screen, self, "ascension-to-heaven")
         self.dt = 0
 
-    def change_scene(self, scene: GenericScene):
+    def change_scene(self, scene: GenericScene, *args):
         log(f"Changing scenes to: {scene}", type="debug")
-        self.current_scene = scene(self.screen, self)
+        print(args)
+        self.current_scene = scene(self.screen, self, *args)
         pygame.display.flip()
 
     def add_key_callback(self, key: int, callback) -> None:
