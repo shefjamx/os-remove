@@ -25,11 +25,15 @@ class Necromancer(GenericEnemy):
 
         self.sprite = self.tilesets[self.tileset].increment()
         self.desireableEntity = desireableEntity
+
+        self.isFlipped = False
         
         centerPos = (self.pos[0] + self.sprite.get_width() / 2, self.pos[1] + self.sprite.get_height() / 2)
         rayCast = Ray(centerPos, self.desireableEntity.getRect())
         self.targetPoint = rayCast.cast() # This is a stupid AI that does not change the point it wants to go to
         self.targetPoint = (self.targetPoint[0], self.targetPoint[1])
+
+        self.isFlipped = self.targetPoint[0] < self.pos[0]
 
 
     def tick(self):
@@ -72,5 +76,5 @@ class Necromancer(GenericEnemy):
     
 
     def draw(self, surface: pygame.Surface, playerPos) -> None:
-        surface.blit(self.sprite, (self.pos[0] - playerPos[0], self.pos[1] - playerPos[1]))
+        surface.blit(pygame.transform.flip(self.sprite, self.isFlipped, False), (self.pos[0] - playerPos[0], self.pos[1] - playerPos[1]))
         super().draw(surface, playerPos)

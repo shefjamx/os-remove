@@ -1,3 +1,3 @@
 audio-path=levels\\anybody-can-find-love\\anybody-can-find-love.mp3
 timing-points=[1000.0, 2000.0, 3000.0, 3500.0, 4000.0]
-zones=[(necromancer 0.0 10000.0 1.0 necromancer skeleton), (more-necromancer 10000.0 -1.0 1.5 bod)]
+zones=[(necromancer 0 10000.0 1.0 skeleton necromancer), (more-necromancer 10000.0 -1.0 1.5 bod)]
