@@ -8,16 +8,18 @@ from objects.zone import Zone
 class HitTiming:
 
     def __init__(self, timing: float):
-        self.__TIMING_WINDOWS = self.TIMING_WINDOWS = [(50, 5), (150, 2)]
+        self.__TIMING_WINDOWS = self.TIMING_WINDOWS = [(50, 5), (125, 2), (175, 0)]
         self.__timing = timing
 
-    def getScore(self, timing: float) -> int:
+    def getScore(self, timing: float) -> tuple[float, int]:
         """
         Returns the score for the given hit timing
         """
+        difference = self.__timing - timing
         for window in self.__TIMING_WINDOWS:
-            if abs(self.__timing - timing) <= window[0]: return window[1]
-        return 0
+            if difference <= window[0]:
+                return difference, window[1]
+        return difference, -1
 
     def getTiming(self) -> float:
         return self.__timing

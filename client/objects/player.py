@@ -1,6 +1,5 @@
 import pygame
 from misc.animator import Tileset
-from objects.worm import Worm
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, main_loop, scene) -> None:
@@ -27,10 +26,11 @@ class Player(pygame.sprite.Sprite):
         self.player_rect = self.surf.get_rect()
         self.x = 500
         self.y = 600
+        self.size = (80, 80)
 
         # Attacking
         self.time_since_last_attack = 0
-        self.min_attack_time = 0.2
+        self.min_attack_time = 0.1
         self.attack_amount = 100
 
         # Movement callbacks
@@ -41,9 +41,7 @@ class Player(pygame.sprite.Sprite):
         self.main_loop.add_key_callback(pygame.locals.K_w, lambda: self.change_position(0, -self.speed, self.last_direction))
         self.main_loop.add_key_callback(pygame.locals.K_d, lambda: self.change_position(self.speed, 0, "right"))
         self.main_loop.add_key_callback(pygame.locals.K_a, lambda: self.change_position(-self.speed, 0, "left"))
-        self.main_loop.add_key_callback(pygame.locals.K_k, lambda: self.attack(), False)
-        self.main_loop.add_key_callback(pygame.locals.K_l, lambda: self.attack(), False)
-        self.main_loop.add_keys_released_callback((pygame.locals.K_a, pygame.locals.K_d, pygame.locals.K_w, pygame.locals.K_s), lambda: self.set_tileset("idle"))
+        self.main_loop.add_keys_released_callback((pygame.locals.K_a, pygame.locals.K_d, pygame.locals.K_w, pygame.locals.K_s), lambda: self.set_tileset("idle") if self.tileset != "attack" else None)
 
     def set_tileset(self, tileset) -> None:
         self.tileset = tileset
@@ -103,12 +101,10 @@ class Player(pygame.sprite.Sprite):
             self.speed = 200
             
             # Attempt to attack the enemies
-            attack_rect = pygame.rect.Rect(self.x + 640 - (self.player_rect.w / 2), self.y + 360 - (self.player_rect.h / 2), self.player_rect.w, self.player_rect.h)
-            enemies_hit = self.scene.enemyHandler.detect_hit(attack_rect)
-            for enemy in enemies_hit:
-                if isinstance(enemy, Worm):
-                    enemy.takeDamage(self.attack_amount)
-
+            attack_rect = pygame.rect.Rect(555, 330, 170, 120)
+            enemies_hit = self.scene.enemyHandler.detect_hit(attack_rect, (self.x - (self.player_rect.w / 2), self.y - (self.player_rect.h / 2)))
+            if len(enemies_hit) >= 1:
+                enemies_hit[-1].takeDamage(self.attack_amount)
 
     def tick(self):
         """Tick the player class, used to animate the player"""
