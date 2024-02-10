@@ -33,16 +33,16 @@ class PlayScene(GenericScene):
             self.nextEnemySpawn = currentPos_ms + self.STANDARD_SPAWN_TIMER
 
     def tick(self):
-        #self.checkSpawnEnemy()
-        #self.cameraPos = (self.player.center_x)
+        print(self.screen.get_width())
+        cameraPos = (-self.player.x + self.screen.get_width()/2, -self.player.y + self.screen.get_height()/2)
         for e in self.enemies:
             e.update()
         # Background
-        self.display.blit(self.background_image, (-self.player.x, -self.player.y))
+        print(self.background_image.get_width(), self.background_image.get_height())
+        self.display.blit(self.background_image, cameraPos)
         for e in self.enemies:
-            e.resolveMove(self.player.x, self.player.y)
-            e.draw(self.display)
-        self.core.draw(self.display, (self.background_image.get_width(), self.background_image.get_height()), self.player)
+            e.draw(self.display, cameraPos)
+        self.core.draw(self.display, cameraPos)
 
 
         self.player.tick()
