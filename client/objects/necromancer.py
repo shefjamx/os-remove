@@ -11,11 +11,13 @@ class Necromancer(GenericEnemy):
         self.mainLoop = mainLoop
         self.tilesets = {
             "run": Tileset(mainLoop, "assets/images/necromancer/run.png", (160, 128), 0, 5, self.pyro),
-            "death": Tileset(mainLoop, "assets/images/necromancer/death.png", (160, 128), 0, 8, self.pyro)
+            "death": Tileset(mainLoop, "assets/images/necromancer/death.png", (160, 128), 0, 8, self.pyro),
+            "attack": Tileset(mainLoop, "assets/images/necromancer/attack.png", (160, 128), 0, 12, self.pyro)
         }
         self.tile_fps = {
             "run": 12,
-            "death": 12
+            "death": 12,
+            "attack": 12
         }
         self.tileset = "run"
 
@@ -40,9 +42,15 @@ class Necromancer(GenericEnemy):
             self.attack(self.desireableEntity)
         return super().tick()
 
+    def setHealth(self, health):
+        self.currentHealth = health
+
     def attack(self, entity) -> None:
+        if not self.has_attacked:
+            self.speed = 0
+            self.tilesets["attack"].callback = lambda: self.setHealth(0)
+            self.tileset = "attack"
         super().attack(entity)
-        self.currentHealth = 0
 
     def kill(self, callback=None) -> None:
         """Kill the enemy and play the necromancer animation"""
