@@ -8,18 +8,12 @@ from effects.particles.particle import Particle
 
 
 class FlameCirle():
-    def __init__(self, speed: int, fade_speed: int, initial_pos: list[int], radius: int):
+    def __init__(self, speed: int, fade_speed: int, initial_pos: list[int], radius: int, theme: list[pygame.Color]):
         self.speed_multiplier = speed # multiplier of the speed
         self.fade_speed = fade_speed
         self.initial_pos = initial_pos
         self.particle_group = pygame.sprite.Group()
-        self.colours = [
-            pygame.Color(255,0,0),
-            pygame.Color(255,90,0),
-            pygame.Color(255,154,0),
-            pygame.Color(255,206,0),
-            pygame.Color(255,232,8)
-            ]
+        self.colours = theme
         self.radius = radius
         self.generate_particles()
         

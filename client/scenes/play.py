@@ -10,8 +10,8 @@ from objects.core import Core
 
 from handlers.enemy import EnemyHandler
 
-from effects.particles.flame_circle_effect import FlameCirle
-from effects.particles.pulse_overlay import PulseEffect
+from effects.particles.flame.flame_effect import FlameCircle
+from effects.particles.particle_themes import ICE
 
 class PlayScene(GenericScene):
     def __init__(self, screen, main_loop, level_string: str) -> None:
@@ -27,7 +27,7 @@ class PlayScene(GenericScene):
 
         self.enemyHandler = EnemyHandler(1.0, self.level.zones[0], self.main_loop, self.player, self.core)
 
-        self.pulse = PulseEffect(10, 10, 100)
+        self.flame = FlameCircle(25, 5, [self.player.getX(),self.player.getY()], 1, ICE)
 
     def checkSpawnEnemy(self):
         currentPos_ms = self.musicChannel.get_pos()
@@ -43,4 +43,6 @@ class PlayScene(GenericScene):
         self.core.draw(self.display, (self.player.x, self.player.y))
         self.core.tick()
         self.player.tick()
-        return super().tick(self.player, self.pulse)
+
+        self.flame.tick(self.display, self.main_loop.dt)
+        return super().tick(self.player)

@@ -1,5 +1,5 @@
 import pygame
-from misc.settings import SCREEN_HEIGHT, SCREEN_WIDTH
+from misc.settings import SCREEN_HEIGHT
 
 class Particle(pygame.sprite.Sprite):
     def __init__(self,
@@ -8,61 +8,62 @@ class Particle(pygame.sprite.Sprite):
                 color: pygame.Color,
                 direction: pygame.math.Vector2,
                 speed: int,
-                fade_speed: int,
-                size_multiplier: int,
-                should_die: bool,
-                max_life: int
+                fade_duration: int,
+                size: int,
+                trail: bool
                  ):
         super().__init__(groups)
         self.pos = pos
         self.color = color
         self.direction = direction
         self.speed = speed
-        self.fade_speed = fade_speed
-        self.size_multiplier = size_multiplier
-        self.should_die = should_die
+        self.fade_duration = fade_duration
+        self.size_multiplier = size
+        self.trail = trail
         self.alpha = 255
-        self.max_life = max_life
         self.lifetime = 0 # lifetime in frames, each particle lives max 240 frames or 4 seconds
 
         self.create_surface()
 
     def fade(self, dt):
-        self.alpha -= self.fade_speed * dt
+        self.alpha -= self.fade_duration * dt
         self.image.set_alpha(self.alpha)
 
     def check_life(self):
-        if self.should_die:
-            if self.lifetime > self.max_life:
-                self.kill()
-        else:
-            # reset back to top
-            if (self.pos[1] > SCREEN_HEIGHT):
-                self.pos[1] = 0
+        """ 
+        OVERRIDE for custom particle behaviour
+        default behaviour particle dies after fade duration
+        """
+        if (self.alpha < 1):
+            self.kill()
+        return
 
     def create_surface(self):
         self.image = pygame.Surface((4 * self.size_multiplier, 20 * self.size_multiplier)).convert_alpha()
         self.image.set_colorkey("black") # makes black pixels transparent
         self.rect_obj = pygame.Rect(self.size_multiplier, self.size_multiplier, 2 * self.size_multiplier, 2*self.size_multiplier)
-        # draw a trail
         
-        for i in range (1,5):
-            surf = pygame.Surface((4,4))
-            pygame.draw.rect(surf, self.color, self.rect_obj)
-            surf.set_alpha(self.alpha / i)
-            self.image.blit(surf, [0, 4*(5-i)])
+        # draw a trail
+        if (self.trail):
+            for i in range (1,5):
+                surf = pygame.Surface((4,4))
+                pygame.draw.rect(surf, self.color, self.rect_obj)
+                surf.set_alpha(self.alpha / i)
+                self.image.blit(surf, [0, 4*(5-i)])
             
         pygame.draw.rect(self.image, self.color, self.rect_obj)
         self.image.set_alpha(self.alpha)
         self.rect = self.image.get_rect(center=self.pos)
     
     def move(self, dt):
-        # update position based on direction and speed
+        """ 
+        OVERRIDE for custom behaviour
+        default behaviour particle continues in direction at constant speed 
+        """ 
         self.pos += self.direction * self.speed * dt
         self.rect.center = self.pos
 
     def update(self, dt):
         self.move(dt)
         self.fade(dt)    
-        self.lifetime += 1
         self.check_life()
