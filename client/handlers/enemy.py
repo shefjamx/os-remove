@@ -15,7 +15,7 @@ class EnemyHandler:
         self.initialSpawnRate = initialSpawnRate
         self.enemies: list[GenericEnemy] = []
         self.enemies_dying: list[GenericEnemy] = []
-        self.enemySpawnPoints = [(591, 718), (812, 267), (1258, 44), (1714, 267), (1931, 720), (1712, 1158), (1267, 1385), (815, 1162)] # there are 8 of these :D
+        self.enemySpawnPoints = [(880, 1076), (1220, 404), (1900, 79), (2570, 404), (2902, 1076), (2558, 1754), (1886, 2090), (1216, 1745)] # there are 8 of these :D
         self.mainLoop = mainLoop
         self.setZone(initialZone)
         self.pathfindingTargets = {

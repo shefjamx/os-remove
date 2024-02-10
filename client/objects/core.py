@@ -24,10 +24,10 @@ class Core:
         self.currentHealth -= damage
 
     def getX(self) -> float:
-        return 2560 / 2 - self.sprite.get_width() / 2
+        return 3842 / 2 - self.sprite.get_width() / 2
 
     def getY(self) -> float:
-        return 1440 / 2 - self.sprite.get_height() / 1.5
+        return 2162 / 2 - self.sprite.get_height() / 1.5
 
     def getWidth(self) -> int:
         return self.sprite.get_width()

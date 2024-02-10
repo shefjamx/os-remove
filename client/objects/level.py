@@ -15,7 +15,7 @@ class HitTiming:
         """
         Returns the score for the given hit timing
         """
-        difference = self.__timing - timing
+        difference = abs(self.__timing - timing)
         for window in self.__TIMING_WINDOWS:
             if difference <= window[0]:
                 return difference, window[1]

@@ -18,7 +18,7 @@ class PlayScene(GenericScene):
         self.level = Level(level_string)
         self.musicChannel = pygame.mixer.music
         self.musicChannel.load(self.level.getSongPath())
-        self.background_image = pygame.image.load("assets/images/level_draft.png")
+        self.background_image = pygame.image.load("assets/images/main_level_3x.png")
         self.player = Player(main_loop, self)
         self.core = Core(10e3, self.main_loop)
         self.musicChannel.play()
