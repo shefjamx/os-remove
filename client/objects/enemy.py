@@ -9,7 +9,8 @@ class GenericEnemy:
         self.pos = [x, y]
         self.player_pos = (0, 0)
         self.damage = damage
-        self.health = health
+        self.maxHealth = health
+        self.currentHealth = self.maxHealth
         self.tilesets = {}
         self.tile_fps = {}
         self.main_loop = main_loop
@@ -25,7 +26,7 @@ class GenericEnemy:
 
     def kill(self) -> None:
         # death animation ?
-        self.health = 0
+        self.currentHealth = 0
 
     def draw(self, surface, playerPos) -> None:
         # draw da enemy
@@ -35,8 +36,7 @@ class GenericEnemy:
         """
         Returns true if the monster is still alive
         """
-        self.health -= damageNum
-        return self.health > 0
+        self.currentHealth -= damageNum
 
     def attack(self, entity) -> None:
         entity.dealDamage(self.damage)

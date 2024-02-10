@@ -54,8 +54,14 @@ class EnemyHandler:
                 self.spawnRandomEnemy(sp[0], sp[1])
             self.nextSpawn += 4e3 * self.currentZone.getSpawnRate()
 
+        toRemove = []
         for enemy in self.enemies:
+            if enemy.currentHealth <= 0:
+                toRemove.append(enemy)
             enemy.tick()
+        for enemy in toRemove:
+            self.enemies.remove(enemy)
+
 
     def draw(self, surface, pX, pY) -> None:
         for enemy in self.enemies:

@@ -37,5 +37,9 @@ class Worm(GenericEnemy):
             self.attack(self.desireableEntity)
         return super().tick()
 
+    def attack(self, entity) -> None:
+        super().attack(entity)
+        self.kill()
+
     def draw(self, surface: pygame.Surface, playerPos) -> None:
         surface.blit(self.sprite, (self.pos[0] - playerPos[0], self.pos[1] - playerPos[1]))
