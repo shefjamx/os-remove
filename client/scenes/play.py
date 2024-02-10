@@ -8,8 +8,11 @@ from misc.logger import log
 from objects.worm import Worm
 from objects.core import Core
 
+from handlers.enemy import EnemyHandler
+
 from effects.particles.flame_circle_effect import FlameCirle
 from effects.particles.pulse_overlay import PulseEffect
+
 class PlayScene(GenericScene):
     def __init__(self, screen, main_loop, level_string: str) -> None:
         pygame.mixer.init()
@@ -20,11 +23,9 @@ class PlayScene(GenericScene):
         self.background_image = pygame.image.load("assets/images/level_draft.png")
         self.player = Player(main_loop)
         self.core = Core(10e3, self.main_loop)
-        self.enemies = []
         self.musicChannel.play()
-        self.STANDARD_SPAWN_TIMER = 1e3 # in ms
-        self.performanceSpawnMultiplier = 1.0
-        self.nextEnemySpawn = 0
+
+        self.enemyHandler = EnemyHandler(1.0, self.level.zones[0], self.main_loop, self.player, self.core)
 
         self.pulse = PulseEffect(10, 10, 100)
 
@@ -35,12 +36,10 @@ class PlayScene(GenericScene):
             self.nextEnemySpawn = currentPos_ms + self.STANDARD_SPAWN_TIMER
 
     def tick(self):
-        for e in self.enemies:
-            e.tick()
+        self.enemyHandler.tick(self.musicChannel.get_pos())
         # Background
         self.display.blit(self.background_image, (-self.player.x, -self.player.y))
-        for e in self.enemies:
-            e.draw(self.display, (self.player.x, self.player.y))
+        self.enemyHandler.draw(self.display, self.player.x, self.player.y)
         self.core.draw(self.display, self.player)
         self.core.tick()
         self.player.tick()

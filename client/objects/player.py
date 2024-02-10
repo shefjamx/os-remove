@@ -41,10 +41,22 @@ class Player(pygame.sprite.Sprite):
         self.main_loop.add_key_callback(pygame.locals.K_k, lambda: self.attack(), False)
         self.main_loop.add_key_callback(pygame.locals.K_l, lambda: self.attack(), False)
         self.main_loop.add_keys_released_callback((pygame.locals.K_a, pygame.locals.K_d, pygame.locals.K_w, pygame.locals.K_s), lambda: self.set_tileset("idle"))
-    
+
     def set_tileset(self, tileset) -> None:
         self.tileset = tileset
         self.speed = 400
+
+    def getX(self) -> float:
+        return self.x
+
+    def getY(self) -> float:
+        return self.y
+
+    def getWidth(self) -> float:
+        return self.surf.get_width()
+
+    def getHeight(self) -> float:
+        return self.surf.get_height()
 
     def change_position(self, x_diff, y_diff, direction):
         """
@@ -63,7 +75,7 @@ class Player(pygame.sprite.Sprite):
         if self.y >= -320 and y_diff < 0:
             self.y += y_diff
         elif self.y <= 1040 and y_diff > 0:
-            self.y += y_diff  
+            self.y += y_diff
 
         # Directions and animations
         if self.last_direction != direction:
@@ -71,7 +83,7 @@ class Player(pygame.sprite.Sprite):
             self.flipped = not self.flipped
 
         if self.tileset != "run" and self.tileset != "attack":
-            self.tileset = "run" 
+            self.tileset = "run"
 
     def attack(self):
         """Run the attack animation to attack and send a message to any enemy in the collision area"""
@@ -90,4 +102,4 @@ class Player(pygame.sprite.Sprite):
             self.time_since_last_tile = 0
             self.surf = self.tilesets[self.tileset].increment()
 
-            
+

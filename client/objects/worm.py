@@ -6,7 +6,7 @@ import pygame
 
 class Worm(GenericEnemy):
 
-    def __init__(self, x, y, desireableEntity, mainLoop):
+    def __init__(self, x, y, mainLoop, desireableEntity):
         super().__init__(x, y, 100, 1, mainLoop)
         self.tilesets["idle"] = Tileset("assets\\images\\wum.jpg", (360, 343), 0, 0, 0.5)
         self.tile_fps["idle"] = 1

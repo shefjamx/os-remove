@@ -27,7 +27,7 @@ class GenericEnemy:
         # death animation ?
         self.health = 0
 
-    def draw(self, surface, cameraPos) -> None:
+    def draw(self, surface, playerPos) -> None:
         # draw da enemy
         raise NotImplementedError("Please draw ur monster silly billy")
 
