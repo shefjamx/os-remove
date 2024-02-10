@@ -34,8 +34,6 @@ class PlayScene(GenericScene):
             self.enemies.append(Worm(self.player.x + (random.randint(0,100) - 50), (self.player.y + random.randint(0, 100)-50)))
             self.nextEnemySpawn = currentPos_ms + self.STANDARD_SPAWN_TIMER
 
-        self.pulse = PulseEffect(5, 0, 10, 10, 50)
-
     def tick(self):
 
         for e in self.enemies:
