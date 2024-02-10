@@ -6,6 +6,8 @@ from scenes.generic_scene import GenericScene
 # from scenes.connect import ConnectScene
 from scenes.play import PlayScene
 
+from effects.particles.flame_circle_effect import FlameCirle
+
 class HomeScreen(GenericScene):
     def __init__(self, screen, main_loop) -> None:
         super().__init__(screen, main_loop)
@@ -72,5 +74,6 @@ class HomeScreen(GenericScene):
         # Move header and render buttons
         self.y_tween.update()
         self.render_buttons()
+
         return super().tick()
     
