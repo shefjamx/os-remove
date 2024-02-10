@@ -9,15 +9,18 @@ from misc.settings import MAX_PARTICLES, SCREEN_HEIGHT, SCREEN_WIDTH
 N_PULSE = 20 # pulse 20 particles
 
 class PulseEffect():
-    def __init__(self, speed: int, fade_speed:int, pulse_duration: int, pulse_intensity: int, N_PARTICLES: int):
+    def __init__(self, pulse_duration: int, pulse_intensity: int, N_PARTICLES: int):
         self.alpha = 100 # low opacity
-        self.speed_multiplier = speed
-        self.fade_speed = fade_speed
+        self.fade_speed = 0
         self.color = pygame.Color(255,255,255) # white is default
         self.particle_group = pygame.sprite.Group()
         self.pulse_duration = pulse_duration
         self.pulse_intensity = pulse_intensity
         self.N_PARTICLES = N_PARTICLES
+
+        self.max_life = pulse_duration / 16.67
+        self.speed_multiplier = SCREEN_HEIGHT / self.max_life
+
 
         self.generate_particles()
 
@@ -31,16 +34,15 @@ class PulseEffect():
                 randint(0, SCREEN_WIDTH), 
                 0 
                 ]
-            speed = randint(10 * self.speed_multiplier, 50 * self.speed_multiplier)
             Particle(groups=self.particle_group, 
                     pos=pos, 
                     color=self.color, 
                     direction=direction,
-                    speed=speed, 
+                    speed=self.speed_multiplier, 
                     fade_speed=self.fade_speed, 
                     size_multiplier=1, 
-                    should_die=False,
-                    max_life=180
+                    should_die=True,
+                    max_life=self.max_life
                     )
             
             self.pulse()

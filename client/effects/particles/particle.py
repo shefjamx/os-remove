@@ -41,7 +41,7 @@ class Particle(pygame.sprite.Sprite):
                 self.pos[1] = 0
 
     def create_surface(self):
-        self.image = pygame.Surface((16,16)).convert_alpha()
+        self.image = pygame.Surface((4 * self.size_multiplier, 4 * self.size_multiplier)).convert_alpha()
         self.image.set_colorkey("black") # makes black pixels transparent
         self.rect_obj = pygame.Rect(self.size_multiplier, self.size_multiplier, 2 * self.size_multiplier, 2*self.size_multiplier)
         pygame.draw.rect(self.image, self.color, self.rect_obj)
@@ -52,8 +52,6 @@ class Particle(pygame.sprite.Sprite):
         # update position based on direction and speed
         self.pos += self.direction * self.speed * dt
         self.rect.center = self.pos
-        if self.image.get_height() > 4:
-            print(self.image.get_height())
 
     def update(self, dt):
         self.move(dt)
