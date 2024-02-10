@@ -24,8 +24,8 @@ class Player(pygame.sprite.Sprite):
         # Player
         self.surf = self.tilesets[self.tileset].increment()
         self.player_rect = self.surf.get_rect()
-        self.x = 500
-        self.y = 600
+        self.x = 0
+        self.y = 0
         self.size = (80, 80)
 
         # Attacking
@@ -101,8 +101,8 @@ class Player(pygame.sprite.Sprite):
             self.speed = 200
             
             # Attempt to attack the enemies
-            attack_rect = pygame.rect.Rect(555, 290, 170, 150)
-            enemies_hit = self.scene.enemyHandler.detect_hit(attack_rect, (self.x - (self.player_rect.w / 2), self.y - (self.player_rect.h / 2)))
+            attack_rect = pygame.rect.Rect(550, 310, 170, 150)
+            enemies_hit = self.scene.enemyHandler.detect_hit(attack_rect, (self.x, self.y))
             if len(enemies_hit) >= 1:
                 enemies_hit[-1].takeDamage(self.attack_amount)
 
