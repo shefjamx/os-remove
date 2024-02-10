@@ -8,11 +8,11 @@ from pygame.locals import (
 )
 
 from misc.logger import log
+from misc.settings import FPS
 from scenes.generic_scene import GenericScene
 from scenes.home import HomeScreen
 # from scenes.level import LevelScene
 
-from misc.settings import FPS
 
 class MainLoop():
     """Main Loop class, this will handle all keyboard inputs and generic stuff (that i've not figured out yet)"""
