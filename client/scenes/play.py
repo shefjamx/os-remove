@@ -4,7 +4,6 @@ from objects.player import Player
 from objects.level import Level
 import random
 
-from misc.logger import log
 from objects.worm import Worm
 from objects.core import Core
 
@@ -21,7 +20,7 @@ class PlayScene(GenericScene):
         self.musicChannel = pygame.mixer.music
         self.musicChannel.load(self.level.getSongPath())
         self.background_image = pygame.image.load("assets/images/level_draft.png")
-        self.player = Player(main_loop)
+        self.player = Player(main_loop, self)
         self.core = Core(10e3, self.main_loop)
         self.musicChannel.play()
 
