@@ -5,6 +5,8 @@ from objects.ray import Ray
 import random
 import pygame
 
+from effects.particles.flame.flame_effect import FlameCircle
+from effects.particles.particle_themes import ICE
 class Necromancer(GenericEnemy):
     def __init__(self, x, y, mainLoop, desireableEntity):
         super().__init__(x, y, 200, 1, mainLoop)
@@ -28,6 +30,7 @@ class Necromancer(GenericEnemy):
         self.targetPoint = rayCast.cast() # This is a stupid AI that does not change the point it wants to go to
         self.targetPoint = (self.targetPoint[0], self.targetPoint[1])
 
+
     def tick(self):
         # player pos vector
         centerPos = (self.pos[0] + self.sprite.get_width() / 2, self.pos[1] + self.sprite.get_height() / 2)
@@ -36,7 +39,7 @@ class Necromancer(GenericEnemy):
         distToEntity = (direction_vector[0] ** 2 + direction_vector[1] ** 2) ** 0.5 """
         directionVector = (centerPos[0] - self.targetPoint[0], centerPos[1] - self.targetPoint[1])
         distToEntity = (directionVector[0] ** 2 + directionVector[1] ** 2) ** 0.5
-
+        
         if distToEntity > 15:
             self.pos[0] -= (directionVector[0] / distToEntity) * 100 * self.mainLoop.dt * self.speed
             self.pos[1] -= (directionVector[1] / distToEntity) * 100 * self.mainLoop.dt * self.speed

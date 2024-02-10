@@ -1,7 +1,7 @@
 import pygame
 
-COLOR_INACTIVE = pygame.Color('lightskyblue3')
-COLOR_ACTIVE = pygame.Color('dodgerblue2')
+COLOR_INACTIVE = pygame.Color('white')
+COLOR_ACTIVE = pygame.Color('white')
 
 class InputBox():
     def __init__(self, x, y, w, h, fontSize,  text=''):
@@ -39,6 +39,9 @@ class InputBox():
                     if not self.max_length:
                         self.text += event.unicode
                 self.txt_surface = self.font.render(self.text, True, self.color)
+
+    def get_text_value(self):
+        return self.text
 
     def draw(self, display: pygame.Surface):
         display.blit(self.txt_surface, (self.rect.x + 5, self.rect.y + 5))

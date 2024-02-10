@@ -1,6 +1,4 @@
 import socket
-import time
-
 
 test_message_join_party = '{"endpoint" : "join-party", "code" : "X8HT" }'
 
@@ -13,7 +11,8 @@ class Client():
         self.socket.connect((self.host, self.port))
         self.is_connected = True
 
-        # once connected attempt to join party using code
+        # once connected a
+        # attempt to join party using code
         self.socket.send(test_message_join_party.encode())
         self.ping_num = 0 
 
@@ -22,6 +21,6 @@ class Client():
             data = self.socket.recv(1024)
             if data:
                 print(data.decode())
-                
+
 client = Client('192.168.0.109', 3000)
 client.run()

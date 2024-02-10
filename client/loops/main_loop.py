@@ -28,8 +28,8 @@ class MainLoop():
         self.monitoredKeys = {}
         self.screen = screen
         self.clock = pygame.time.Clock()
-        # self.current_scene: GenericScene = HomeScreen(screen, self)
-        self.current_scene: GenericScene = PlayScene(screen, self, "anybody-can-find-love")
+        #self.current_scene: GenericScene = HomeScreen(screen, self)
+        self.current_scene: GenericScene = PlayScene(screen, self, "ascension-to-heaven")
         # self.current_scene: GenericScene = LevelEditor(screen, self, "anybody-can-find-love")
         self.dt = 0
 

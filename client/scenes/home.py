@@ -5,7 +5,7 @@ from tweener import Tween, Easing, EasingMode
 from scenes.generic_scene import GenericScene
 from objects.menu.input_box import InputBox
 # from scenes.connect import ConnectScene
-from scenes.play import PlayScene
+from scenes.connect import ConnectScene
 
 
 class HomeScreen(GenericScene):
@@ -35,7 +35,7 @@ class HomeScreen(GenericScene):
 
     def create_button_dict(self):
         """Create buttons and add them to the dictionary to be later used"""
-        self.create_button(490, 320, 300, 60, "PLAY", 580, 330, lambda: self.main_loop.change_scene(PlayScene, "anybody-can-find-love"))
+        self.create_button(490, 320, 300, 60, "PLAY", 580, 330, lambda: self.main_loop.change_scene(ConnectScene))
         self.create_button(490, 420, 300, 60, "LEAVE", 575, 430, sys.exit)
 
     def create_button(self, x, y, w, h, text, tx, ty, callback):
