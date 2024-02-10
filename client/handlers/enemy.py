@@ -66,13 +66,19 @@ class EnemyHandler:
         for enemy in self.enemies:
             enemy.draw(surface, (pX, pY))
 
-    def detect_hit(self, player_surface: pygame.rect.Rect) -> List[GenericEnemy]:
+    def detect_hit(self, test_rect: pygame.rect.Rect, player_pos) -> List[GenericEnemy]:
         """
         Detects a player hit and returns a list of all enemies in that area.
         If there are no enemies then an empty list is returned x
         """
         enemies_hit = []
         for enemy in self.enemies:
-            if player_surface.collidepoint(enemy.pos):
+            enemy_pos = (enemy.pos[0] - player_pos[0], enemy.pos[1] - player_pos[1])
+            enemy_rect = pygame.Rect(enemy_pos[0], enemy_pos[1], enemy.sprite.get_width() / 4, enemy.sprite.get_height() / 4)
+            if test_rect.colliderect(enemy_rect):
                 enemies_hit.append(enemy)
+            
+            # print(f"{test_rect.left} <= {enemy_pos[0]} <= {test_rect.right}  //  {test_rect.top} <= {enemy_pos[1]} <= {test_rect.bottom}")
+            # if test_rect.left <= enemy_pos[0] <= test_rect.right and test_rect.top <= enemy_pos[1] <= test_rect.bottom:
+            #     enemies_hit.append(enemy)
         return enemies_hit
