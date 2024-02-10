@@ -27,10 +27,11 @@ class Player(pygame.sprite.Sprite):
         self.player_rect = self.surf.get_rect()
         self.x = 500
         self.y = 600
+        self.size = (80, 80)
 
         # Attacking
         self.time_since_last_attack = 0
-        self.min_attack_time = 0.3
+        self.min_attack_time = 0.1
         self.attack_amount = 100
 
         # Movement callbacks
@@ -101,8 +102,8 @@ class Player(pygame.sprite.Sprite):
             self.speed = 200
             
             # Attempt to attack the enemies
-            attack_rect = pygame.rect.Rect(self.x + 640 - (self.player_rect.w) - 25, self.y + 360 - (self.player_rect.h) - 25, self.player_rect.w + 50, self.player_rect.h + 50)
-            enemies_hit = self.scene.enemyHandler.detect_hit(attack_rect)
+            attack_rect = pygame.rect.Rect(555, 330, 170, 120)
+            enemies_hit = self.scene.enemyHandler.detect_hit(attack_rect, (self.x - (self.player_rect.w / 2), self.y - (self.player_rect.h / 2)))
             if len(enemies_hit) >= 1:
                 enemies_hit[-1].takeDamage(self.attack_amount)
 

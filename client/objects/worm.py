@@ -11,9 +11,9 @@ class Worm(GenericEnemy):
         super().__init__(x, y, 200, 1, mainLoop)
         self.mainLoop = mainLoop
         # self.tilesets["idle"] = Tileset("assets\\images\\wum.jpg", (360, 343), 0, 0, 0.25)
-        self.tilesets["idle"] = Tileset("assets/images/necromancer/idle.png", (160, 128), 0, 7, 2)
-        self.tile_fps["idle"] = 12
-        self.tileset = "idle"
+        self.tilesets["run"] = Tileset("assets/images/necromancer/run.png", (160, 128), 0, 5, 2)
+        self.tile_fps["run"] = 12
+        self.tileset = "run"
 
         self.sprite = self.tilesets[self.tileset].increment()
         self.desireableEntity = desireableEntity
