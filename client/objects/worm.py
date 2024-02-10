@@ -9,12 +9,15 @@ class Worm(GenericEnemy):
 
     def __init__(self, x, y, mainLoop, desireableEntity):
         super().__init__(x, y, 200, 1, mainLoop)
-        self.tilesets["idle"] = Tileset("assets\\images\\wum.jpg", (360, 343), 0, 0, 0.25)
-        self.tile_fps["idle"] = 1
+        self.mainLoop = mainLoop
+        # self.tilesets["idle"] = Tileset("assets\\images\\wum.jpg", (360, 343), 0, 0, 0.25)
+        self.tilesets["idle"] = Tileset("assets/images/necromancer/idle.png", (160, 128), 0, 7, 2)
+        self.tile_fps["idle"] = 24
         self.tileset = "idle"
+
         self.sprite = self.tilesets[self.tileset].increment()
         self.desireableEntity = desireableEntity
-        self.mainLoop = mainLoop
+        
         centerPos = (self.pos[0] + self.sprite.get_width() / 2, self.pos[1] + self.sprite.get_height() / 2)
         rayCast = Ray(centerPos, self.desireableEntity.getRect())
         self.targetPoint = rayCast.cast() # This is a stupid AI that does not change the point it wants to go to

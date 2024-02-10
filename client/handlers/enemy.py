@@ -22,7 +22,7 @@ class EnemyHandler:
         }
         self.ENEMY_LIST = {
             "worm": Worm,
-            # "necromancer": Necromancer
+            "necromancer": Necromancer
         }
         self.nextSpawn = 0
 
@@ -35,7 +35,6 @@ class EnemyHandler:
         self.enemies.append(self.ENEMY_LIST[_type](*args))
 
     def spawnRandomEnemy(self, x: float, y: float) -> None:
-        """"""
         toSpawn = random.choice(self.currentZone.getAllowedEnemies())
         self.enemies.append(self.ENEMY_LIST[toSpawn](x, y, self.mainLoop, self.pathfindingTargets[toSpawn]))
 

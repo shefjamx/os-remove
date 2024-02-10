@@ -16,7 +16,7 @@ class HitTiming:
         Returns the score for the given hit timing
         """
         for window in self.__TIMING_WINDOWS:
-            if abs(self.__timing - timing) <= window[0]: return window[1]
+            if abs(self.__timing - timing) <= window[0]: return window[1]  # noqa: E701
         return 0
 
     def getTiming(self) -> float:

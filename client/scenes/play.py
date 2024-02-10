@@ -38,10 +38,10 @@ class PlayScene(GenericScene):
         self.enemyHandler.tick(self.musicChannel.get_pos())
         # Background
         self.display.blit(self.background_image, (-self.player.x, -self.player.y))
-        self.enemyHandler.draw(self.display, self.player.x, self.player.y)
         self.core.draw(self.display, (self.player.x, self.player.y))
         self.core.tick()
         self.player.tick()
+        self.enemyHandler.draw(self.display, self.player.x, self.player.y)
 
         self.flame.tick(self.display, self.main_loop.dt)
         return super().tick(self.player)

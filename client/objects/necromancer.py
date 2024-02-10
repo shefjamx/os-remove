@@ -3,13 +3,14 @@ from objects.enemy import GenericEnemy
 from misc.animator import Tileset
 
 class Necromancer(GenericEnemy):
-    def __init__(self, x, y, entity, main_loop) -> None:
+    def __init__(self, x, y, main_loop, entity) -> None:
         super().__init__(x, y, 100, 1, main_loop)
         self.dseireableEntity = entity
         self.main_loop = main_loop
         self.tilesets = {
-            "idle": Tileset("assets/images/necromancer/idle.png", (128, 128), 0, 7)
+            "idle": Tileset("assets/images/necromancer/idle.png", (128, 128), 0, 0, 2)
         }
+        self.tile_fps["idle"] = 12
         self.tileset = "idle"
 
         # Sprite
