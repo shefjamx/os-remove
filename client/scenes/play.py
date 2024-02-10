@@ -35,7 +35,6 @@ class PlayScene(GenericScene):
             self.nextEnemySpawn = currentPos_ms + self.STANDARD_SPAWN_TIMER
 
     def tick(self):
-
         for e in self.enemies:
             e.update()
         # Background
