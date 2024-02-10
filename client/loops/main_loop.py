@@ -14,6 +14,7 @@ from scenes.generic_scene import GenericScene
 from scenes.home import HomeScreen
 from scenes.editor import LevelEditor
 from scenes.play import PlayScene
+from scenes.connect import ConnectScene
 
 
 class MainLoop():
@@ -27,8 +28,8 @@ class MainLoop():
         self.monitoredKeys = {}
         self.screen = screen
         self.clock = pygame.time.Clock()
-        # self.current_scene: GenericScene = HomeScreen(screen, self)
-        self.current_scene: GenericScene = PlayScene(screen, self, "anybody-can-find-love")
+        self.current_scene: GenericScene = HomeScreen(screen, self)
+        #self.current_scene: GenericScene = PlayScene(screen, self, "anybody-can-find-love")
         # self.current_scene: GenericScene = LevelEditor(screen, self, "anybody-can-find-love")
         self.dt = 0
 
@@ -88,6 +89,10 @@ class MainLoop():
                     self.running = False
                     sys.exit()
 
+                # input boxes handle events differently
+                if isinstance(self.current_scene, ConnectScene):
+                    self.current_scene.handle_menu_input(event)
+                
                 # Clicks
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
