@@ -1,23 +1,22 @@
 from objects.enemy import GenericEnemy
-from misc.animator import Tileset
 from objects.ray import Ray
 import pygame
 
 class Necromancer(GenericEnemy):
     def __init__(self, x, y, mainLoop, desireableEntity):
         super().__init__(x, y, 200, 1, mainLoop)
+        self.enemyName = "necromancer"
+        self.pyro = 3
         self.mainLoop = mainLoop
-        self.tilesets = {
-            "run": Tileset("assets/images/necromancer/run.png", (160, 128), 0, 5, 2),
-            "death": Tileset("assets/images/necromancer/death.png", (160, 128), 0, 8, 2)  # Updated with callback later in code
-        }
+        self.mainLoop.cachedTiles.addTile(self.enemyName, "run", False, "assets/images/necromancer/run.png", (160, 128), 0, 5, self.pyro)
+        self.mainLoop.cachedTiles.addTile(self.enemyName, "death", False, "assets/images/necromancer/death.png", (160, 128), 0, 8, self.pyro)
         self.tile_fps = {
             "run": 12,
             "death": 12
         }
         self.tileset = "run"
 
-        self.sprite = self.tilesets[self.tileset].increment()
+        self.sprite = self.mainLoop.cachedTiles.getTile(self.enemyName, self.tileset).increment()
         self.desireableEntity = desireableEntity
         
         centerPos = (self.pos[0] + self.sprite.get_width() / 2, self.pos[1] + self.sprite.get_height() / 2)
@@ -45,7 +44,7 @@ class Necromancer(GenericEnemy):
     def kill(self, callback=None) -> None:
         """Kill the enemy and play the necromancer animation"""
         self.speed = 0
-        self.tilesets["death"] = Tileset("assets/images/necromancer/death.png", (160, 128), 0, 8, 2, callback=callback)
+        self.mainLoop.cachedTiles.getTile(self.enemyName, "death").callback = callback
         self.tileset = "death"
 
     def getBoundingBox(self) -> pygame.Rect:

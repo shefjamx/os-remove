@@ -10,7 +10,7 @@ class GenericEnemy:
         self.damage = damage
         self.maxHealth = health
         self.currentHealth = self.maxHealth
-        self.tilesets = {}
+        self.enemyName = ""
         self.tile_fps = {}
         self.main_loop = main_loop
         self.time_since_last_tile = 0
@@ -22,7 +22,7 @@ class GenericEnemy:
         self.time_since_last_tile += self.main_loop.dt
         if self.time_since_last_tile >= 1 / self.tile_fps[self.tileset]:
             self.time_since_last_tile = 0
-            self.sprite = self.tilesets[self.tileset].increment()
+            self.sprite = self.main_loop.cachedTiles.getTile(self.enemyName, self.tileset).increment()
 
     def kill(self, callback=None) -> None:
         """Kill the enemy and use a callback afterwards"""

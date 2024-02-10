@@ -52,3 +52,21 @@ class Tileset:
     def reset(self):
         """Reset the tileset animation back to the start"""
         self.current_tile_index = self.start
+
+class CachedTiles:
+    def __init__(self) -> None:
+        self.tiles = {}
+
+    def getTile(self, entityName, animationName):
+        """Returns a tile if one was found"""
+        if entityName in self.tiles:
+            if animationName in self.tiles[entityName]:
+                return self.tiles[entityName][animationName]
+        return None
+    
+    def addTile(self, entityName, animationName, override=False, *TilesetAttributes):
+        if entityName in self.tiles:
+            if animationName not in self.tiles[entityName] or override:
+                self.tiles[entityName][animationName] = Tileset(*TilesetAttributes)
+        else:
+            self.tiles[entityName] = {animationName: Tileset(*TilesetAttributes)}

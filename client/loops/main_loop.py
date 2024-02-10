@@ -10,6 +10,7 @@ from pygame.locals import (
 
 from misc.logger import log
 from misc.settings import FPS
+from misc.animator import CachedTiles
 from scenes.generic_scene import GenericScene
 from scenes.home import HomeScreen
 from scenes.editor import LevelEditor
@@ -32,6 +33,9 @@ class MainLoop():
         self.current_scene: GenericScene = PlayScene(screen, self, "anybody-can-find-love")
         # self.current_scene: GenericScene = LevelEditor(screen, self, "anybody-can-find-love")
         self.dt = 0
+
+        # Cached Tiles
+        self.cachedTiles: CachedTiles = CachedTiles()
 
     def change_scene(self, scene: GenericScene, *args):
         log(f"Changing scenes to: {scene}", type="debug")

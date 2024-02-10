@@ -54,8 +54,8 @@ class EnemyHandler:
         toRemove = []
         for enemy in self.enemies:
             if enemy.currentHealth <= 0 and enemy not in self.enemies_dying:
-                toRemove.append(enemy)
                 self.enemies_dying.append(enemy)
+                toRemove.append(enemy)
             enemy.tick()
         for enemy in toRemove:
             enemy.kill(lambda: self.deleteEnemy(enemy))
