@@ -4,6 +4,7 @@ from typing import List
 from objects.enemy import GenericEnemy
 from objects.necromancer import Necromancer
 from objects.bringer_of_death import BringerOfDeath
+from objects.skeleton import Skeleton
 from objects.zone import Zone
 
 class EnemyHandler:
@@ -19,11 +20,13 @@ class EnemyHandler:
         self.setZone(initialZone)
         self.pathfindingTargets = {
             "necromancer": core,
-            "bod": core
+            "bod": core,
+            "skeleton": core
         }
         self.ENEMY_LIST = {
             "necromancer": Necromancer,
-            "bod": BringerOfDeath
+            "bod": BringerOfDeath,
+            "skeleton": Skeleton
         }
         self.nextSpawn = 0
 
