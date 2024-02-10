@@ -101,6 +101,9 @@ class Level:
     def getSongPath(self) -> str:
         return self.songPath
     
+    def getSpawnRate(self) -> float:
+        return self.spawnRate
+    
 
         
 if __name__ == "__main__":
