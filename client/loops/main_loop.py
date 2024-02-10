@@ -87,7 +87,7 @@ class MainLoop():
                 self.current_scene.tick()
 
             # Tick clock at 120fps
-            self.clock.tick(120)
+            self.clock.tick(60)
 
         # Game is over
         pygame.quit()
