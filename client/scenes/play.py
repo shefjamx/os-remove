@@ -9,7 +9,7 @@ class PlayScene(GenericScene):
         super().__init__(screen, main_loop)
         self.background_image = pygame.image.load("assets/images/level_draft.png")
         self.player = Player(main_loop)
-        self.enemies = [Worm(100, 100) for x in range(10)]
+        self.enemies = [Worm(500, 500) for x in range(10)]
 
     def tick(self):
         for e in self.enemies:
@@ -19,5 +19,9 @@ class PlayScene(GenericScene):
         rect.x -= self.player.x
         rect.y -= self.player.y
         self.display.blit(self.background_image, rect)
+        for e in self.enemies:
+            e.resolveMove(self.player.x, self.player.y)
+            e.draw(self.display)
+
 
         return super().tick(self.player)
