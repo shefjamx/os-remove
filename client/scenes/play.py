@@ -40,7 +40,7 @@ class PlayScene(GenericScene):
         # Background
         self.display.blit(self.background_image, (-self.player.x, -self.player.y))
         self.enemyHandler.draw(self.display, self.player.x, self.player.y)
-        self.core.draw(self.display, self.player)
+        self.core.draw(self.display, (self.player.x, self.player.y))
         self.core.tick()
         self.player.tick()
         return super().tick(self.player, self.pulse)
