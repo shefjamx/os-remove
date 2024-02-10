@@ -28,7 +28,10 @@ class GenericEnemy:
 
     def draw(self, surface, playerPos) -> None:
         # draw da enemy
-        raise NotImplementedError("Please draw ur monster silly billy")
+        movedBox = self.getBoundingBox()
+        movedBox.x -= playerPos[0]
+        movedBox.y -= playerPos[1]
+        pygame.draw.rect(surface, "#FF0000", movedBox, 1)
 
     def takeDamage(self, damageNum: float) -> bool:
         """
@@ -39,6 +42,12 @@ class GenericEnemy:
             self.kill()
             return False
         return True
+    
+    def getBoundingBox(self) -> pygame.Rect:
+        rect = self.sprite.get_rect()
+        rect.x = self.pos[0]
+        rect.y = self.pos[1]
+        return rect
 
     def attack(self, entity) -> None:
         entity.dealDamage(self.damage)
