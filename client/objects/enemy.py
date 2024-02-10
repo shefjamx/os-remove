@@ -17,16 +17,12 @@ class GenericEnemy:
             print("Loaded sprite")
             GenericEnemy.sprite_map[sprite] = pygame.image.load(sprite)
         return GenericEnemy.sprite_map[sprite]
-        
-
-    def resolveMove(self, playerX, playerY) -> None:
-        self.player_pos = (playerX, playerY)
 
     def update(self) -> None:
         # run ai :D
         raise NotImplementedError("Please add ai to ur monster goofy goober")
 
-    def draw(self, surface) -> None:
+    def draw(self, surface, cameraPos) -> None:
         # draw da enemy
         raise NotImplementedError("Please draw ur monster silly billy")
     
