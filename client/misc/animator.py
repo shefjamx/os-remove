@@ -2,7 +2,7 @@ import pygame
 from misc.logger import log
 
 class Tileset:
-    def __init__(self, mainLoop, file, size=(64, 64), start=0, stop=0, upscale=1, callback=None, reverse=False) -> None:
+    def __init__(self, mainLoop, file, size=(64, 64), start=0, stop=0, upscale=1, callback=None, reverse=False, max_repeat=0) -> None:
         """
         Init a tile set
             file: file path relative to client (actual images must be on 1 line)
@@ -20,6 +20,8 @@ class Tileset:
         self.callback = callback
         self.reverse = reverse
         self.current_tile_index = start
+        self.max_repeat = max_repeat
+        self.repeats = 0
 
         if mainLoop.cachedImages.getImage(file) is None:
             self.image = pygame.image.load(file)
@@ -57,6 +59,11 @@ class Tileset:
             if self.callback:
                 self.callback()
             self.current_tile_index = self.start
+            self.repeats += 1
+        
+        if self.repeats >= self.max_repeat and self.max_repeat > 0:
+            log("Hit max repeats", "warning")
+            self.callback()
         
         return tile
     
