@@ -3,7 +3,9 @@ from tkinter import filedialog, Tk
 
 from pygame.locals import (
     K_SPACE,
-    K_o
+    K_o,
+    K_s,
+    K_n
 )
 from scenes.generic_scene import GenericScene
 from objects.level import Level, HitTiming
@@ -98,6 +100,7 @@ class LevelEditor(GenericScene):
     def __init__(self, screen, mainloop, directory: str = "") -> None:
         super().__init__(screen, mainloop)
         self.main_loop.add_key_binding(K_o, self.openDialog)
+        self.main_loop.add_key_binding(K_s, self.save)
         if directory:
             self.open(directory)
 
@@ -116,6 +119,16 @@ class LevelEditor(GenericScene):
         self.timeline = Timeline(self.level)
         self.main_loop.add_key_callback(K_SPACE, self.timeline.resume, False)
 
+
+    def save(self) -> None:
+        self.level.saveToPath()
+
+
+    def newMap(self) -> None:
+        # get name of map
+        # create level object
+        # copy audio file and set path
+        pass
 
 
     def handle_click(self, pos) -> None:
