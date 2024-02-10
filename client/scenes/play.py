@@ -41,7 +41,7 @@ class PlayScene(GenericScene):
         # Background
         self.display.blit(self.background_image, (-self.player.x, -self.player.y))
         for e in self.enemies:
-            e.draw(self.display)
+            e.draw(self.display, (self.player.x, self.player.y))
         self.core.draw(self.display, self.player)
         self.core.tick()
         self.player.tick()
