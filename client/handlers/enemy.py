@@ -72,14 +72,15 @@ class EnemyHandler:
         """
         enemies_hit = []
         for enemy in self.enemies:
-            enemy_pos = (enemy.pos[0] - player_pos[0], enemy.pos[1] - player_pos[1])
-            enemy_rect = pygame.Rect(enemy_pos[0], enemy_pos[1], 10, 10)
-            pygame.draw.rect(self.mainLoop.current_scene.screen, (255, 0, 0), enemy_rect)
-            pygame.display.flip()
-            if test_rect.colliderect(enemy_rect):
+            bounding_box = enemy.getBoundingBox()
+            # enemy_pos = (bounding_box.x - player_pos[0], bounding_box.y - player_pos[1])
+            # enemy_rect = pygame.Rect(enemy_pos[0], enemy_pos[1], bounding_box.w, bounding_box.h)
+            # pygame.draw.rect(self.mainLoop.current_scene.screen, (255, 0, 0), enemy_rect)
+            # pygame.display.flip()
+            if test_rect.colliderect(bounding_box):
                 enemies_hit.append(enemy)
             
-            print(f"{test_rect.left} <= {enemy_pos[0]} <= {test_rect.right}  //  {test_rect.top} <= {enemy_pos[1]} <= {test_rect.bottom}")
+            # print(f"{test_rect.left} <= {enemy_pos[0]} <= {test_rect.right}  //  {test_rect.top} <= {enemy_pos[1]} <= {test_rect.bottom}")
             # if test_rect.left <= enemy_pos[0] <= test_rect.right and test_rect.top <= enemy_pos[1] <= test_rect.bottom:
             #     enemies_hit.append(enemy)
         return enemies_hit
