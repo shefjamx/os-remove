@@ -82,7 +82,7 @@ class Level:
         Returns: 
             list of hit timings that fall within the desired range
         """
-        return filter(lambda x: currentTime <= x.getTiming() < currentTime + numTime, self.timingPoints)
+        return list(filter(lambda x: currentTime <= x.getTiming() < currentTime + numTime, self.timingPoints))
     
     def addHitTiming(self, float) -> None:
         self.timingPoints.append(HitTiming(float))
