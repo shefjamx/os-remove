@@ -1,5 +1,6 @@
 import pygame
 from misc.animator import Tileset
+from objects.worm import Worm
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, main_loop, scene) -> None:
@@ -30,6 +31,7 @@ class Player(pygame.sprite.Sprite):
         # Attacking
         self.time_since_last_attack = 0
         self.min_attack_time = 0.2
+        self.attack_amount = 100
 
         # Movement callbacks
         self.speed = 400
@@ -103,6 +105,9 @@ class Player(pygame.sprite.Sprite):
             # Attempt to attack the enemies
             attack_rect = pygame.rect.Rect(self.x + 640 - (self.player_rect.w / 2), self.y + 360 - (self.player_rect.h / 2), self.player_rect.w, self.player_rect.h)
             enemies_hit = self.scene.enemyHandler.detect_hit(attack_rect)
+            for enemy in enemies_hit:
+                if isinstance(enemy, Worm):
+                    enemy.takeDamage(self.attack_amount)
 
 
     def tick(self):

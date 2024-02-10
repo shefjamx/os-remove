@@ -35,6 +35,10 @@ class GenericEnemy:
         Returns true if the monster is still alive
         """
         self.currentHealth -= damageNum
+        if self.currentHealth <= 0:
+            self.kill()
+            return False
+        return True
 
     def attack(self, entity) -> None:
         entity.dealDamage(self.damage)
