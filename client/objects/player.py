@@ -24,8 +24,8 @@ class Player(pygame.sprite.Sprite):
         # Player
         self.surf = self.tilesets[self.tileset].increment()
         self.player_rect = self.surf.get_rect()
-        self.x = 0
-        self.y = 0
+        self.x = 500
+        self.y = 600
         self.size = (80, 80)
 
         # Attacking
