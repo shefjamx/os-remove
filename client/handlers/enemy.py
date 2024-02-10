@@ -22,6 +22,7 @@ class EnemyHandler:
             "necromancer": Necromancer
         }
         self.nextSpawn = 0
+        self.first = False
 
     def updateSpawnRate(self, mult: float) -> None:
         self.initialSpawnRate*=mult
@@ -44,7 +45,8 @@ class EnemyHandler:
         self.currentZone = zone
 
     def tick(self, currentSongTime: float) -> None:
-        if currentSongTime >= self.nextSpawn:
+        if currentSongTime >= self.nextSpawn and not self.first:
+            # self.first = True
             chosenSpawnPoints = [random.choice(self.enemySpawnPoints) for i in range(self.NUM_SPAWNS)]
             for sp in chosenSpawnPoints:
                 self.spawnRandomEnemy(sp[0] + random.randint(0, 30) - 15, sp[1] + random.randint(0, 30) - 15)
@@ -71,11 +73,13 @@ class EnemyHandler:
         enemies_hit = []
         for enemy in self.enemies:
             enemy_pos = (enemy.pos[0] - player_pos[0], enemy.pos[1] - player_pos[1])
-            enemy_rect = pygame.Rect(enemy_pos[0], enemy_pos[1], enemy.sprite.get_width() / 4, enemy.sprite.get_height() / 4)
+            enemy_rect = pygame.Rect(enemy_pos[0], enemy_pos[1], 10, 10)
+            pygame.draw.rect(self.mainLoop.current_scene.screen, (255, 0, 0), enemy_rect)
+            pygame.display.flip()
             if test_rect.colliderect(enemy_rect):
                 enemies_hit.append(enemy)
             
-            # print(f"{test_rect.left} <= {enemy_pos[0]} <= {test_rect.right}  //  {test_rect.top} <= {enemy_pos[1]} <= {test_rect.bottom}")
+            print(f"{test_rect.left} <= {enemy_pos[0]} <= {test_rect.right}  //  {test_rect.top} <= {enemy_pos[1]} <= {test_rect.bottom}")
             # if test_rect.left <= enemy_pos[0] <= test_rect.right and test_rect.top <= enemy_pos[1] <= test_rect.bottom:
             #     enemies_hit.append(enemy)
         return enemies_hit
