@@ -2,7 +2,6 @@ import pygame
 import random
 from typing import List
 from objects.enemy import GenericEnemy
-from objects.worm import Worm
 from objects.necromancer import Necromancer
 from objects.zone import Zone
 
@@ -17,11 +16,9 @@ class EnemyHandler:
         self.mainLoop = mainLoop
         self.setZone(initialZone)
         self.pathfindingTargets = {
-            "worm": core,
             "necromancer": core
         }
         self.ENEMY_LIST = {
-            "worm": Worm,
             "necromancer": Necromancer
         }
         self.nextSpawn = 0

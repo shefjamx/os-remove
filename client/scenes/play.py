@@ -4,7 +4,6 @@ from objects.player import Player
 from objects.level import Level
 import random
 
-from objects.worm import Worm
 from objects.core import Core
 
 from handlers.enemy import EnemyHandler

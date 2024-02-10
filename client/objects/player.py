@@ -1,6 +1,5 @@
 import pygame
 from misc.animator import Tileset
-from objects.worm import Worm
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, main_loop, scene) -> None:
