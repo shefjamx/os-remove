@@ -19,7 +19,7 @@ class PlayScene(GenericScene):
         self.musicChannel.load(self.level.getSongPath())
         self.background_image = pygame.image.load("assets/images/level_draft.png")
         self.player = Player(main_loop)
-        self.core = Core(10e3)
+        self.core = Core(10e3, self.main_loop)
         self.enemies = []
         self.musicChannel.play()
         self.STANDARD_SPAWN_TIMER = 1e3 # in ms
@@ -37,16 +37,14 @@ class PlayScene(GenericScene):
         self.pulse = PulseEffect(5, 0, 10, 10, 50)
 
     def tick(self):
-        #self.checkSpawnEnemy()
-        #self.cameraPos = (self.player.center_x)
+
         for e in self.enemies:
             e.update()
         # Background
         self.display.blit(self.background_image, (-self.player.x, -self.player.y))
         for e in self.enemies:
-            e.resolveMove(self.player.x, self.player.y)
             e.draw(self.display)
-        self.core.draw(self.display, (self.background_image.get_width(), self.background_image.get_height()), self.player)
-
+        self.core.draw(self.display, self.player)
+        self.core.tick()
         self.player.tick()
         return super().tick(self.player, self.pulse)
