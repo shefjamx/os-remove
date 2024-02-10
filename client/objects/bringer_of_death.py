@@ -19,6 +19,7 @@ class BringerOfDeath(GenericEnemy):
             "attack": 12
         }
         self.tileset = "run"
+        self.speed = 0.9
 
         self.sprite = self.tilesets[self.tileset].increment()
         self.desireableEntity = desireableEntity
@@ -33,7 +34,7 @@ class BringerOfDeath(GenericEnemy):
         directionVector = (centerPos[0] - self.targetPoint[0], centerPos[1] - self.targetPoint[1])
         distToEntity = (directionVector[0] ** 2 + directionVector[1] ** 2) ** 0.5
 
-        if distToEntity > 15:
+        if distToEntity > 8:
             self.pos[0] -= (directionVector[0] / distToEntity) * 100 * self.mainLoop.dt * self.speed
             self.pos[1] -= (directionVector[1] / distToEntity) * 100 * self.mainLoop.dt * self.speed
         else:
