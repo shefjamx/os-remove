@@ -32,6 +32,11 @@ class GenericEnemy:
         movedBox.x -= playerPos[0]
         movedBox.y -= playerPos[1]
         pygame.draw.rect(surface, "#FF0000", movedBox, 1)
+    
+    def getRelativeBoundingBox(self) -> pygame.Rect:
+        bb = self.getBoundingBox()
+        spriteRect = self.sprite.get_rect()
+        return pygame.Rect(bb.x - spriteRect.x, bb.y - spriteRect.y, bb.width, bb.height)                
 
     def takeDamage(self, damageNum: float) -> bool:
         """
