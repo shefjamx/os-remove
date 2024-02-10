@@ -1,4 +1,5 @@
 from objects.enemy import GenericEnemy
+from misc.logger import log
 import random
 import pygame
 
@@ -12,4 +13,4 @@ class Worm(GenericEnemy):
         self.pos[1] += (random.randint(0, 20) - 10)
 
     def draw(self, surface: pygame.Surface) -> None:
-        surface.blit(self.sprite, self.pos)
+        surface.blit(self.sprite, (self.pos[0] - self.player_pos[0], self.pos[1] - self.player_pos[1]))
