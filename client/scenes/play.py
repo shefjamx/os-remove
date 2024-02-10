@@ -26,6 +26,8 @@ class PlayScene(GenericScene):
         self.performanceSpawnMultiplier = 1.0
         self.nextEnemySpawn = 0
 
+        self.pulse = PulseEffect(10, 0, 10, 10, 200)
+
     def checkSpawnEnemy(self):
         currentPos_ms = self.musicChannel.get_pos()
         if currentPos_ms >= self.nextEnemySpawn:
