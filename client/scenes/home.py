@@ -13,16 +13,16 @@ class HomeScreen(GenericScene):
         super().__init__(screen, main_loop)
         self.font = pygame.font.Font("assets/fonts/Abaddon Bold.ttf", 96)
         self.label_font = pygame.font.Font("assets/fonts/Abaddon Bold.ttf", 48)
-        self.background_image = pygame.image.load("assets/images/home_background.png")
+        self.background_image = pygame.image.load("assets/images/home_background.png").convert()
 
         # Create tween
         self.y_tween = Tween(
-            begin=140, 
+            begin=140,
             end=160,
             duration=2000,
             easing=Easing.SINE,
             easing_mode=EasingMode.IN_OUT,
-            boomerang=True, 
+            boomerang=True,
             loop=True
         )
         self.y_tween.start()
@@ -36,8 +36,8 @@ class HomeScreen(GenericScene):
 
     def create_button_dict(self):
         """Create buttons and add them to the dictionary to be later used"""
-        self.create_button(490, 320, 300, 60, "PLAY", 580, 330, lambda: self.main_loop.change_scene(PlayScene, "anybody-can-find-love")) 
-        self.create_button(490, 420, 300, 60, "LEAVE", 575, 430, sys.exit) 
+        self.create_button(490, 320, 300, 60, "PLAY", 580, 330, lambda: self.main_loop.change_scene(PlayScene, "anybody-can-find-love"))
+        self.create_button(490, 420, 300, 60, "LEAVE", 575, 430, sys.exit)
 
     def create_button(self, x, y, w, h, text, tx, ty, callback):
         """
@@ -76,4 +76,3 @@ class HomeScreen(GenericScene):
         self.render_buttons()
 
         return super().tick()
-    
