@@ -1,9 +1,9 @@
 import pygame
-from logic.level import Level
 from misc.logger import log
 from scenes.generic_scene import GenericScene
 import time
 import enum
+import math
 
 
 class LevelScene(GenericScene):
@@ -14,10 +14,11 @@ class LevelScene(GenericScene):
         FINISHED = 2
 
     def __init__(self, screen, main_loop, pathToLevel: str):
-        self.GRACE_PERIOD = 5 #countdown before the song plays in seconds
         super().__init__(screen, main_loop)
-        self.musicChannel = pygame.mixer.music
+        self.GRACE_PERIOD = 5 #countdown before the song plays in seconds
+        self.APPROACH_RATE = 0.75
         self.level = Level(pathToLevel)
+        self.musicChannel = pygame.mixer.music
         self.musicChannel.load(self.level.getSongPath())
 
         self.status = self.Status.COUNTDOWN
@@ -26,10 +27,10 @@ class LevelScene(GenericScene):
         self.graphics_attributes = {}
 
     def render(self):
-        self.display.fill((0, 0, 0))
+        self.display.fill((0, 0, 0)) # TODO: replace with background image as appropriate
         if self.status == self.Status.COUNTDOWN:
-            # Draw the countdown to the screen
-            timeTillStart = "{:.2f}".format(self.GRACE_PERIOD - (time.perf_counter() - self.countdownStart))
+            # Draw the countdown to the screen TODO: Replace with nicer code :D
+            timeTillStart = f"{math.ceil(self.GRACE_PERIOD - (time.perf_counter() - self.countdownStart))}"
             _time = self.font.render(f"{timeTillStart}", False, "#FFFFFF")
             if "time-width" not in self.graphics_attributes:
                 self.graphics_attributes["time-width"] = _time.get_width() + 10
@@ -38,8 +39,19 @@ class LevelScene(GenericScene):
             self.display.blit(_text, (self.graphics_attributes["time-width"], 0))
 
     def startLevel(self):
+        """
+        Begins playing the level
+        """
         self.status = self.Status.PLAYING
         self.musicChannel.play()
+    
+
+    def drawHitTimings(self) -> None:
+        timingPoint = self.musicChannel.get_pos() / 1e3 # current timing point in seconds
+        relevantTimingPoints = self.level.getNextHitTimings(timingPoint, self.APPROACH_RATE) # points that need to be rendered
+        for tp in relevantTimingPoints:
+            ratio = (tp.getTiming() - timingPoint) / self.APPROACH_RATE # how close are we to the perfect hit
+            # TODO: rendering logic for actual hit timing circles here :D
     
     def doGameLogic(self):
         if self.status == self.Status.COUNTDOWN:
@@ -47,13 +59,14 @@ class LevelScene(GenericScene):
             if timeTillStart <= 0:
                 self.startLevel()
         elif self.status == self.Status.PLAYING:
-            currentSongTime = self.musicChannel.get_pos()
+            currentSongTime = self.musicChannel.get_pos() / 1e3 # pos in seconds
             # spawn any new enemies
             # update enemy positions
             # calculate enemy attacks
             # check if center is still alive after attacks
             # update player position
-            # check player attack based on currentSongTime    
+            # check player attack based on currentSongTime
+            # draw hit timings
     
     def tick(self):
         self.doGameLogic()

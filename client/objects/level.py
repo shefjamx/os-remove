@@ -1,4 +1,6 @@
+from __future__ import annotations
 import os
+from misc.logger import log
 
 class HitTiming:
 
@@ -26,21 +28,24 @@ class Level:
     """
     Encapsulates the level object and the reading / writing to file
     """
-    def __init__(self, levelDir: str):
-        self.__levelPath = f"levels\\{levelDir}\\level.dat"
+    def __init__(self, level_string: str):
+        self.__levelPath = f"levels\\{level_string}\\level.dat"
         self.songPath = ""
         self.timingPoints = []
+        self.spawnRate = 0.0
         self.zones = []
         # To add an attribute to the file schema, 
         self.__FILE_SCHEMA = {
-            "audio-path": ("songPath", lambda x: x),
-            "timing-points": ("timingPoints", lambda x: [HitTiming(float(i)) for i in x.strip('][').split(', ')])
+            "audio-path": ("songPath", str),
+            "timing-points": ("timingPoints", lambda x: [HitTiming(float(i)) for i in x.strip('][').split(', ')]),
+            "spawn-rate": ("spawnRate", float)
         }
         self.__loadFromPath(self.__levelPath)
         
     
     def __loadFromPath(self, path: str) -> None:
         if not os.path.isfile(path):
+            log(f"File {path} not found!", "ERROR")
             raise FileNotFoundError("No Level Exists!")
         with open(path, "r") as f:
             attributes = f.read().split("\n")
@@ -49,6 +54,11 @@ class Level:
                 if name in self.__FILE_SCHEMA:
                     setattr(self, self.__FILE_SCHEMA[name][0], self.__FILE_SCHEMA[name][1](value))
             print(self.songPath)
+    
+
+    @staticmethod
+    def allLevels(self) -> list[Level]:
+        return os.walk("levels")
     
 
     def saveToPath(self, path: str = "") -> None:
