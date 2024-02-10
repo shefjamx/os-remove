@@ -1,5 +1,7 @@
 import pygame
+import os
 from tkinter import filedialog, Tk
+import shutil
 
 from pygame.locals import (
     K_SPACE,
@@ -101,6 +103,7 @@ class LevelEditor(GenericScene):
         super().__init__(screen, mainloop)
         self.main_loop.add_key_binding(K_o, self.openDialog)
         self.main_loop.add_key_binding(K_s, self.save)
+        self.main_loop.add_key_binding(K_n, self.newMap)
         if directory:
             self.open(directory)
 
@@ -126,8 +129,20 @@ class LevelEditor(GenericScene):
 
     def newMap(self) -> None:
         # get name of map
-        # create level object
+        name = "test-new-map"
+        _dir = f"levels/{name}"
         # copy audio file and set path
+        top = Tk()
+        top.withdraw()  # hide window
+        file_name = filedialog.askopenfile(filetypes=[("Audio Files", ".mp3 .ogg .wav")], parent=top).name
+        print(file_name)
+        top.destroy()
+        newAudio = f"{_dir}\\{file_name.split('/')[-1]}"
+        shutil.copy(file_name, _dir)
+        # create level object
+        self.level = Level.newLevel(_dir, newAudio)
+        self.timeline = Timeline(self.level)
+        self.main_loop.add_key_callback(K_SPACE, self.timeline.resume, False)
         pass
 
 

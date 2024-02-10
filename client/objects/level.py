@@ -1,6 +1,7 @@
 from __future__ import annotations
 import os
 from misc.logger import log
+import pathlib
 
 class HitTiming:
 
@@ -59,6 +60,16 @@ class Level:
     @staticmethod
     def allLevels(self) -> list[Level]:
         return os.walk("levels")
+
+    @staticmethod
+    def newLevel(directory: str, audioFile: str) -> Level:
+        print(f"{directory}")
+        pathlib.Path.mkdir(directory)
+        with open(f"{directory}\\level.dat", "w+") as f:
+            f.writeline(f"audio-path=audio.{audioFile}")
+            f.writeline(f"timing-points=[]")
+            f.writeline(f"spawn-rate=1.0")
+        return Level(directory.split(",")[-1])
 
     def saveToPath(self, path: str = "") -> None:
         """
