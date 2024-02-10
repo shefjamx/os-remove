@@ -1,3 +1,3 @@
 audio-path=levels\\anybody-can-find-love\\anybody-can-find-love.mp3
 timing-points=[1000.0, 2000.0, 3000.0, 3500.0, 4000.0]
-zones=[(0 10000 1.0 worm worm), (10000 -1 1.5 worm worm)]
+zones=[(worms 0 10000 1.0 worm worm), (more-worms 10000 -1 1.5 worm worm)]

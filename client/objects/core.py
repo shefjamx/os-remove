@@ -19,6 +19,9 @@ class Core:
         self.sprite = self.tilesets[self.tileset].increment()
         self.time_since_last_tile = 0
 
+    def dealDamage(self, damage: float) -> None:
+        self.currentHealth -= damage
+
     def getX(self) -> float:
         return 2560 / 2 - self.sprite.get_width() / 2
 
@@ -30,6 +33,9 @@ class Core:
 
     def getHeight(self) -> int:
         return self.sprite.get_height()
+
+    def getRect(self) -> pygame.Rect:
+        return pygame.Rect(self.getX(), self.getY(), self.getWidth(), self.getHeight())
 
     def doDamage(self, damage: int) -> None:
         self.health -= damage
@@ -49,7 +55,6 @@ class Core:
 
     def tick(self):
         """Tick the player class, used to animate the player"""
-        self.currentHealth -= 10
         self.time_since_last_tile += self.main_loop.dt
         if self.time_since_last_tile >= 1 / self.tile_fps[self.tileset]:
             self.time_since_last_tile = 0

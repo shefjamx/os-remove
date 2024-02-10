@@ -25,8 +25,14 @@ class Zone:
         """
         self.spawnRate = spawnRate
 
+    def getTimings(self) -> (float, float):
+        return self.startTime, self.endTime
+
     def getSpawnRate(self) -> float:
         return self.spawnRate
+
+    def setName(self, name) -> None:
+        self.name = name
 
     def getAllowedEnemies(self) -> list[str]:
         return self.allowedEnemies
@@ -40,16 +46,17 @@ class Zone:
         """
         rZone = Zone()
         data = dat.strip(')(').split(" ")
-        rZone.setTimingPoints(float(data[0]), float(data[1]))
-        rZone.setSpawnRate(float(data[2]))
-        rZone.allowedEnemies = [enemy for enemy in data[3::]]
+        rZone.setName(data[0].replace('-', ' '))
+        rZone.setTimingPoints(float(data[1]), float(data[2]))
+        rZone.setSpawnRate(float(data[3]))
+        rZone.allowedEnemies = [enemy for enemy in data[4::]]
         return rZone
 
     def __repr__(self) -> str:
         return str(self)
 
     def __str__(self) -> str:
-        rStr = f"({self.startTime} {self.endTime} {self.spawnRate}"
+        rStr = f"({self.name.replace(' ', '-')} {self.startTime} {self.endTime} {self.spawnRate}"
         for enemy in self.allowedEnemies:
             rStr += f" {enemy}"
         return rStr + ")"

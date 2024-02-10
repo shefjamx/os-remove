@@ -29,7 +29,7 @@ class MainLoop():
         self.clock = pygame.time.Clock()
         #self.current_scene: GenericScene = HomeScreen(screen, self)
         self.current_scene: GenericScene = PlayScene(screen, self, "anybody-can-find-love")
-        #self.current_scene: GenericScene = LevelEditor(screen, self, "space-invaders")
+        #self.current_scene: GenericScene = LevelEditor(screen, self, "anybody-can-find-love")
         self.dt = 0
 
     def change_scene(self, scene: GenericScene, *args):

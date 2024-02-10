@@ -37,3 +37,7 @@ class GenericEnemy:
         """
         self.health -= damageNum
         return self.health > 0
+
+    def attack(self, entity) -> None:
+        entity.dealDamage(self.damage)
+        #TODO: play anims

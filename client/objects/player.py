@@ -46,6 +46,9 @@ class Player(pygame.sprite.Sprite):
         self.tileset = tileset
         self.speed = 400
 
+    def getRect(self) -> pygame.Rect:
+        return self.surf.get_rect()
+
     def getX(self) -> float:
         return self.x
 

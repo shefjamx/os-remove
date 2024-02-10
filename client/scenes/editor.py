@@ -61,6 +61,12 @@ class Timeline:
 
     def draw(self, surface: pygame.Surface, scale) -> None:
         width, height = 1000, 10
+        for zone in self.level.zones:
+            start, end = zone.getTimings()
+            if int(end) == -1.0:
+                end = self.duration
+            start, end = start/self.duration, end/self.duration
+            pygame.draw.rect(surface, "#FFA000", (140 + start, 450, 140 + end, 100))
         pygame.draw.rect(surface, "#FFFFFF", (140, 500, width, height))
         pygame.draw.rect(surface, "#FFFFFF", (140, 450, 2, 100))
         pygame.draw.rect(surface, "#FFFFFF", (1140, 450, 2, 100))
@@ -68,6 +74,7 @@ class Timeline:
         for point in self.level.getHitTimings():
             ratio = point.getTiming() / self.duration
             pygame.draw.rect(surface, "#FF0000", (140 + 1000*ratio, 475, 1, 50))
+
 
         ratio = self.currentTime / self.duration
         pygame.draw.rect(surface, "#00FF00", (140 + 1000*ratio, 475, 2, 50))
