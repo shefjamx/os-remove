@@ -1,3 +1,4 @@
+from __future__ import annotations
 import os
 
 class HitTiming:
@@ -49,6 +50,11 @@ class Level:
                 if name in self.__FILE_SCHEMA:
                     setattr(self, self.__FILE_SCHEMA[name][0], self.__FILE_SCHEMA[name][1](value))
             print(self.songPath)
+    
+
+    @staticmethod
+    def allLevels(self) -> list[Level]:
+        return os.walk("levels")
     
 
     def saveToPath(self, path: str = "") -> None:
