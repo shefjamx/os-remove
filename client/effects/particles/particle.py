@@ -41,9 +41,17 @@ class Particle(pygame.sprite.Sprite):
                 self.pos[1] = 0
 
     def create_surface(self):
-        self.image = pygame.Surface((4 * self.size_multiplier, 4 * self.size_multiplier)).convert_alpha()
+        self.image = pygame.Surface((4 * self.size_multiplier, 20 * self.size_multiplier)).convert_alpha()
         self.image.set_colorkey("black") # makes black pixels transparent
         self.rect_obj = pygame.Rect(self.size_multiplier, self.size_multiplier, 2 * self.size_multiplier, 2*self.size_multiplier)
+        # draw a trail
+        
+        for i in range (1,5):
+            surf = pygame.Surface((4,4))
+            pygame.draw.rect(surf, self.color, self.rect_obj)
+            surf.set_alpha(self.alpha / i)
+            self.image.blit(surf, [0, 4*(5-i)])
+            
         pygame.draw.rect(self.image, self.color, self.rect_obj)
         self.image.set_alpha(self.alpha)
         self.rect = self.image.get_rect(center=self.pos)

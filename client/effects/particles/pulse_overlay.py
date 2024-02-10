@@ -42,7 +42,7 @@ class PulseEffect():
                     fade_speed=self.fade_speed, 
                     size_multiplier=1, 
                     should_die=True,
-                    max_life=self.max_life
+                    max_life=20000
                     )
             
             self.pulse()
