@@ -4,14 +4,16 @@ import sys
 from pygame.locals import (
     KEYDOWN,
     KEYUP,
-    QUIT
+    QUIT,
+    K_LCTRL
 )
 
 from misc.logger import log
 from misc.settings import FPS
 from scenes.generic_scene import GenericScene
 from scenes.home import HomeScreen
-# from scenes.level import LevelScene
+from scenes.editor import LevelEditor
+from scenes.play import PlayScene
 
 
 class MainLoop():
@@ -20,12 +22,14 @@ class MainLoop():
     def __init__(self, screen) -> None:
         self.running = False
         self.keyMap: dict = {}
+        self.keyBindingMap: dict = {}
         self.pressedKeys = []
         self.monitoredKeys = {}
         self.screen = screen
         self.clock = pygame.time.Clock()
-        self.current_scene: GenericScene = HomeScreen(screen, self)
-        # self.current_scene: GenericScene = LevelScene(screen, self, "ascension-to-heaven")
+        #self.current_scene: GenericScene = HomeScreen(screen, self)
+        self.current_scene: GenericScene = PlayScene(screen, self, "anybody-can-find-love")
+        #self.current_scene: GenericScene = LevelEditor(screen, self, "anybody-can-find-love")
         self.dt = 0
 
     def change_scene(self, scene: GenericScene, *args):
@@ -33,6 +37,10 @@ class MainLoop():
         print(args)
         self.current_scene = scene(self.screen, self, *args)
         pygame.display.flip()
+
+
+    def add_key_binding(self, key: int, callback) -> None:
+        self.keyBindingMap[key] = callback
 
     def add_key_callback(self, key: int, callback, onHold=True) -> None:
         """
@@ -55,7 +63,7 @@ class MainLoop():
 
     def add_keys_released_callback(self, keys: tuple[int], callback) -> None:
         self.monitoredKeys[keys] = callback
-    
+
 
     def dispatchKeyCallback(self, key: int) -> None:
         if key in self.keyMap:
@@ -97,6 +105,8 @@ class MainLoop():
                     for keyCollection in self.monitoredKeys:
                         if event.key in keyCollection and not any(key in self.pressedKeys for key in keyCollection):
                             self.monitoredKeys[keyCollection]()
+                    if pygame.key.get_mods() & K_LCTRL and event.key in self.keyBindingMap:
+                        self.keyBindingMap[event.key]()
 
 
             # Re-render the screen
