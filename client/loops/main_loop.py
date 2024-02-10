@@ -25,6 +25,7 @@ class MainLoop():
         self.clock = pygame.time.Clock()
         self.current_scene: GenericScene = HomeScreen(screen, self)
         # self.current_scene: GenericScene = LevelScene(screen, self, "ascension-to-heaven")
+        self.dt = 0
 
     def change_scene(self, scene: GenericScene):
         log(f"Changing scenes to: {scene}", type="debug")
@@ -62,6 +63,9 @@ class MainLoop():
         """
         self.running = True
         while self.running:
+            # Tick clock at 60 fps
+            self.dt = self.clock.tick(FPS)
+
             # Event loop
             for key in self.pressedKeys:
                 self.dispatchKeyCallback(key)
@@ -87,9 +91,6 @@ class MainLoop():
             # Re-render the screen
             if self.current_scene is not None:
                 self.current_scene.tick()
-
-            # Tick clock at 60 fps
-            self.clock.tick(FPS)
 
         # Game is over
         pygame.quit()
