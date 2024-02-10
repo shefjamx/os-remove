@@ -1,7 +1,9 @@
 from __future__ import annotations
 import os
-from misc.logger import log
 import pathlib
+
+from misc.logger import log
+from objects.zone import Zone
 
 class HitTiming:
 
@@ -33,13 +35,12 @@ class Level:
         self.__levelPath = f"levels\\{level_string}\\level.dat"
         self.songPath = ""
         self.timingPoints = []
-        self.spawnRate = 0.0
         self.zones = []
         # To add an attribute to the file schema,
         self.__FILE_SCHEMA = {
             "audio-path": ("songPath", str),
             "timing-points": ("timingPoints", lambda x: [HitTiming(float(i)) for i in x.strip('][').split(', ')]),
-            "spawn-rate": ("spawnRate", float)
+            "zones": ("zones", lambda x: [Zone.from_string(dat) for dat in x.strip('][').split(', ')])
         }
         self.__loadFromPath(self.__levelPath)
 
@@ -54,7 +55,7 @@ class Level:
                 name, value = attribute.split("=")
                 if name in self.__FILE_SCHEMA:
                     setattr(self, self.__FILE_SCHEMA[name][0], self.__FILE_SCHEMA[name][1](value))
-            print(self.songPath)
+            print(self.zones)
 
 
     @staticmethod
@@ -111,9 +112,6 @@ class Level:
 
     def getSongPath(self) -> str:
         return self.songPath
-
-    def getSpawnRate(self) -> float:
-        return self.spawnRate
 
 
 

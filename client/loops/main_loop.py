@@ -13,7 +13,7 @@ from misc.settings import FPS
 from scenes.generic_scene import GenericScene
 from scenes.home import HomeScreen
 from scenes.editor import LevelEditor
-# from scenes.level import LevelScene
+from scenes.play import PlayScene
 
 
 class MainLoop():
@@ -28,8 +28,8 @@ class MainLoop():
         self.screen = screen
         self.clock = pygame.time.Clock()
         #self.current_scene: GenericScene = HomeScreen(screen, self)
-        # self.current_scene: GenericScene = LevelScene(screen, self, "ascension-to-heaven")
-        self.current_scene: GenericScene = LevelEditor(screen, self, "space-invaders")
+        self.current_scene: GenericScene = PlayScene(screen, self, "anybody-can-find-love")
+        #self.current_scene: GenericScene = LevelEditor(screen, self, "space-invaders")
         self.dt = 0
 
     def change_scene(self, scene: GenericScene, *args):

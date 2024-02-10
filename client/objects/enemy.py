@@ -5,7 +5,7 @@ from misc.animator import Tileset
 class GenericEnemy:
 
     sprite_map = {}
-    def __init__(self, x: float, y: str, damage: int, health: int, main_loop) -> None:
+    def __init__(self, x: float, y: float, damage: int, health: int, main_loop) -> None:
         self.pos = [x, y]
         self.player_pos = (0, 0)
         self.damage = damage
@@ -23,10 +23,14 @@ class GenericEnemy:
             self.time_since_last_tile = 0
             self.sprite = self.tilesets[self.tileset].increment()
 
+    def kill(self) -> None:
+        # death animation ?
+        self.health = 0
+
     def draw(self, surface, cameraPos) -> None:
         # draw da enemy
         raise NotImplementedError("Please draw ur monster silly billy")
-    
+
     def takeDamage(self, damageNum: float) -> bool:
         """
         Returns true if the monster is still alive
