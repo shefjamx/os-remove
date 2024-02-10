@@ -12,7 +12,7 @@ class Worm(GenericEnemy):
         self.mainLoop = mainLoop
         # self.tilesets["idle"] = Tileset("assets\\images\\wum.jpg", (360, 343), 0, 0, 0.25)
         self.tilesets["idle"] = Tileset("assets/images/necromancer/idle.png", (160, 128), 0, 7, 2)
-        self.tile_fps["idle"] = 24
+        self.tile_fps["idle"] = 12
         self.tileset = "idle"
 
         self.sprite = self.tilesets[self.tileset].increment()

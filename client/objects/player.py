@@ -103,7 +103,7 @@ class Player(pygame.sprite.Sprite):
             self.speed = 200
             
             # Attempt to attack the enemies
-            attack_rect = pygame.rect.Rect(self.x + 640 - (self.player_rect.w / 2) - 25, self.y + 360 - (self.player_rect.h / 2) - 25, self.player_rect.w + 50, self.player_rect.h + 50)
+            attack_rect = pygame.rect.Rect(self.x + 640 - (self.player_rect.w) - 25, self.y + 360 - (self.player_rect.h) - 25, self.player_rect.w + 50, self.player_rect.h + 50)
             enemies_hit = self.scene.enemyHandler.detect_hit(attack_rect)
             if len(enemies_hit) >= 1:
                 if isinstance(enemies_hit[0], Worm):
