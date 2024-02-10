@@ -3,6 +3,7 @@ import sys
 from tweener import Tween, Easing, EasingMode
 
 from scenes.generic_scene import GenericScene
+from objects.menu.input_box import InputBox
 # from scenes.connect import ConnectScene
 from scenes.play import PlayScene
 
@@ -13,7 +14,6 @@ class HomeScreen(GenericScene):
         self.font = pygame.font.Font("assets/fonts/Abaddon Bold.ttf", 96)
         self.label_font = pygame.font.Font("assets/fonts/Abaddon Bold.ttf", 48)
         self.background_image = pygame.image.load("assets/images/home_background.png").convert()
-
         # Create tween
         self.y_tween = Tween(
             begin=140,
