@@ -29,11 +29,11 @@ class Worm(GenericEnemy):
         directionVector = (centerPos[0] - self.targetPoint[0], centerPos[1] - self.targetPoint[1])
         distToEntity = (directionVector[0] ** 2 + directionVector[1] ** 2) ** 0.5
 
-        if distToEntity > 2:
-            self.pos[0] -= (directionVector[0] / distToEntity) * 100 * self.mainLoop.dt
-            self.pos[1] -= (directionVector[1] / distToEntity) * 100 * self.mainLoop.dt
-        else:
-            self.attack(self.desireableEntity)
+        # if distToEntity > 2:
+        #     self.pos[0] -= (directionVector[0] / distToEntity) * 100 * self.mainLoop.dt
+        #     self.pos[1] -= (directionVector[1] / distToEntity) * 100 * self.mainLoop.dt
+        # else:
+        #     self.attack(self.desireableEntity)
         return super().tick()
 
     def attack(self, entity) -> None:

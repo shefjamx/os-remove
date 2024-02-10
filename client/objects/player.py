@@ -43,7 +43,7 @@ class Player(pygame.sprite.Sprite):
         self.main_loop.add_key_callback(pygame.locals.K_a, lambda: self.change_position(-self.speed, 0, "left"))
         self.main_loop.add_key_callback(pygame.locals.K_k, lambda: self.attack(), False)
         self.main_loop.add_key_callback(pygame.locals.K_l, lambda: self.attack(), False)
-        self.main_loop.add_keys_released_callback((pygame.locals.K_a, pygame.locals.K_d, pygame.locals.K_w, pygame.locals.K_s), lambda: self.set_tileset("idle"))
+        self.main_loop.add_keys_released_callback((pygame.locals.K_a, pygame.locals.K_d, pygame.locals.K_w, pygame.locals.K_s), lambda: self.set_tileset("idle") if self.tileset != "attack" else None)
 
     def set_tileset(self, tileset) -> None:
         self.tileset = tileset
@@ -103,7 +103,7 @@ class Player(pygame.sprite.Sprite):
             self.speed = 200
             
             # Attempt to attack the enemies
-            attack_rect = pygame.rect.Rect(self.x + 640 - (self.player_rect.w / 2), self.y + 360 - (self.player_rect.h / 2), self.player_rect.w, self.player_rect.h)
+            attack_rect = pygame.rect.Rect(self.x + 640 - (self.player_rect.w / 2) - 50, self.y + 360 - (self.player_rect.h / 2) - 50, self.player_rect.w + 100, self.player_rect.h + 100)
             enemies_hit = self.scene.enemyHandler.detect_hit(attack_rect)
             for enemy in enemies_hit:
                 if isinstance(enemy, Worm):
