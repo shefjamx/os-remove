@@ -2,6 +2,7 @@ import socket
 import random
 import string
 import json
+import threading
 
 class Server:
     def __init__(self, host, port):
@@ -17,58 +18,56 @@ class Server:
         self.socket.listen()
 
     def run(self):
-        print("Server Starting...")
         while True:
+            print("Server Starting...")
             conn, addr = self.socket.accept()
+            thread = threading.Thread(target=self.listen, args=(conn, addr))
             print(f'Connected to  {addr}')
-            self.conn = conn
-            self.addr = addr
+            thread.start()
             self.init = True
-            self.listen() # listen for pings
 
     
-    def listen(self):
-        while self.conn:
-            data = self.conn.recv(2048)
+    def listen(self, clientsocket, addr):
+        while True:
+            data = clientsocket.recv(2048)
             if not data:
-                self.socket.close()
-                self.remove_party(self.addr[0])
+                clientsocket.close()
+                self.remove_party(addr[0])
                 
-            for party in self.parties:
-                print("Code: " + party.get_code())
-                print("Party Leader: " + party.get_leader())
-                print("Member: " + party.get_player())
-                    
             # decode data
             if data:
+                print(data.decode())
                 json_data = json.loads(data.decode())
                 if json_data['endpoint'] == 'create-party':
-                    self.create_party(self.addr[0])
+                    self.create_party(addr[0], clientsocket)
                 elif json_data['endpoint'] == 'join-party':
-                    self.join_party(json_data['code'], self.addr[0])
+                    print("joined party")
+                    self.join_party(json_data['code'], clientsocket)
             
     def remove_party(self, leader: str):
         for party in self.parties:
             if party.get_leader() == leader:
                 self.parties.remove(party)
 
-    def create_party(self, leader: str):
+    def create_party(self, leader: str, clientsocket):
         # check if leader not in party
         for party in self.parties:
             if party.get_leader() == leader:
                 self.conn.send("Leader already in party".encode())
                 return
             
-        self.parties.append(Party(leader))
-        print("party created: " + self.parties[-1].get_code())
+        self.parties.append(Party(clientsocket))
+        clientsocket.send(f"Party code is: {self.parties[-1].get_code()}".encode())
 
-    def join_party(self, code: str, player: str):
+    def join_party(self, code: str, player):
         for party in self.parties:
             if party.get_code() == code:
                 party.join_party(player)
                 print("Code: " + party.get_code())
                 print("Party Leader: " + party.get_leader())
                 print("Member: " + party.get_player())
+                party.test_send_leader("from client")
+                party.test_send_client("from leader")
                 return
         self.conn.send("Party doesn't exist".encode())
 
@@ -78,6 +77,13 @@ class Party():
         self.code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
         self.player = player
 
+    def test_send_leader(self, data):
+        self.leader.send(f"Hello from {data}".encode())
+        print("Im being sent")
+
+    def test_send_client(self, data):
+        self.player.send(f"Hello from {data}".encode())
+
     def get_player(self):#
         if not self.is_empty():
             return self.player
@@ -85,7 +91,10 @@ class Party():
             return ""
 
     def get_leader(self):
-        return self.leader
+        return str(self.leader.getsockname()[0])
+    
+    def get_player(self):
+        return str(self.player.getsockname()[0])
 
     def get_code(self):
         """
@@ -107,7 +116,7 @@ class Party():
         checks if party is empty, and allows player to join
         """
         if self.is_empty():
-            player = player
+            self.player = player
     
 server = Server('0.0.0.0', 3000)
 server.run()
