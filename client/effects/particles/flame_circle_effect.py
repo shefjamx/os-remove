@@ -30,7 +30,17 @@ class FlameCirle():
             direction = direction.normalize()
             pos = self.initial_pos + (direction * self.radius)
             speed = randint(10 * self.speed_multiplier, 50 * self.speed_multiplier)
-            Particle(groups=self.particle_group, pos=pos, color=choice(self.colours), direction=direction, speed=speed, fade_speed=self.fade_speed)
+            Particle(groups=self.particle_group,
+                    pos=pos,
+                    color=choice(self.colours),
+                    direction=direction, 
+                    speed=speed, 
+                    fade_speed=self.fade_speed, 
+                    size_multiplier=1, 
+                    should_die=True,
+                    max_life= 240
+                    )
+
 
     def tick(self, display: pygame.Surface, dt):
         self.particle_group.update(dt)

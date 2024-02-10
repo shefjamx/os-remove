@@ -2,7 +2,7 @@ import pygame
 from misc.logger import log
 
 class Tileset:
-    def __init__(self, file, size=(64, 64), start=0, stop=0, upscale=1) -> None:
+    def __init__(self, file, size=(64, 64), start=0, stop=0, upscale=1, callback=None) -> None:
         """
         Init a tile set
             file: file path relative to client (actual images must be on 1 line)
@@ -16,6 +16,7 @@ class Tileset:
         self.upscale = (size[0] * upscale, size[1] * upscale)
         self.start = start
         self.stop = stop
+        self.callback = callback
 
         self.image = pygame.image.load(file)
         self.rect = self.image.get_rect()
@@ -43,6 +44,8 @@ class Tileset:
         if self.current_tile_index + 1 <= self.stop:
             self.current_tile_index += 1 
         else:
+            if self.callback:
+                self.callback()
             self.current_tile_index = self.start
         return tile
     

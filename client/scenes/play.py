@@ -9,7 +9,7 @@ from objects.worm import Worm
 from objects.core import Core
 
 from effects.particles.flame_circle_effect import FlameCirle
-
+from effects.particles.pulse_overlay import PulseEffect
 class PlayScene(GenericScene):
     def __init__(self, screen, main_loop, level_string: str) -> None:
         pygame.mixer.init()
@@ -26,11 +26,15 @@ class PlayScene(GenericScene):
         self.performanceSpawnMultiplier = 1.0
         self.nextEnemySpawn = 0
 
+        self.pulse = PulseEffect(10, 0, 10, 10, 200)
+
     def checkSpawnEnemy(self):
         currentPos_ms = self.musicChannel.get_pos()
         if currentPos_ms >= self.nextEnemySpawn:
             self.enemies.append(Worm(self.player.x + (random.randint(0,100) - 50), (self.player.y + random.randint(0, 100)-50)))
             self.nextEnemySpawn = currentPos_ms + self.STANDARD_SPAWN_TIMER
+
+        self.pulse = PulseEffect(5, 0, 10, 10, 50)
 
     def tick(self):
         print(self.screen.get_width())
@@ -44,6 +48,5 @@ class PlayScene(GenericScene):
             e.draw(self.display, cameraPos)
         self.core.draw(self.display, cameraPos)
 
-
         self.player.tick()
-        return super().tick(self.player)
+        return super().tick(self.player, self.pulse)
