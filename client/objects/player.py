@@ -22,7 +22,17 @@ class Player(pygame.sprite.Sprite):
         self.main_loop.add_key_callback(pygame.locals.K_a, lambda: self.change_position(-self.speed, 0))
 
     def change_position(self, x_diff, y_diff):
-        """Increment/Decrement self.x and self.y"""
-        self.x += x_diff
-        self.y += y_diff
+        """
+        Increment/Decrement self.x and self.y
+        Check that the player isn't about to go over a boundary first (kinda magic numbers honestly sorry)
+        """
+        if self.x >= -600 and x_diff < 0:
+            self.x += x_diff
+        elif self.x <= 1880 and x_diff > 0:
+            self.x += x_diff
+
+        if self.y >= -320 and y_diff < 0:
+            self.y += y_diff
+        elif self.y <= 1040 and y_diff > 0:
+            self.y += y_diff
     
