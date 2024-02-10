@@ -3,6 +3,7 @@ import random
 from typing import List
 from objects.enemy import GenericEnemy
 from objects.necromancer import Necromancer
+from objects.bringer_of_death import BringerOfDeath
 from objects.zone import Zone
 
 class EnemyHandler:
@@ -17,10 +18,12 @@ class EnemyHandler:
         self.mainLoop = mainLoop
         self.setZone(initialZone)
         self.pathfindingTargets = {
-            "necromancer": core
+            "necromancer": core,
+            "bod": core
         }
         self.ENEMY_LIST = {
-            "necromancer": Necromancer
+            "necromancer": Necromancer,
+            "bod": BringerOfDeath
         }
         self.nextSpawn = 0
 
@@ -54,8 +57,8 @@ class EnemyHandler:
         toRemove = []
         for enemy in self.enemies:
             if enemy.currentHealth <= 0 and enemy not in self.enemies_dying:
-                toRemove.append(enemy)
                 self.enemies_dying.append(enemy)
+                toRemove.append(enemy)
             enemy.tick()
         for enemy in toRemove:
             enemy.kill(lambda: self.deleteEnemy(enemy))

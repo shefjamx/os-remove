@@ -3,16 +3,15 @@ from objects.ray import Ray
 from misc.animator import Tileset
 import pygame
 
-class Necromancer(GenericEnemy):
-    def __init__(self, x, y, mainLoop, desireableEntity):
-        super().__init__(x, y, 200, 1, mainLoop)
-        self.enemyName = "necromancer"
-        self.pyro = 3
+class BringerOfDeath(GenericEnemy):
+    def __init__(self, x: float, y: float, mainLoop, desireableEntity) -> None:
+        super().__init__(x, y, 500, 1, mainLoop)
+        self.pyro = 2
         self.mainLoop = mainLoop
         self.tilesets = {
-            "run": Tileset(mainLoop, "assets/images/necromancer/run.png", (160, 128), 0, 5, self.pyro),
-            "death": Tileset(mainLoop, "assets/images/necromancer/death.png", (160, 128), 0, 8, self.pyro),
-            "attack": Tileset(mainLoop, "assets/images/necromancer/attack.png", (160, 128), 0, 12, self.pyro)
+            "run": Tileset(mainLoop, "assets/images/bod/walk.png", (140, 93), 0, 7, self.pyro),
+            "death": Tileset(mainLoop, "assets/images/bod/death.png", (140, 93), 0, 7, self.pyro),
+            "attack": Tileset(mainLoop, "assets/images/bod/attack.png", (140, 93), 0, 7, self.pyro)
         }
         self.tile_fps = {
             "run": 12,
@@ -30,7 +29,6 @@ class Necromancer(GenericEnemy):
         self.targetPoint = (self.targetPoint[0], self.targetPoint[1])
 
     def tick(self):
-        # player pos vector
         centerPos = (self.pos[0] + self.sprite.get_width() / 2, self.pos[1] + self.sprite.get_height() / 2)
         directionVector = (centerPos[0] - self.targetPoint[0], centerPos[1] - self.targetPoint[1])
         distToEntity = (directionVector[0] ** 2 + directionVector[1] ** 2) ** 0.5
@@ -40,8 +38,9 @@ class Necromancer(GenericEnemy):
             self.pos[1] -= (directionVector[1] / distToEntity) * 100 * self.mainLoop.dt * self.speed
         else:
             self.attack(self.desireableEntity)
-        return super().tick()
 
+        return super().tick()
+    
     def setHealth(self, health):
         self.currentHealth = health
 
@@ -59,15 +58,12 @@ class Necromancer(GenericEnemy):
         self.tileset = "death"
 
     def getBoundingBox(self) -> pygame.Rect:
-        bbWidth = 80
-        bbHeight = 125
         oldBoundingBox = super().getBoundingBox()
-        newBoundingBox = pygame.Rect(oldBoundingBox.x + (oldBoundingBox.width - bbWidth)/2, 
-                                     oldBoundingBox.y + (oldBoundingBox.height - bbHeight),
-                                       bbWidth, bbHeight)
+        newBoundingBox = pygame.Rect(oldBoundingBox.x + (oldBoundingBox.width * 3/4)/2, 
+                                     oldBoundingBox.y + (oldBoundingBox.height * 0.5), oldBoundingBox.width / 4, oldBoundingBox.height / 2)
         return newBoundingBox
     
 
     def draw(self, surface: pygame.Surface, playerPos) -> None:
         surface.blit(self.sprite, (self.pos[0] - playerPos[0], self.pos[1] - playerPos[1]))
-        #super().draw(surface, playerPos)
+        super().draw(surface, playerPos)
