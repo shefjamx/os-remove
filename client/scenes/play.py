@@ -34,7 +34,7 @@ class PlayScene(GenericScene):
 
     def tick(self):
         #self.checkSpawnEnemy()
-        self.cameraPos = (self.player.get_rect().center_x)
+        #self.cameraPos = (self.player.center_x)
         for e in self.enemies:
             e.update()
         # Background
