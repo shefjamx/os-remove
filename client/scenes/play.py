@@ -6,6 +6,7 @@ import random
 
 from misc.logger import log
 from objects.worm import Worm
+from objects.core import Core
 
 from effects.particles.flame_circle_effect import FlameCirle
 
@@ -18,6 +19,7 @@ class PlayScene(GenericScene):
         self.musicChannel.load(self.level.getSongPath())
         self.background_image = pygame.image.load("assets/images/level_draft.png")
         self.player = Player(main_loop)
+        self.core = Core(10e3)
         self.enemies = []
         self.musicChannel.play()
         self.STANDARD_SPAWN_TIMER = 1e3 # in ms
@@ -31,7 +33,8 @@ class PlayScene(GenericScene):
             self.nextEnemySpawn = currentPos_ms + self.STANDARD_SPAWN_TIMER
 
     def tick(self):
-        self.checkSpawnEnemy()
+        #self.checkSpawnEnemy()
+        self.cameraPos = (self.player.get_rect().center_x)
         for e in self.enemies:
             e.update()
         # Background
@@ -39,6 +42,7 @@ class PlayScene(GenericScene):
         for e in self.enemies:
             e.resolveMove(self.player.x, self.player.y)
             e.draw(self.display)
+        self.core.draw(self.display, (self.background_image.get_width(), self.background_image.get_height()), self.player)
 
 
         return super().tick(self.player)
