@@ -1,26 +1,27 @@
 import pygame
 from misc.logger import log
+from misc.animator import Tileset
 
 class GenericEnemy:
 
     sprite_map = {}
-    def __init__(self, x: float, y: float, sprite: str, damage: int, health: int) -> None:
+    def __init__(self, x: float, y: str, damage: int, health: int, main_loop) -> None:
         self.pos = [x, y]
         self.player_pos = (0, 0)
-        self.sprite = GenericEnemy.getSprite(sprite)
         self.damage = damage
         self.health = health
-    
-    @staticmethod
-    def getSprite(sprite):
-        if sprite not in GenericEnemy.sprite_map:
-            print("Loaded sprite")
-            GenericEnemy.sprite_map[sprite] = pygame.image.load(sprite)
-        return GenericEnemy.sprite_map[sprite]
+        self.tilesets = {}
+        self.tile_fps = {}
+        self.main_loop = main_loop
+        self.time_since_last_tile = 0
 
-    def update(self) -> None:
-        # run ai :D
-        raise NotImplementedError("Please add ai to ur monster goofy goober")
+
+    def tick(self):
+        """Tick the player class, used to animate the player"""
+        self.time_since_last_tile += self.main_loop.dt
+        if self.time_since_last_tile >= 1 / self.tile_fps[self.tileset]:
+            self.time_since_last_tile = 0
+            self.sprite = self.tilesets[self.tileset].increment()
 
     def draw(self, surface, cameraPos) -> None:
         # draw da enemy
