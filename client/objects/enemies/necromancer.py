@@ -13,7 +13,7 @@ class Necromancer(GenericEnemy):
         self.mainLoop = mainLoop
         self.tilesets = {
             "run": Tileset(mainLoop, "assets/images/necromancer/run.png", (160, 128), 0, 5, self.pyro),
-            "death": Tileset(mainLoop, "assets/images/necromancer/death.png", (160, 128), 0, 8, self.pyro),
+            "death": Tileset(mainLoop, "assets/images/necromancer/death.png", (160, 128), 0, 8, self.pyro, max_repeat=2),
             "attack": Tileset(mainLoop, "assets/images/necromancer/attack.png", (160, 128), 0, 12, self.pyro)
         }
         self.tile_fps = {

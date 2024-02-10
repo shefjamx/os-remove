@@ -10,7 +10,7 @@ class Skeleton(GenericEnemy):
         self.mainLoop = mainLoop
         self.tilesets = {
             "run": Tileset(mainLoop, "assets/images/skeleton/run.png", (64, 64), 0, 11, self.pyro),
-            "death": Tileset(mainLoop, "assets/images/skeleton/death.png", (64, 64), 0, 12, self.pyro),
+            "death": Tileset(mainLoop, "assets/images/skeleton/death.png", (64, 64), 0, 12, self.pyro, max_repeat=2),
             "attack": Tileset(mainLoop, "assets/images/skeleton/attack.png", (64, 64), 0, 25, self.pyro)
         }
         self.tile_fps = {
