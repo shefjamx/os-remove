@@ -25,7 +25,7 @@ class GenericScene:
 
         self.screen.blit(self.display, self.shake_offset)
         if player:
-            # pygame.draw.rect(self.screen, (255, 255, 255), (555, 325, 170, 130))
+            pygame.draw.rect(self.screen, (255, 255, 255), (555, 290, 170, 150))
             self.screen.blit(pygame.transform.flip(player.surf, player.flipped, False), [640 - player.player_rect.w/2, 360 - player.player_rect.h/2])
         if particle_effect:
             particle_effect.tick(self.screen, self.main_loop.dt)
