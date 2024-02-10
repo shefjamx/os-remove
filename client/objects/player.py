@@ -11,11 +11,7 @@ class Player(pygame.sprite.Sprite):
         self.y = 600
 
         # Movement callbacks
-        self.speed = 5
-        # self.main_loop.add_key_callback(pygame.locals.K_s, lambda: self.player_rect.move_ip(0, self.speed))
-        # self.main_loop.add_key_callback(pygame.locals.K_w, lambda: self.player_rect.move_ip(0, -self.speed))
-        # self.main_loop.add_key_callback(pygame.locals.K_d, lambda: self.player_rect.move_ip(self.speed, 0))
-        # self.main_loop.add_key_callback(pygame.locals.K_a, lambda: self.player_rect.move_ip(-self.speed, 0))
+        self.speed = 400
         self.main_loop.add_key_callback(pygame.locals.K_s, lambda: self.change_position(0, self.speed))
         self.main_loop.add_key_callback(pygame.locals.K_w, lambda: self.change_position(0, -self.speed))
         self.main_loop.add_key_callback(pygame.locals.K_d, lambda: self.change_position(self.speed, 0))
@@ -26,6 +22,9 @@ class Player(pygame.sprite.Sprite):
         Increment/Decrement self.x and self.y
         Check that the player isn't about to go over a boundary first (kinda magic numbers honestly sorry)
         """
+        x_diff *= self.main_loop.dt
+        y_diff *= self.main_loop.dt
+
         if self.x >= -600 and x_diff < 0:
             self.x += x_diff
         elif self.x <= 1880 and x_diff > 0:

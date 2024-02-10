@@ -16,8 +16,8 @@ class PlayScene(GenericScene):
             e.update()
         # Background
         rect = self.background_image.get_rect()
-        rect.x -= self.player.x
-        rect.y -= self.player.y
+        rect.x = -self.player.x
+        rect.y = -self.player.y
         self.display.blit(self.background_image, rect)
         for e in self.enemies:
             e.resolveMove(self.player.x, self.player.y)
