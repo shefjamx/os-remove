@@ -12,6 +12,8 @@ from scenes.generic_scene import GenericScene
 from scenes.home import HomeScreen
 # from scenes.level import LevelScene
 
+from misc.settings import FPS
+
 class MainLoop():
     """Main Loop class, this will handle all keyboard inputs and generic stuff (that i've not figured out yet)"""
 
@@ -53,7 +55,7 @@ class MainLoop():
             # call the button callback
             self.keyMap[key]()
 
-    
+
     def start(self) -> None:
         """
         Start the main game loop:
@@ -86,8 +88,8 @@ class MainLoop():
             if self.current_scene is not None:
                 self.current_scene.tick()
 
-            # Tick clock at 120fps
-            self.clock.tick(120)
+            # Tick clock at 60 fps
+            self.clock.tick(FPS)
 
         # Game is over
         pygame.quit()

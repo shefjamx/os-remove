@@ -29,6 +29,9 @@ class HomeScreen(GenericScene):
         self.buttons = {}
         self.create_button_dict()
 
+        # start shake
+        self.start_shake(1000, 10)
+
     def create_button_dict(self):
         """Create buttons and add them to the dictionary to be later used"""
         self.create_button(490, 320, 300, 60, "PLAY", 580, 330, lambda: self.main_loop.change_scene(PlayScene)) 
@@ -45,8 +48,8 @@ class HomeScreen(GenericScene):
 
     def render_buttons(self):
         for button in self.buttons:
-            pygame.draw.rect(self.screen, "#BED9E5", self.buttons[button][0])
-            self.screen.blit(self.buttons[button][1][0], (self.buttons[button][1][1], self.buttons[button][1][2]))
+            pygame.draw.rect(self.display, "#BED9E5", self.buttons[button][0])
+            self.display.blit(self.buttons[button][1][0], (self.buttons[button][1][1], self.buttons[button][1][2]))
 
     def handle_click(self, mouse_pos):
         for button in self.buttons:
@@ -56,15 +59,15 @@ class HomeScreen(GenericScene):
     def tick(self):
         # Background
         rect = self.background_image.get_rect()
-        self.screen.blit(self.background_image, rect)
+        self.display.blit(self.background_image, rect)
 
         # Header Text
         os = self.font.render("OS, ", True, "#D6D5D4")
         remove = self.font.render("REMOVE", True, "#DB2D20")
         question_mark = self.font.render("?", True, "#D6D5D4")
-        self.screen.blit(os, (388, self.y_tween.value))
-        self.screen.blit(remove, (550, self.y_tween.value))
-        self.screen.blit(question_mark, (850, self.y_tween.value))
+        self.display.blit(os, (388, self.y_tween.value))
+        self.display.blit(remove, (550, self.y_tween.value))
+        self.display.blit(question_mark, (850, self.y_tween.value))
 
         # Move header and render buttons
         self.y_tween.update()
