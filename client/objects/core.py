@@ -8,11 +8,12 @@ class Core:
         self.maxHealth = health
         self.currentHealth = health
         self.tilesets = {
-            "idle": Tileset("assets\\images\\core\\FlyingObelisk_no_lightnings_no_letter.png", (200, 400), 0, 12)
+            "idle": Tileset("assets\\images\\core\\FlyingObelisk_no_lightnings_no_letter.png", (200, 400), 0, 12),
+            "death": Tileset("assets\\images\\core\\FlyingObelisk_Destruction.png", (200, 400), 0, 15)
         }
         self.tile_fps = {
             "idle": 12,
-            "run": 12,
+            "death": 8,
             "attack": 36
         }
         self.tileset = "idle"
@@ -59,3 +60,5 @@ class Core:
         if self.time_since_last_tile >= 1 / self.tile_fps[self.tileset]:
             self.time_since_last_tile = 0
             self.sprite = self.tilesets[self.tileset].increment()
+        if self.currentHealth <= 0:
+            self.tileset = "death"
