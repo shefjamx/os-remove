@@ -3,15 +3,15 @@ from objects.ray import Ray
 from misc.animator import Tileset
 import pygame
 
-class BringerOfDeath(GenericEnemy):
+class Skeleton(GenericEnemy):
     def __init__(self, x: float, y: float, mainLoop, desireableEntity) -> None:
-        super().__init__(x, y, 500, 1, mainLoop)
-        self.pyro = 2
+        super().__init__(x, y, 50, 1, mainLoop)
+        self.pyro = 2.5
         self.mainLoop = mainLoop
         self.tilesets = {
-            "run": Tileset(mainLoop, "assets/images/bod/walk.png", (140, 93), 0, 7, self.pyro),
-            "death": Tileset(mainLoop, "assets/images/bod/death.png", (140, 93), 1, 7, self.pyro, reverse=True),
-            "attack": Tileset(mainLoop, "assets/images/bod/attack.png", (140, 93), 0, 7, self.pyro)
+            "run": Tileset(mainLoop, "assets/images/skeleton/run.png", (64, 64), 0, 11, self.pyro),
+            "death": Tileset(mainLoop, "assets/images/skeleton/death.png", (64, 64), 0, 12, self.pyro),
+            "attack": Tileset(mainLoop, "assets/images/skeleton/attack.png", (64, 64), 0, 12, self.pyro)
         }
         self.tile_fps = {
             "run": 12,
@@ -19,7 +19,7 @@ class BringerOfDeath(GenericEnemy):
             "attack": 12
         }
         self.tileset = "run"
-        self.speed = 0.9
+        self.speed = 1.1
 
         self.sprite = self.tilesets[self.tileset].increment()
         self.desireableEntity = desireableEntity
@@ -34,7 +34,7 @@ class BringerOfDeath(GenericEnemy):
         directionVector = (centerPos[0] - self.targetPoint[0], centerPos[1] - self.targetPoint[1])
         distToEntity = (directionVector[0] ** 2 + directionVector[1] ** 2) ** 0.5
 
-        if distToEntity > 8:
+        if distToEntity > 12:
             self.pos[0] -= (directionVector[0] / distToEntity) * 100 * self.mainLoop.dt * self.speed
             self.pos[1] -= (directionVector[1] / distToEntity) * 100 * self.mainLoop.dt * self.speed
         else:
