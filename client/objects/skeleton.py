@@ -5,13 +5,13 @@ import pygame
 
 class Skeleton(GenericEnemy):
     def __init__(self, x: float, y: float, mainLoop, desireableEntity) -> None:
-        super().__init__(x, y, 50, 1, mainLoop)
+        super().__init__(x, y, 100, 1, mainLoop)
         self.pyro = 2.5
         self.mainLoop = mainLoop
         self.tilesets = {
             "run": Tileset(mainLoop, "assets/images/skeleton/run.png", (64, 64), 0, 11, self.pyro),
             "death": Tileset(mainLoop, "assets/images/skeleton/death.png", (64, 64), 0, 12, self.pyro),
-            "attack": Tileset(mainLoop, "assets/images/skeleton/attack.png", (64, 64), 0, 12, self.pyro)
+            "attack": Tileset(mainLoop, "assets/images/skeleton/attack.png", (64, 64), 0, 25, self.pyro)
         }
         self.tile_fps = {
             "run": 12,
