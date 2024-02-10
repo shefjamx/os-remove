@@ -60,10 +60,10 @@ class Skeleton(GenericEnemy):
 
     def getBoundingBox(self) -> pygame.Rect:
         bbWidth = 80
-        bbHeight = 125
+        bbHeight = 100
         oldBoundingBox = super().getBoundingBox()
         newBoundingBox = pygame.Rect(oldBoundingBox.x + bbWidth*0.25, 
-                                     oldBoundingBox.y + (oldBoundingBox.height - bbHeight),
+                                     oldBoundingBox.y + (oldBoundingBox.height - bbHeight)/2,
                                        bbWidth, bbHeight)
         return newBoundingBox
 
