@@ -13,7 +13,7 @@ class Player(pygame.sprite.Sprite):
             "attack": Tileset("assets/images/player/attack.png", (80, 80), 0, 11, upscale=3, callback=lambda: self.set_tileset("idle"))
         }
         self.tile_fps = {
-            "idle": 12,
+            "idle": 8,
             "run": 12,
             "attack": 36
         }
