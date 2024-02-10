@@ -7,6 +7,8 @@ import random
 from misc.logger import log
 from objects.worm import Worm
 
+from effects.particles.flame_circle_effect import FlameCirle
+
 class PlayScene(GenericScene):
     def __init__(self, screen, main_loop, level_string: str) -> None:
         pygame.mixer.init()

@@ -64,5 +64,4 @@ class GenericScene:
         self.shake_offset = [0,0]
         self.shake_amplitude = 0
         self.time_difference = time.time() - self.time_difference # ms diff
-        print(self.time_difference)
     
