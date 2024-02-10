@@ -32,4 +32,5 @@ class PlayScene(GenericScene):
             e.draw(self.display)
 
 
+        self.player.tick()
         return super().tick(self.player)
