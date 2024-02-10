@@ -14,6 +14,8 @@ class GenericEnemy:
         self.tile_fps = {}
         self.main_loop = main_loop
         self.time_since_last_tile = 0
+        self.speed = 1
+        self.has_attacked = False
 
     def tick(self):
         """Tick the player class, used to animate the player"""
@@ -22,9 +24,11 @@ class GenericEnemy:
             self.time_since_last_tile = 0
             self.sprite = self.tilesets[self.tileset].increment()
 
-    def kill(self) -> None:
-        # death animation ?
+    def kill(self, callback=None) -> None:
+        """Kill the enemy and use a callback afterwards"""
         self.currentHealth = 0
+        if callback is not None:
+            callback()
 
     def draw(self, surface, playerPos) -> None:
         # draw da enemy
@@ -43,10 +47,7 @@ class GenericEnemy:
         Returns true if the monster is still alive
         """
         self.currentHealth -= damageNum
-        if self.currentHealth <= 0:
-            self.kill()
-            return False
-        return True
+        return self.currentHealth <= 0
     
     def getBoundingBox(self) -> pygame.Rect:
         rect = self.sprite.get_rect()
@@ -55,5 +56,6 @@ class GenericEnemy:
         return rect
 
     def attack(self, entity) -> None:
-        entity.dealDamage(self.damage)
-        #TODO: play anims
+        if not self.has_attacked:
+            entity.dealDamage(self.damage)
+            self.has_attacked = True

@@ -12,6 +12,7 @@ class EnemyHandler:
     def __init__(self, initialSpawnRate: float, initialZone: Zone, mainLoop, player, core) -> None:
         self.initialSpawnRate = initialSpawnRate
         self.enemies: list[GenericEnemy] = []
+        self.enemies_dying: list[GenericEnemy] = []
         self.enemySpawnPoints = [(591, 718), (812, 267), (1258, 44), (1714, 267), (1931, 720), (1712, 1158), (1267, 1385), (815, 1162)] # there are 8 of these :D
         self.mainLoop = mainLoop
         self.setZone(initialZone)
@@ -22,7 +23,6 @@ class EnemyHandler:
             "necromancer": Necromancer
         }
         self.nextSpawn = 0
-        self.first = False
 
     def updateSpawnRate(self, mult: float) -> None:
         self.initialSpawnRate*=mult
@@ -45,8 +45,7 @@ class EnemyHandler:
         self.currentZone = zone
 
     def tick(self, currentSongTime: float) -> None:
-        if currentSongTime >= self.nextSpawn and not self.first:
-            # self.first = True
+        if currentSongTime >= self.nextSpawn:
             chosenSpawnPoints = [random.choice(self.enemySpawnPoints) for i in range(self.NUM_SPAWNS)]
             for sp in chosenSpawnPoints:
                 self.spawnRandomEnemy(sp[0] + random.randint(0, 30) - 15, sp[1] + random.randint(0, 30) - 15)
@@ -54,12 +53,17 @@ class EnemyHandler:
 
         toRemove = []
         for enemy in self.enemies:
-            if enemy.currentHealth <= 0:
+            if enemy.currentHealth <= 0 and enemy not in self.enemies_dying:
                 toRemove.append(enemy)
+                self.enemies_dying.append(enemy)
             enemy.tick()
         for enemy in toRemove:
-            self.enemies.remove(enemy)
+            enemy.kill(lambda: self.deleteEnemy(enemy))
 
+    def deleteEnemy(self, enemy):
+        if enemy in self.enemies:
+            self.enemies.remove(enemy)
+            self.enemies_dying.remove(enemy)
 
     def draw(self, surface, pX, pY) -> None:
         for enemy in self.enemies:
@@ -75,7 +79,7 @@ class EnemyHandler:
             bounding_box = enemy.getRelativeBoundingBox()
             enemy_pos = (bounding_box.x - player_pos[0], bounding_box.y - player_pos[1])
             enemy_rect = pygame.Rect(enemy_pos[0], enemy_pos[1], bounding_box.w, bounding_box.h)
-            if test_rect.colliderect(enemy_rect):
+            if test_rect.colliderect(enemy_rect) and enemy not in self.enemies_dying:
                 enemies_hit.append(enemy)
             
             # print(f"{test_rect.left} <= {enemy_pos[0]} <= {test_rect.right}  //  {test_rect.top} <= {enemy_pos[1]} <= {test_rect.bottom}")

@@ -6,13 +6,18 @@ import random
 import pygame
 
 class Necromancer(GenericEnemy):
-
     def __init__(self, x, y, mainLoop, desireableEntity):
         super().__init__(x, y, 200, 1, mainLoop)
         self.mainLoop = mainLoop
         # self.tilesets["idle"] = Tileset("assets\\images\\wum.jpg", (360, 343), 0, 0, 0.25)
-        self.tilesets["run"] = Tileset("assets/images/necromancer/run.png", (160, 128), 0, 5, 2)
-        self.tile_fps["run"] = 12
+        self.tilesets = {
+            "run": Tileset("assets/images/necromancer/run.png", (160, 128), 0, 5, 2),
+            "death": Tileset("assets/images/necromancer/death.png", (160, 128), 0, 8, 2)  # Updated with callback later in code
+        }
+        self.tile_fps = {
+            "run": 12,
+            "death": 12
+        }
         self.tileset = "run"
 
         self.sprite = self.tilesets[self.tileset].increment()
@@ -33,16 +38,22 @@ class Necromancer(GenericEnemy):
         distToEntity = (directionVector[0] ** 2 + directionVector[1] ** 2) ** 0.5
 
         if distToEntity > 15:
-            self.pos[0] -= (directionVector[0] / distToEntity) * 100 * self.mainLoop.dt
-            self.pos[1] -= (directionVector[1] / distToEntity) * 100 * self.mainLoop.dt
+            self.pos[0] -= (directionVector[0] / distToEntity) * 100 * self.mainLoop.dt * self.speed
+            self.pos[1] -= (directionVector[1] / distToEntity) * 100 * self.mainLoop.dt * self.speed
         else:
             self.attack(self.desireableEntity)
         return super().tick()
 
     def attack(self, entity) -> None:
         super().attack(entity)
-        self.kill()
-    
+        self.currentHealth = 0
+
+    def kill(self, callback=None) -> None:
+        """Kill the enemy and play the necromancer animation"""
+        self.speed = 0
+        self.tilesets["death"] = Tileset("assets/images/necromancer/death.png", (160, 128), 0, 8, 2, callback=callback)
+        self.tileset = "death"
+
     def getBoundingBox(self) -> pygame.Rect:
         bbWidth = 80
         bbHeight = 125
