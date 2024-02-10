@@ -21,6 +21,7 @@ class MainLoop():
         self.running = False
         self.keyMap: dict = {}
         self.pressedKeys = []
+        self.monitoredKeys = {}
         self.screen = screen
         self.clock = pygame.time.Clock()
         self.current_scene: GenericScene = HomeScreen(screen, self)
@@ -33,7 +34,7 @@ class MainLoop():
         self.current_scene = scene(self.screen, self, *args)
         pygame.display.flip()
 
-    def add_key_callback(self, key: int, callback) -> None:
+    def add_key_callback(self, key: int, callback, onHold=True) -> None:
         """
         Registers a callback to be called when the given keycode is registered as pressed
         If there is already a callback registered then it is removed :D Dont care!!!
@@ -43,19 +44,23 @@ class MainLoop():
             callback[callable]: The function to be called
         TODO: Do we want there to be multiple callbacks for one keycode?
         """
-        self.keyMap[key] = callback
+        self.keyMap[key] = (callback, onHold)
 
     def remove_key_callback(self, key: int) -> None:
         """
         Removes a created callback function
         """
         del self.keyMap[key]
+
+
+    def add_keys_released_callback(self, keys: tuple[int], callback) -> None:
+        self.monitoredKeys[keys] = callback
     
 
     def dispatchKeyCallback(self, key: int) -> None:
         if key in self.keyMap:
             # call the button callback
-            self.keyMap[key]()
+            self.keyMap[key][0]()
 
 
     def start(self) -> None:
@@ -83,10 +88,15 @@ class MainLoop():
                 # call held down keys
                 # Keydown / up commands
                 if event.type == KEYDOWN:
-                    self.pressedKeys.append(event.key)
                     self.dispatchKeyCallback(event.key)
+                    if event.key in self.keyMap and self.keyMap[event.key][1]:
+                        self.pressedKeys.append(event.key)
                 elif event.type == KEYUP:
-                    self.pressedKeys.remove(event.key)
+                    if event.key in self.keyMap and self.keyMap[event.key][1]:
+                        self.pressedKeys.remove(event.key)
+                    for keyCollection in self.monitoredKeys:
+                        if event.key in keyCollection and not any(key in self.pressedKeys for key in keyCollection):
+                            self.monitoredKeys[keyCollection]()
 
 
             # Re-render the screen
