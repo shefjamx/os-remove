@@ -2,7 +2,7 @@ import pygame
 from scenes.generic_scene import GenericScene
 from objects.player import Player
 from objects.level import Level
-import random
+from objects.beat import BeatHitter
 
 from objects.core import Core
 
@@ -36,9 +36,8 @@ class PlayScene(GenericScene):
         self.main_loop.add_key_callback(pygame.locals.K_k, self.doPlayerAttack, False)
 
         self.flame = FlameCircle(25, 5, [self.player.getX(),self.player.getY()], 1, ICE)
-
         self.hitTimings = self.level.getHitTimings()
-
+        self.beatHitter = BeatHitter(main_loop, main_loop.screen)
         self.pastAttackOffsets = []
 
     def resetCombo(self) -> None:
@@ -86,6 +85,7 @@ class PlayScene(GenericScene):
         self.player.tick()
         self.enemyHandler.draw(self.display, self.player.x, self.player.y)
         self.display.blit(self.label_font.render(f"x{self.playData['current-combo']}", False, "#FFFFFF"), (0, 0))
+        self.beatHitter.draw(self.display)
 
         self.flame.tick(self.display, self.main_loop.dt)
         return super().tick(self.player)
