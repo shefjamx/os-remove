@@ -2,7 +2,7 @@ import pygame
 from misc.logger import log
 
 class Tileset:
-    def __init__(self, mainLoop, file, size=(64, 64), start=0, stop=0, upscale=1, callback=None) -> None:
+    def __init__(self, mainLoop, file, size=(64, 64), start=0, stop=0, upscale=1, callback=None, reverse=False) -> None:
         """
         Init a tile set
             file: file path relative to client (actual images must be on 1 line)
@@ -18,6 +18,7 @@ class Tileset:
         self.start = start
         self.stop = stop
         self.callback = callback
+        self.reverse = reverse
         self.current_tile_index = start
 
         if mainLoop.cachedImages.getImage(file) is None:
@@ -49,13 +50,14 @@ class Tileset:
 
     def increment(self) -> pygame.Surface:
         """Incrementally go through all tiles. Return the current tile"""
-        tile = self.tiles[self.current_tile_index]
+        tile = self.tiles[self.stop - self.current_tile_index] if self.reverse else self.tiles[self.current_tile_index]
         if self.current_tile_index + 1 <= self.stop:
             self.current_tile_index += 1 
         else:
             if self.callback:
                 self.callback()
             self.current_tile_index = self.start
+        
         return tile
     
     def reset(self):
