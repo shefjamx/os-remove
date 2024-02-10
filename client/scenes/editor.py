@@ -47,6 +47,12 @@ class Timeline:
                         (pygame.image.load("assets\\images\\ui\\zoom-in-timeline.png").convert(), lambda: self.zoom(1.1)),
                         (pygame.image.load("assets\\images\\ui\\zoom-out-timeline.png").convert(), lambda: self.zoom(0.9))]
 
+
+        self.entitySprites = {
+            "necromancer": pygame.image.load("assets\\images\\thumbnails\\necromancer.png").convert(),
+            "bod": pygame.image.load("assets\\images\\thumbnails\\bod.png").convert()
+        }
+
         self.graphicsData = {
             "button-offset-y": 600,
             "button-margin-x": 20,
@@ -103,8 +109,23 @@ class Timeline:
         return pygame.Rect(startX + start, startY, end-start, 60)
     
     def drawCurrentZone(self, surface) -> None:
-        title = self.title_font.render(self.currentZone.name, False, "#FFFFFF")
-        surface.blit(title, ())
+        title = self.title_font.render(f"Zone: {self.currentZone.name}", False, "#FFFFFF")
+        surface.blit(title, ((surface.get_width() - title.get_width()) / 2, 0))
+
+        subtitle = self.subtitle_font.render(f"Included Entities", False, "#FFFFFF")
+        surface.blit(subtitle, (50, 100))
+        for i,entity in enumerate(self.entitySprites.keys()):
+            size,margin = 100, 10
+            x = 50 + (size+margin)*i
+            y = 160 + (size+margin)*(i//6)
+            text = self.label_font.render(entity, False, "#FFFFFF")
+            color = "#00FF00" if entity in self.currentZone.getAllowedEnemies() else "#FF0000"
+            pygame.draw.rect(surface, color, (x, y, 100, 100))
+            pygame.draw.rect(surface, "#FFFFFF", (x, y, 100, 100), width=1)
+            surface.blit(self.entitySprites[entity], (x,y))
+            surface.blit(text, (x,y+105))
+
+
 
     def draw(self, surface: pygame.Surface, scale) -> None:
 
@@ -160,6 +181,17 @@ class Timeline:
                 if self.getZoneRect(x, 470, zone).collidepoint(pos[0], pos[1]):
                     print("zoned bitch")
                     self.currentZone = zone
+            if self.currentZone:
+                for i,entity in enumerate(self.entitySprites.keys()):
+                    rect = pygame.Rect(50 + (110)*i, 160 + (110)*(i//6), 100, 100)
+                    if rect.collidepoint(pos[0], pos[1]):
+                        print("Epic epic carpal tunner")
+                        print(entity)
+                        if entity in self.currentZone.allowedEnemies:
+                            self.currentZone.allowedEnemies.remove(entity)
+                        else:
+                            self.currentZone.allowedEnemies.append(entity)
+
 
         if 600 <= pos[1] <= 650:
             for i,button in enumerate(self.audioButtons):
