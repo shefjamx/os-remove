@@ -21,6 +21,7 @@ class MainLoop():
         self.running = False
         self.keyMap: dict = {}
         self.pressedKeys = []
+        self.monitoredKeys = {}
         self.screen = screen
         self.clock = pygame.time.Clock()
         self.current_scene: GenericScene = HomeScreen(screen, self)
@@ -50,6 +51,10 @@ class MainLoop():
         Removes a created callback function
         """
         del self.keyMap[key]
+
+
+    def add_keys_released_callback(self, keys: tuple[int], callback) -> None:
+        self.monitoredKeys[keys] = callback
     
 
     def dispatchKeyCallback(self, key: int) -> None:
@@ -87,6 +92,9 @@ class MainLoop():
                     self.dispatchKeyCallback(event.key)
                 elif event.type == KEYUP:
                     self.pressedKeys.remove(event.key)
+                    for keyCollection in self.monitoredKeys:
+                        if event.key in keyCollection and not any(key in self.pressedKeys for key in keyCollection):
+                            self.monitoredKeys[keyCollection]()
 
 
             # Re-render the screen
