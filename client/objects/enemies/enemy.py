@@ -10,7 +10,7 @@ class GenericEnemy:
         self.damage = damage
         self.maxHealth = health
         self.currentHealth = self.maxHealth
-        self.tilesets = {}
+        self.tilsets = {}
         self.tile_fps = {}
         self.main_loop = main_loop
         self.time_since_last_tile = 0

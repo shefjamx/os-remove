@@ -1,8 +1,10 @@
 import pygame
 import random
 from typing import List
-from objects.enemy import GenericEnemy
-from objects.necromancer import Necromancer
+from objects.enemies.enemy import GenericEnemy
+from objects.enemies.necromancer import Necromancer
+from objects.enemies.bringer_of_death import BringerOfDeath
+from objects.enemies.skeleton import Skeleton
 from objects.zone import Zone
 
 class EnemyHandler:
@@ -17,15 +19,19 @@ class EnemyHandler:
         self.mainLoop = mainLoop
         self.setZone(initialZone)
         self.pathfindingTargets = {
-            "necromancer": core
+            "necromancer": core,
+            "bod": core,
+            "skeleton": core
         }
         self.ENEMY_LIST = {
-            "necromancer": Necromancer
+            "necromancer": Necromancer,
+            "bod": BringerOfDeath,
+            "skeleton": Skeleton
         }
         self.nextSpawn = 0
 
     def updateSpawnRate(self, mult: float) -> None:
-        self.initialSpawnRate*=mult
+        self.initialSpawnRate *= mult
 
     def spawnEnemy(self, _type: str, *args) -> None:
         if _type not in self.currentZone.getAllowedEnemies():
@@ -54,8 +60,8 @@ class EnemyHandler:
         toRemove = []
         for enemy in self.enemies:
             if enemy.currentHealth <= 0 and enemy not in self.enemies_dying:
-                toRemove.append(enemy)
                 self.enemies_dying.append(enemy)
+                toRemove.append(enemy)
             enemy.tick()
         for enemy in toRemove:
             enemy.kill(lambda: self.deleteEnemy(enemy))
@@ -81,8 +87,4 @@ class EnemyHandler:
             enemy_rect = pygame.Rect(enemy_pos[0], enemy_pos[1], bounding_box.w, bounding_box.h)
             if test_rect.colliderect(enemy_rect) and enemy not in self.enemies_dying:
                 enemies_hit.append(enemy)
-            
-            # print(f"{test_rect.left} <= {enemy_pos[0]} <= {test_rect.right}  //  {test_rect.top} <= {enemy_pos[1]} <= {test_rect.bottom}")
-            # if test_rect.left <= enemy_pos[0] <= test_rect.right and test_rect.top <= enemy_pos[1] <= test_rect.bottom:
-            #     enemies_hit.append(enemy)
         return enemies_hit
