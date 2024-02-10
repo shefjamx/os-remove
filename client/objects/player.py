@@ -2,9 +2,10 @@ import pygame
 from misc.animator import Tileset
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, main_loop) -> None:
+    def __init__(self, main_loop, scene) -> None:
         super().__init__()
         self.main_loop = main_loop
+        self.scene = scene
 
         # Tileset
         self.tilesets = {
@@ -92,10 +93,17 @@ class Player(pygame.sprite.Sprite):
         """Run the attack animation to attack and send a message to any enemy in the collision area"""
         if self.time_since_last_attack >= self.min_attack_time:
             self.time_since_last_attack = 0
+
+            # Animations
             if self.tileset == "attack":
                 self.tilesets[self.tileset].reset()
             self.tileset = "attack"
             self.speed = 200
+            
+            # Attempt to attack the enemies
+            attack_rect = pygame.rect.Rect(self.x + 640 - (self.player_rect.w / 2), self.y + 360 - (self.player_rect.h / 2), self.player_rect.w, self.player_rect.h)
+            enemies_hit = self.scene.enemyHandler.detect_hit(attack_rect)
+
 
     def tick(self):
         """Tick the player class, used to animate the player"""

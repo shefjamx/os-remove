@@ -30,7 +30,6 @@ class Worm(GenericEnemy):
         distToEntity = (directionVector[0] ** 2 + directionVector[1] ** 2) ** 0.5
 
         if distToEntity > 2:
-
             self.pos[0] -= (directionVector[0] / distToEntity) * 100 * self.mainLoop.dt
             self.pos[1] -= (directionVector[1] / distToEntity) * 100 * self.mainLoop.dt
         else:

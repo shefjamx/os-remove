@@ -1,9 +1,10 @@
 import pygame
-from misc.logger import log
-from scenes.generic_scene import GenericScene
 import time
 import enum
 import math
+
+from objects.level import Level
+from scenes.generic_scene import GenericScene
 
 
 class LevelScene(GenericScene):
@@ -34,7 +35,7 @@ class LevelScene(GenericScene):
             _time = self.font.render(f"{timeTillStart}", False, "#FFFFFF")
             if "time-width" not in self.graphics_attributes:
                 self.graphics_attributes["time-width"] = _time.get_width() + 10
-            _text = self.font.render(f"s to Start", False, "#FFFFFF")
+            _text = self.font.render("s to Start", False, "#FFFFFF")
             self.display.blit(_time,(0, 0))
             self.display.blit(_text, (self.graphics_attributes["time-width"], 0))
 

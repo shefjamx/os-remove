@@ -1,10 +1,10 @@
+import pygame
 import random
+from typing import List
 from objects.enemy import GenericEnemy
 from objects.worm import Worm
 from objects.necromancer import Necromancer
 from objects.zone import Zone
-
-
 
 class EnemyHandler:
 
@@ -22,7 +22,7 @@ class EnemyHandler:
         }
         self.ENEMY_LIST = {
             "worm": Worm,
-            "necromancer": Necromancer
+            # "necromancer": Necromancer
         }
         self.nextSpawn = 0
 
@@ -66,3 +66,14 @@ class EnemyHandler:
     def draw(self, surface, pX, pY) -> None:
         for enemy in self.enemies:
             enemy.draw(surface, (pX, pY))
+
+    def detect_hit(self, player_surface: pygame.rect.Rect) -> List[GenericEnemy]:
+        """
+        Detects a player hit and returns a list of all enemies in that area.
+        If there are no enemies then an empty list is returned x
+        """
+        enemies_hit = []
+        for enemy in self.enemies:
+            if player_surface.collidepoint(enemy.pos):
+                enemies_hit.append(enemy)
+        return enemies_hit
