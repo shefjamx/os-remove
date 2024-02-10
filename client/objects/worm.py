@@ -21,7 +21,7 @@ class Worm(GenericEnemy):
         centerPos = (self.pos[0] + self.sprite.get_width() / 2, self.pos[1] + self.sprite.get_height() / 2)
         rayCast = Ray(centerPos, self.desireableEntity.getRect())
         self.targetPoint = rayCast.cast() # This is a stupid AI that does not change the point it wants to go to
-        self.targetPoint = (self.targetPoint[0] + (random.randint(0, 50) - 25), self.targetPoint[1] + (random.randint(0, 100) - 50))
+        self.targetPoint = (self.targetPoint[0], self.targetPoint[1])
 
     def tick(self):
         # player pos vector
@@ -32,7 +32,7 @@ class Worm(GenericEnemy):
         directionVector = (centerPos[0] - self.targetPoint[0], centerPos[1] - self.targetPoint[1])
         distToEntity = (directionVector[0] ** 2 + directionVector[1] ** 2) ** 0.5
 
-        if distToEntity > 2:
+        if distToEntity > 15:
             self.pos[0] -= (directionVector[0] / distToEntity) * 100 * self.mainLoop.dt
             self.pos[1] -= (directionVector[1] / distToEntity) * 100 * self.mainLoop.dt
         else:

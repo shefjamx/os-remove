@@ -52,7 +52,8 @@ class Core:
     def draw(self, surface: pygame.Surface, playerPos):
         posX, posY = self.getX(), self.getY()
         surface.blit(self.sprite, (posX - playerPos[0], posY - playerPos[1]))
-        self.drawHealthBar(surface, playerPos)
+        if self.currentHealth > 0:
+            self.drawHealthBar(surface, playerPos)
 
     def tick(self):
         """Tick the player class, used to animate the player"""

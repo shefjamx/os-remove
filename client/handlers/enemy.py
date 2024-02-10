@@ -50,7 +50,7 @@ class EnemyHandler:
         if currentSongTime >= self.nextSpawn:
             chosenSpawnPoints = [random.choice(self.enemySpawnPoints) for i in range(self.NUM_SPAWNS)]
             for sp in chosenSpawnPoints:
-                self.spawnRandomEnemy(sp[0], sp[1])
+                self.spawnRandomEnemy(sp[0] + random.randint(0, 30) - 15, sp[1] + random.randint(0, 30) - 15)
             self.nextSpawn += 4e3 * self.currentZone.getSpawnRate()
 
         toRemove = []

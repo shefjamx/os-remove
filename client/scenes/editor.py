@@ -16,7 +16,7 @@ class Timeline:
 
     def __init__(self, level: Level) -> None:
         self.level = level
-        self.duration = pygame.mixer.Sound(level.getSongPath()).get_length()
+        self.duration = pygame.mixer.Sound(level.getSongPath()).get_length() * 1e3
         self.currentTime = 0
         self.pauseTime = 0
         self.musicChannel = pygame.mixer.music
@@ -44,7 +44,7 @@ class Timeline:
 
 
     def getTrueCurrentTime(self) -> float:
-        return -0.5 + self.musicChannel.get_pos() / 1e3 + self.pauseTime
+        return -500 + self.musicChannel.get_pos() + self.pauseTime
 
     def resume(self) -> None:
         self.isPlaying = not self.isPlaying
@@ -85,7 +85,7 @@ class Timeline:
         if self.isPlaying:
             self.currentTime = self.getTrueCurrentTime()
 
-            currentTickTimes = self.level.getNextHitTimings(self.currentTime, 0.5)
+            currentTickTimes = self.level.getNextHitTimings(self.currentTime, 500)
             for tick in currentTickTimes:
                 if tick not in self.previousRelevantHitObjects:
                     self.hitSound.play()
@@ -93,9 +93,9 @@ class Timeline:
 
     def click(self, pos) -> None:
         if 475 <= pos[1] <= 525:
-            timingPoint = (pos[0] - 140) * self.duration
+            timingPoint = (pos[0] - 140) * self.duration / 1e3
             print(f"Adding timing point at {timingPoint}")
-            self.level.addHitTiming(timingPoint / 1e3)
+            self.level.addHitTiming(timingPoint)
 
         if 600 <= pos[1] <= 650:
             for i,button in enumerate(self.buttons):
