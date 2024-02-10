@@ -27,7 +27,10 @@ class Player(pygame.sprite.Sprite):
         self.main_loop.add_key_callback(pygame.locals.K_w, lambda: self.change_position(0, -self.speed, self.last_direction))
         self.main_loop.add_key_callback(pygame.locals.K_d, lambda: self.change_position(self.speed, 0, "right"))
         self.main_loop.add_key_callback(pygame.locals.K_a, lambda: self.change_position(-self.speed, 0, "left"))
-
+        self.main_loop.add_keys_released_callback((pygame.locals.K_a, pygame.locals.K_d, pygame.locals.K_w, pygame.locals.K_s), lambda: self.set_tileset("idle"))
+    
+    def set_tileset(self, tileset) -> None:
+        self.tileset = self.tilesets[tileset]
 
     def change_position(self, x_diff, y_diff, direction):
         """
