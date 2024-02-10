@@ -64,7 +64,7 @@ class MainLoop():
         self.running = True
         while self.running:
             # Tick clock at 60 fps
-            self.dt = self.clock.tick(FPS) << 10
+            self.dt = self.clock.tick(FPS) >> 10
 
             # Event loop
             for key in self.pressedKeys:

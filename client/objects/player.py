@@ -12,10 +12,7 @@ class Player(pygame.sprite.Sprite):
 
         # Movement callbacks
         self.speed = 5
-        # self.main_loop.add_key_callback(pygame.locals.K_s, lambda: self.player_rect.move_ip(0, self.speed))
-        # self.main_loop.add_key_callback(pygame.locals.K_w, lambda: self.player_rect.move_ip(0, -self.speed))
-        # self.main_loop.add_key_callback(pygame.locals.K_d, lambda: self.player_rect.move_ip(self.speed, 0))
-        # self.main_loop.add_key_callback(pygame.locals.K_a, lambda: self.player_rect.move_ip(-self.speed, 0))
+        print(self.main_loop.dt)
         self.main_loop.add_key_callback(pygame.locals.K_s, lambda: self.change_position(0, self.speed))
         self.main_loop.add_key_callback(pygame.locals.K_w, lambda: self.change_position(0, -self.speed))
         self.main_loop.add_key_callback(pygame.locals.K_d, lambda: self.change_position(self.speed, 0))
