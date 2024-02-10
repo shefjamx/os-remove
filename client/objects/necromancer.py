@@ -60,14 +60,14 @@ class Necromancer(GenericEnemy):
 
     def getBoundingBox(self) -> pygame.Rect:
         bbWidth = 80
-        bbHeight = 125
+        bbHeight = 150
         oldBoundingBox = super().getBoundingBox()
         newBoundingBox = pygame.Rect(oldBoundingBox.x + (oldBoundingBox.width - bbWidth)/2, 
-                                     oldBoundingBox.y + (oldBoundingBox.height - bbHeight),
+                                     oldBoundingBox.y + (oldBoundingBox.height - bbHeight)*0.9,
                                        bbWidth, bbHeight)
         return newBoundingBox
     
 
     def draw(self, surface: pygame.Surface, playerPos) -> None:
         surface.blit(self.sprite, (self.pos[0] - playerPos[0], self.pos[1] - playerPos[1]))
-        #super().draw(surface, playerPos)
+        super().draw(surface, playerPos)

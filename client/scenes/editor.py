@@ -2,17 +2,26 @@ import pygame
 import os
 from tkinter import filedialog, Tk
 import shutil
+import enum
 
 from pygame.locals import (
     K_SPACE,
     K_o,
     K_s,
-    K_n
+    K_n,
+    K_RIGHT,
+    K_LEFT
 )
 from scenes.generic_scene import GenericScene
 from objects.level import Level, HitTiming
 
 class Timeline:
+
+    class EditingMode(enum.Enum):
+        E_NORMAL = 1,
+        E_ZONES = 2,
+        E_PARTICLES = 3,
+        E_DATA = 4
 
     def __init__(self, level: Level) -> None:
         self.level = level
@@ -24,10 +33,20 @@ class Timeline:
         self.hitSound = pygame.mixer.Sound("assets\\sound\\hitsound.ogg")
 
         self.previousRelevantHitObjects = self.level.getNextHitTimings(self.currentTime, 0.5)
+        self.editingMode = self.EditingMode.E_NORMAL
 
-        self.buttons = [(pygame.image.load("assets\\images\\ui\\player.png").convert(), self.resume),
+        self.currentZone = None
+
+        self.label_font = pygame.font.Font("assets/fonts/Abaddon Bold.ttf", 12)
+        self.title_font = pygame.font.Font("assets/fonts/Abaddon Bold.ttf", 48)
+        self.subtitle_font = pygame.font.Font("assets/fonts/Abaddon Bold.ttf", 30)
+        self.audioButtons = [(pygame.image.load("assets\\images\\ui\\zone-selection.png").convert(), lambda: self.toggleZoneMode()),
+                        (pygame.image.load("assets\\images\\ui\\player.png").convert(), self.resume),
                         (pygame.image.load("assets\\images\\ui\\pausegers.png").convert(), self.resume),
-                        (pygame.image.load("assets\\images\\ui\\back-to-start.png").convert(), self.resetSong)]
+                        (pygame.image.load("assets\\images\\ui\\back-to-start.png").convert(), self.resetSong),
+                        (pygame.image.load("assets\\images\\ui\\zoom-in-timeline.png").convert(), lambda: self.zoom(1.1)),
+                        (pygame.image.load("assets\\images\\ui\\zoom-out-timeline.png").convert(), lambda: self.zoom(0.9))]
+
         self.graphicsData = {
             "button-offset-y": 600,
             "button-margin-x": 20,
@@ -35,6 +54,17 @@ class Timeline:
         }
 
         self.isPlaying = False
+        self.currentScale = 1.0
+    
+    def toggleZoneMode(self) -> None:
+        if self.editingMode == self.EditingMode.E_ZONES:
+            self.editingMode = self.EditingMode.E_NORMAL
+        else:
+            print("Toggled")
+            self.editingMode = self.EditingMode.E_ZONES
+
+    def zoom(self, amt: float) -> None:
+        self.currentScale*=amt
 
     def resetSong(self) -> float:
         self.currentTime = 0
@@ -44,61 +74,95 @@ class Timeline:
 
 
     def getTrueCurrentTime(self) -> float:
-        return -500 + self.musicChannel.get_pos() + self.pauseTime
+        return self.musicChannel.get_pos() + self.pauseTime
 
     def resume(self) -> None:
         self.isPlaying = not self.isPlaying
         if self.isPlaying:
-            self.musicChannel.play(0, self.pauseTime)
+            print(self.pauseTime)
+            self.musicChannel.play(0, self.pauseTime/1e3)
         else:
             self.pauseTime = self.getTrueCurrentTime()
             self.musicChannel.pause()
+    
+    def incrementSong(self, amt) -> None:
+        if self.isPlaying:
+            return
+        self.pauseTime += amt
 
     def drawButtons(self, surface: pygame.Surface) -> None:
-        for i,b in enumerate(self.buttons):
+        for i,b in enumerate(self.audioButtons):
             xPos = 1280 / 2 - self.graphicsData["button-container-size"] / 2 + (95)*i
             surface.blit(b[0], (xPos,self.graphicsData["button-offset-y"]))
+    
+    def getZoneRect(self, startX, startY, zone) -> pygame.Rect:
+        start, end = zone.getTimings()
+        if int(end) == -1:
+            end = self.duration
+        start, end = (start / self.duration) * self.width, (end/self.duration) * self.width
+        return pygame.Rect(startX + start, startY, end-start, 60)
+    
+    def drawCurrentZone(self, surface) -> None:
+        title = self.title_font.render(self.currentZone.name, False, "#FFFFFF")
+        surface.blit(title, ())
 
     def draw(self, surface: pygame.Surface, scale) -> None:
-        width, height = 1000, 10
-        for zone in self.level.zones:
-            start, end = zone.getTimings()
-            if int(end) == -1.0:
-                end = self.duration
-            start, end = start/self.duration, end/self.duration
-            pygame.draw.rect(surface, "#FFA000", (140 + start, 450, 140 + end, 100))
-        pygame.draw.rect(surface, "#FFFFFF", (140, 500, width, height))
-        pygame.draw.rect(surface, "#FFFFFF", (140, 450, 2, 100))
-        pygame.draw.rect(surface, "#FFFFFF", (1140, 450, 2, 100))
+
+        if self.editingMode == self.EditingMode.E_ZONES and self.currentZone:
+            self.drawCurrentZone(surface)
+        scale = self.currentScale
+        self.width, self.height = 1000*scale, 10
+
+        x, y = 1280 / 2, 450
+        cursorX = self.width * (self.getTrueCurrentTime() / self.duration)
+        x -= cursorX
+        if self.editingMode == self.EditingMode.E_ZONES:
+            for zone in self.level.zones:
+                rect = self.getZoneRect(x, y+20, zone)
+                pygame.draw.rect(surface, "#66A000", rect)
+                pygame.draw.rect(surface, "#FFFFFF", rect, width=1)
+                if self.editingMode == self.EditingMode.E_ZONES:
+                    text = self.label_font.render(zone.name, False, "#FFFFFF")
+                    surface.blit(text, (rect.left + (rect.width - text.get_width()) / 2, y + 20 - text.get_height()))
+        
+        pygame.draw.rect(surface, "#FFFFFF", (x, y + 50, self.width, self.height))
+        pygame.draw.rect(surface, "#FFFFFF", (x, y, 2, 100))
+        pygame.draw.rect(surface, "#FFFFFF", (x + self.width, y, 2, 100))
 
         for point in self.level.getHitTimings():
             ratio = point.getTiming() / self.duration
-            pygame.draw.rect(surface, "#FF0000", (140 + 1000*ratio, 475, 1, 50))
+            pygame.draw.rect(surface, "#FF0000", (x + ratio*self.width, y+25, 1, 50))
 
 
         ratio = self.currentTime / self.duration
-        pygame.draw.rect(surface, "#00FF00", (140 + 1000*ratio, 475, 2, 50))
+        pygame.draw.rect(surface, "#00FF00", (1280/2, y + 25, 2, 50))
 
         self.drawButtons(surface)
 
     def tick(self) -> None:
         if self.isPlaying:
             self.currentTime = self.getTrueCurrentTime()
-
             currentTickTimes = self.level.getNextHitTimings(self.currentTime, 500)
-            for tick in currentTickTimes:
-                if tick not in self.previousRelevantHitObjects:
+            for tick in self.previousRelevantHitObjects:
+                if tick not in currentTickTimes:
+                    print(self.musicChannel.get_pos())
                     self.hitSound.play()
             self.previousRelevantHitObjects = currentTickTimes
 
     def click(self, pos) -> None:
-        if 475 <= pos[1] <= 525:
-            timingPoint = (pos[0] - 140) * self.duration / 1e3
-            print(f"Adding timing point at {timingPoint}")
-            self.level.addHitTiming(timingPoint)
+        x = 1280 / 2 - self.width * (self.currentTime / self.duration)
+        if self.editingMode == self.EditingMode.E_NORMAL:
+            if 475 <= pos[1] <= 525:
+                timingPoint = (pos[0] - x) * self.duration / self.width
+                self.level.addHitTiming(timingPoint)
+        elif self.editingMode == self.EditingMode.E_ZONES:
+            for zone in self.level.zones:
+                if self.getZoneRect(x, 470, zone).collidepoint(pos[0], pos[1]):
+                    print("zoned bitch")
+                    self.currentZone = zone
 
         if 600 <= pos[1] <= 650:
-            for i,button in enumerate(self.buttons):
+            for i,button in enumerate(self.audioButtons):
                 xPos = 1280 / 2 - self.graphicsData["button-container-size"] / 2 + (95)*i
                 if xPos <= pos[0] <= xPos + 75:
                     button[1]()
@@ -128,6 +192,8 @@ class LevelEditor(GenericScene):
         self.level = Level(directory)
         self.timeline = Timeline(self.level)
         self.main_loop.add_key_callback(K_SPACE, self.timeline.resume, False)
+        self.main_loop.add_key_callback(K_RIGHT, lambda: self.timeline.incrementSong(100))
+        self.main_loop.add_key_callback(K_LEFT, lambda: self.timeline.incrementSong(-100))
 
 
     def save(self) -> None:

@@ -58,11 +58,13 @@ class BringerOfDeath(GenericEnemy):
         self.tileset = "death"
 
     def getBoundingBox(self) -> pygame.Rect:
+        bbWidth = 80
+        bbHeight = 125
         oldBoundingBox = super().getBoundingBox()
-        newBoundingBox = pygame.Rect(oldBoundingBox.x + (oldBoundingBox.width * 3/4)/2, 
-                                     oldBoundingBox.y + (oldBoundingBox.height * 0.5), oldBoundingBox.width / 4, oldBoundingBox.height / 2)
+        newBoundingBox = pygame.Rect(oldBoundingBox.x + bbWidth*0.25, 
+                                     oldBoundingBox.y + (oldBoundingBox.height - bbHeight),
+                                       bbWidth, bbHeight)
         return newBoundingBox
-    
 
     def draw(self, surface: pygame.Surface, playerPos) -> None:
         surface.blit(self.sprite, (self.pos[0] - playerPos[0], self.pos[1] - playerPos[1]))
