@@ -10,19 +10,25 @@ class Player(pygame.sprite.Sprite):
         self.tilesets = {
             "idle": Tileset("assets/images/player/idle.png", (80, 80), 0, 8, upscale=3),
             "run": Tileset("assets/images/player/run.png", (80, 80), 0, 5, upscale=3),
-            "attack": Tileset("assets/images/player/attack.png", (80, 80), 0, 11, upscale=3)
+            "attack": Tileset("assets/images/player/attack.png", (80, 80), 0, 11, upscale=3, callback=lambda: self.set_tileset("idle"))
         }
         self.tile_fps = {
             "idle": 12,
             "run": 12,
-            "attack": 24
+            "attack": 36
         }
         self.tileset = "idle"
         self.time_since_last_tile = 0
+
+        # Player
         self.surf = self.tilesets[self.tileset].increment()
         self.player_rect = self.surf.get_rect()
         self.x = 500
         self.y = 600
+
+        # Attacking
+        self.time_since_last_attack = 0
+        self.min_attack_time = 0.2
 
         # Movement callbacks
         self.speed = 400
@@ -38,6 +44,7 @@ class Player(pygame.sprite.Sprite):
     
     def set_tileset(self, tileset) -> None:
         self.tileset = tileset
+        self.speed = 400
 
     def change_position(self, x_diff, y_diff, direction):
         """
@@ -63,18 +70,24 @@ class Player(pygame.sprite.Sprite):
             self.last_direction = direction
             self.flipped = not self.flipped
 
-        if self.tileset != "run":
+        if self.tileset != "run" and self.tileset != "attack":
             self.tileset = "run" 
 
     def attack(self):
         """Run the attack animation to attack and send a message to any enemy in the collision area"""
-        if self.tileset == "attack":
-            self.tilesets[self.tileset].reset()
-        self.tileset = "attack"
+        if self.time_since_last_attack >= self.min_attack_time:
+            self.time_since_last_attack = 0
+            if self.tileset == "attack":
+                self.tilesets[self.tileset].reset()
+            self.tileset = "attack"
+            self.speed = 200
 
     def tick(self):
         """Tick the player class, used to animate the player"""
         self.time_since_last_tile += self.main_loop.dt
+        self.time_since_last_attack += self.main_loop.dt
         if self.time_since_last_tile >= 1 / self.tile_fps[self.tileset]:
             self.time_since_last_tile = 0
             self.surf = self.tilesets[self.tileset].increment()
+
+            
