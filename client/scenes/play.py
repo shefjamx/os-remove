@@ -45,4 +45,5 @@ class PlayScene(GenericScene):
         self.core.draw(self.display, (self.background_image.get_width(), self.background_image.get_height()), self.player)
 
 
+        self.player.tick()
         return super().tick(self.player)
