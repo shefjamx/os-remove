@@ -25,6 +25,12 @@ class Core:
     def getY(self) -> float:
         return 1440 / 2 - self.sprite.get_height() / 1.5
     
+    def getWidth(self) -> int:
+        return self.sprite.get_width()
+
+    def getHeight(self) -> int:
+        return self.sprite.get_height()
+    
     def doDamage(self, damage: int) -> None:
         self.health -= damage
 
