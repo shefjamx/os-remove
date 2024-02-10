@@ -12,9 +12,9 @@ class Player(pygame.sprite.Sprite):
         # self.main_loop.cached_tiles.addTile("necromancer", "run", Tileset("assets/images/player/run.png", (80, 80), 0, 5, upscale=3))
         # self.main_loop.cached_tiles.addTile("necromancer", "attack", Tileset("assets/images/player/attack.png", (80, 80), 0, 11, upscale=3, callback=lambda: self.set_tileset("idle")))
         self.tilesets = {
-            "idle": Tileset("assets/images/player/idle.png", (80, 80), 0, 8, upscale=3),
-            "run": Tileset("assets/images/player/run.png", (80, 80), 0, 5, upscale=3),
-            "attack": Tileset("assets/images/player/attack.png", (80, 80), 0, 11, upscale=3, callback=lambda: self.set_tileset("idle"))
+            "idle": Tileset(main_loop, "assets/images/player/idle.png", (80, 80), 0, 8, upscale=3),
+            "run": Tileset(main_loop, "assets/images/player/run.png", (80, 80), 0, 5, upscale=3),
+            "attack": Tileset(main_loop, "assets/images/player/attack.png", (80, 80), 0, 11, upscale=3, callback=lambda: self.set_tileset("idle"))
         }
         self.tile_fps = {
             "idle": 8,

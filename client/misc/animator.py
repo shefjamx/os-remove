@@ -2,7 +2,7 @@ import pygame
 from misc.logger import log
 
 class Tileset:
-    def __init__(self, file, size=(64, 64), start=0, stop=0, upscale=1, callback=None) -> None:
+    def __init__(self, mainLoop, file, size=(64, 64), start=0, stop=0, upscale=1, callback=None) -> None:
         """
         Init a tile set
             file: file path relative to client (actual images must be on 1 line)
@@ -11,18 +11,25 @@ class Tileset:
             end: end of animation, zero indexed
             upscale: how much to upscale the image by
         """
+        self.mainLoop = mainLoop
         self.file = file
         self.size = size
         self.upscale = (size[0] * upscale, size[1] * upscale)
         self.start = start
         self.stop = stop
         self.callback = callback
-
-        self.image = pygame.image.load(file)
-        self.rect = self.image.get_rect()
-        self.tiles = []
         self.current_tile_index = start
-        self.setup()
+
+        if mainLoop.cachedImages.getImage(file) is None:
+            self.image = pygame.image.load(file)
+            self.tiles = []
+            self.rect = self.image.get_rect()
+            self.setup()
+        else:
+            cachedImage = mainLoop.cachedImages.getImage(file)
+            self.image = cachedImage["image"]
+            self.tiles = cachedImage["tiles"]
+            self.rect = self.image.get_rect()
 
     def setup(self):
         """Import all images into the tileset"""
@@ -37,6 +44,8 @@ class Tileset:
             tile.blit(self.image, (0, 0), (x, 0, *self.size))
             tile = pygame.transform.scale(tile, self.upscale)
             self.tiles.append(tile)
+
+        self.mainLoop.cachedImages.addImage(self.file, {"image": self.image, "tiles": self.tiles})
 
     def increment(self) -> pygame.Surface:
         """Incrementally go through all tiles. Return the current tile"""
@@ -53,20 +62,15 @@ class Tileset:
         """Reset the tileset animation back to the start"""
         self.current_tile_index = self.start
 
-class CachedTiles:
+class CachedImages:
     def __init__(self) -> None:
-        self.tiles = {}
+        self.images = {}
 
-    def getTile(self, entityName, animationName):
-        """Returns a tile if one was found"""
-        if entityName in self.tiles:
-            if animationName in self.tiles[entityName]:
-                return self.tiles[entityName][animationName]
+    def getImage(self, filename):
+        if filename in self.images:
+            return self.images[filename]
         return None
-    
-    def addTile(self, entityName, animationName, override=False, *TilesetAttributes):
-        if entityName in self.tiles:
-            if animationName not in self.tiles[entityName] or override:
-                self.tiles[entityName][animationName] = Tileset(*TilesetAttributes)
-        else:
-            self.tiles[entityName] = {animationName: Tileset(*TilesetAttributes)}
+
+    def addImage(self, filename, image):
+        if filename not in self.images:
+            self.images[filename] = image

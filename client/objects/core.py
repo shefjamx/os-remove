@@ -8,8 +8,8 @@ class Core:
         self.maxHealth = health
         self.currentHealth = health
         self.tilesets = {
-            "idle": Tileset("assets\\images\\core\\FlyingObelisk_no_lightnings_no_letter.png", (200, 400), 0, 12),
-            "death": Tileset("assets\\images\\core\\FlyingObelisk_Destruction.png", (200, 400), 0, 15)
+            "idle": Tileset(main_loop, "assets\\images\\core\\FlyingObelisk_no_lightnings_no_letter.png", (200, 400), 0, 12),
+            "death": Tileset(main_loop, "assets\\images\\core\\FlyingObelisk_Destruction.png", (200, 400), 0, 15)
         }
         self.tile_fps = {
             "idle": 12,
