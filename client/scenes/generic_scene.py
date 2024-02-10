@@ -14,7 +14,7 @@ class GenericScene:
         self.main_loop = main_loop
         self.time_difference = 0 
 
-    def tick(self):
+    def tick(self, player = None):
         """Re-render the scene"""
         # RENDER EVERYTHING ON self.display
 
@@ -23,10 +23,11 @@ class GenericScene:
         elif self.shake_duration > 2:
             self.shake()
 
-
         self.screen.blit(self.display, self.shake_offset)
+        if player:
+            self.screen.blit(player.surf, [640 - player.player_rect.w/2, 360 - player.player_rect.h/2])
         pygame.display.flip()
-
+    
     def handle_click(self, mouse):
         """
         Handle a click.
