@@ -31,11 +31,13 @@ class Level:
         self.__levelPath = f"levels\\{levelDir}\\level.dat"
         self.songPath = ""
         self.timingPoints = []
+        self.spawnRate = 0.0
         self.zones = []
         # To add an attribute to the file schema, 
         self.__FILE_SCHEMA = {
-            "audio-path": ("songPath", lambda x: x),
-            "timing-points": ("timingPoints", lambda x: [HitTiming(float(i)) for i in x.strip('][').split(', ')])
+            "audio-path": ("songPath", str),
+            "timing-points": ("timingPoints", lambda x: [HitTiming(float(i)) for i in x.strip('][').split(', ')]),
+            "spawn-rate": ("spawnRate", float)
         }
         self.__loadFromPath(self.__levelPath)
         
