@@ -101,7 +101,7 @@ class Player(pygame.sprite.Sprite):
             self.speed = 200
             
             # Attempt to attack the enemies
-            attack_rect = pygame.rect.Rect(550, 310, 170, 150)
+            attack_rect = pygame.rect.Rect(540, 310, 190, 150)
             enemies_hit = self.scene.enemyHandler.detect_hit(attack_rect, (self.x, self.y))
             if len(enemies_hit) >= 1:
                 enemies_hit[-1].takeDamage(self.attack_amount)
