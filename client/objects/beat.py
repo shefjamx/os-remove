@@ -35,10 +35,7 @@ class BeatHitter:
 
     def tick(self):
         # Get all beats
-        # beatsBefore = self.scene.level.getNextHitTimings(pygame.mixer.music.get_pos() - self.timePerBeat * (self.beatsPerBar / 2), self.timePerBeat * (self.beatsPerBar / 2))
         beatsAfter = self.scene.level.getNextHitTimings(pygame.mixer.music.get_pos(), self.timePerBeat * (self.beatsPerBar / 2))
-
-        # self.beats = [-x.getTiming() for x in beatsBefore]
         for x in beatsAfter:
             self.beats.append(x.getTiming())
 
