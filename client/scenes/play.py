@@ -60,7 +60,7 @@ class PlayScene(GenericScene):
         log("Player died", "debug")
         pygame.mixer.music.stop()
         self.cores = []
-        self.main_loop.change_scene(EndScene)
+        self.main_loop.change_scene(EndScene, False)
 
     def resetCombo(self) -> None:
         self.playData["highest-combo"] = max(self.playData["highest-combo"], self.playData["current-combo"])
