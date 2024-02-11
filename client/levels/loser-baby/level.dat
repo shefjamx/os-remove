@@ -1,0 +1,6 @@
+bpm=8
+audio-path=levels/loser-baby/audio.mp3
+timing-points=[358, 4108, 7858]
+zones=[(default 0.0 10000.0 1.0 necromancer), (zone2 10000.0 -1.0 1.5 bod skeleton)]
+player-attack-timing=0.2
+initial-offset=0.0
