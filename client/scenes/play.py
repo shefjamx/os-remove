@@ -77,7 +77,7 @@ class PlayScene(GenericScene):
     def removeHitTimings(self, songPos: float) -> None:
         toRemove = []
         for timing in self.hitTimings:
-            if (timing.getTiming() - (120/self.level.bpm)*1000) < songPos:
+            if (timing.getTiming() + (120/self.level.bpm)*1000) < songPos:
                 toRemove.append(timing)
             else:
                 break
