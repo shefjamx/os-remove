@@ -264,9 +264,13 @@ class LevelEditor(GenericScene):
         file_name = filedialog.askopenfile(filetypes=[("Audio Files", ".mp3 .ogg .wav")], parent=top).name
         print(file_name)
         top.destroy()
-        newAudio = f"{_dir}\\{file_name.split('/')[-1]}"
-        shutil.copy(file_name, _dir)
+        newAudio = f"{_dir}/audio.{file_name.split('/')[-1].split('.')[-1]}"
         # create level object
+        print(_dir)
+        directory = f"./{_dir}/"
+        print(f"{directory}")
+        os.mkdir(f"{directory}")
+        shutil.copy(file_name, f"{_dir}/audio.mp3")
         self.level = Level.newLevel(_dir, newAudio)
         self.timeline = Timeline(self.level)
         self.main_loop.add_key_callback(K_SPACE, self.timeline.resume, False)

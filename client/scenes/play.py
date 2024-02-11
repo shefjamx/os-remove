@@ -32,7 +32,7 @@ class PlayScene(GenericScene):
             self.musicChannel.play()
         self.label_font = pygame.font.Font("assets/fonts/Abaddon Bold.ttf", 48)
 
-        self.enemyHandler = EnemyHandler(1.0, self.level.zones[0], self.main_loop, self.player, self.cores[0])
+        self.enemyHandler = EnemyHandler(1.0, self.level.zones[0], self.main_loop, self.player, self.cores)
         self.playData = {
             "num-misses": 0,
             "total-score": 0,

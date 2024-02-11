@@ -1,6 +1,7 @@
 from __future__ import annotations
 import os
 import pathlib
+import pygame
 
 from misc.logger import log
 from objects.zone import Zone
@@ -42,12 +43,17 @@ class Level:
         # To add an attribute to the file schema,
         self.__FILE_SCHEMA = {
             "audio-path": ("songPath", str),
-            "timing-points": ("timingPoints", lambda x: [HitTiming(float(i)) for i in x.strip('][').split(', ')]),
+            "timing-points": ("timingPoints", self.timingPointsFromString),
             "zones": ("zones", lambda x: [Zone.from_string(dat) for dat in x.strip('][').split(', ')]),
             "bpm": ("bpm", int)
         }
         self.__loadFromPath(self.__levelPath)
 
+    def timingPointsFromString(self, data) -> list[HitTiming]:
+        timings = data.strip('][').split(', ')
+        if '' in timings:
+            timings.remove('')
+        return [HitTiming(float(i)) for i in timings]
 
     def __loadFromPath(self, path: str) -> None:
         if not os.path.isfile(path):
@@ -68,13 +74,12 @@ class Level:
 
     @staticmethod
     def newLevel(directory: str, audioFile: str) -> Level:
-        print(f"{directory}")
-        pathlib.Path.mkdir(directory)
         with open(f"{directory}\\level.dat", "w+") as f:
-            f.writeline(f"audio-path=audio.{audioFile}")
-            f.writeline("timing-points=[]")
-            f.writeline("spawn-rate=1.0")
-        return Level(directory.split(",")[-1])
+            f.write(f"audio-path={audioFile}\n")
+            f.write("timing-points=[]\n")
+            f.write(f"zones=[(default 0 {pygame.mixer.Sound(audioFile).get_length()*1e3} 1.0)]\n")
+            f.write("bpm=120")
+        return Level(directory.split("/")[-1])
 
     def saveToPath(self, path: str = "") -> None:
         """
