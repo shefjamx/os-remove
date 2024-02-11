@@ -82,6 +82,7 @@ class PlayScene(GenericScene):
             return
         self.beatHitter.deleteNearest()
         print(nextTimingScore[0])
+        
         self.pastAttackOffsets.append(nextTimingScore[0])
         if nextTimingScore[1] == 0:
             self.shake()
