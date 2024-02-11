@@ -11,8 +11,8 @@ class BeatHitter:
         self.baseBeatImage = pygame.image.load("assets/images/beat.png").convert_alpha()
 
         self.beatsPerBar = 4
-        self.beatsPerGreen = 1
-        self.beatsPerOrange = 0.5
+        self.beatsPerGreen = 1.25
+        self.beatsPerOrange = 0.75
         self.beatsPerRed = 0.25
         self.timePerBeat = 60/bpm*1000
         self.beats = []

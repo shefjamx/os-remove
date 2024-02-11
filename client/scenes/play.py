@@ -23,6 +23,7 @@ class PlayScene(GenericScene):
         self.musicChannel.load(self.level.getSongPath())
         self.background_image = pygame.image.load("assets/images/main_level_3x.png")
         self.player = Player(main_loop, self)
+        self.player.min_attack_time = self.level.playerAttackSpeed
         self.cores = (Core(10e3, 0, 0, self.main_loop), Core(10e3, 0, 0, self.main_loop))
         offsetX, coreY = self.background_image.get_width() / 2.5, 2162 / 2 - self.cores[0].sprite.get_height() / 1.5
         self.cores[0].setPos((offsetX, coreY))
@@ -76,7 +77,7 @@ class PlayScene(GenericScene):
     def removeHitTimings(self, songPos: float) -> None:
         toRemove = []
         for timing in self.hitTimings:
-            if timing.getTiming() < songPos:
+            if (timing.getTiming() + (120/self.level.bpm)*1000) < songPos:
                 toRemove.append(timing)
             else:
                 break

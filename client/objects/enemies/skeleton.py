@@ -5,7 +5,7 @@ import pygame
 
 class Skeleton(GenericEnemy):
     def __init__(self, x: float, y: float, mainLoop, desireableEntity) -> None:
-        super().__init__(x, y, 100, 1, mainLoop)
+        super().__init__(x, y, 200, 1, mainLoop)
         self.pyro = 3.5
         self.mainLoop = mainLoop
         self.tilesets = {

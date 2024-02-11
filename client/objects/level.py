@@ -7,17 +7,18 @@ from misc.logger import log
 from objects.zone import Zone
 
 class HitTiming:
-    def __init__(self, timing: float, bpm: int):
-        self.timePerBeat = 60/bpm
-        self.__TIMING_WINDOWS = self.TIMING_WINDOWS = [(self.timePerBeat*0.25*2, 5), (self.timePerBeat*0.5*2, 2), (self.timePerBeat*1*2, 0)]
-        print(self.__TIMING_WINDOWS)
+    def __init__(self, timing: float):
         self.__timing = timing
+
+    def setup(self, bpm):
+        self.timePerBeat = 60/bpm*1000
+        self.__TIMING_WINDOWS = self.TIMING_WINDOWS = [(self.timePerBeat*0.25, 5), (self.timePerBeat*0.75, 2), (self.timePerBeat*1.25, 0)]
 
     def getScore(self, timing: float) -> tuple[float, int]:
         """
         Returns the score for the given hit timing
         """
-        difference = abs(self.__timing - timing)
+        difference = abs(timing - self.__timing)
         for window in self.__TIMING_WINDOWS:
             if difference <= window[0]:
                 return difference, window[1]
@@ -37,24 +38,30 @@ class Level:
     """
     def __init__(self, level_string: str):
         self.__levelPath = f"levels\\{level_string}\\level.dat"
+        self.directory = level_string
+        self.name = level_string.replace("-", " ").capitalize()
         self.songPath = ""
         self.timingPoints = []
         self.zones = []
-        self.bpm = 1
+        self.bpm = 0
+        self.playerAttackSpeed = 0.0
         # To add an attribute to the file schema,
         self.__FILE_SCHEMA = {
             "bpm": ("bpm", int),
             "audio-path": ("songPath", str),
             "timing-points": ("timingPoints", self.timingPointsFromString),
             "zones": ("zones", lambda x: [Zone.from_string(dat) for dat in x.strip('][').split(', ')]),
+            "player-attack-timing": ("playerAttackSpeed", float)
         }
         self.__loadFromPath(self.__levelPath)
+        for timingPoint in self.timingPoints:
+            timingPoint.setup(self.bpm)
 
     def timingPointsFromString(self, data) -> list[HitTiming]:
         timings = data.strip('][').split(', ')
         if '' in timings:
             timings.remove('')
-        return [HitTiming(float(i), self.bpm) for i in timings]
+        return [HitTiming(float(i)) for i in timings]
 
     def __loadFromPath(self, path: str) -> None:
         if not os.path.isfile(path):
@@ -70,8 +77,8 @@ class Level:
 
 
     @staticmethod
-    def allLevels(self) -> list[Level]:
-        return os.walk("levels")
+    def allLevels() -> list[Level]:
+        return [Level(x) for x in list(os.walk("levels"))[0][1]]
 
     @staticmethod
     def newLevel(directory: str, audioFile: str) -> Level:
@@ -80,6 +87,7 @@ class Level:
             f.write("timing-points=[]\n")
             f.write(f"zones=[(default 0 {pygame.mixer.Sound(audioFile).get_length()*1e3} 1.0)]\n")
             f.write("bpm=120")
+            f.write("player-attack-timing=0.1")
         return Level(directory.split("/")[-1])
 
     def saveToPath(self, path: str = "") -> None:

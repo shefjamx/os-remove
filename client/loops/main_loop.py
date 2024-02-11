@@ -32,8 +32,9 @@ class MainLoop():
         self.clock = pygame.time.Clock()
         self.cachedImages: CachedImages = CachedImages()
 
-        # self.current_scene: GenericScene = HomeScreen(screen, self)
-        self.current_scene: GenericScene = PlayScene(screen, self, "ascension-to-heaven", time.time() + 5, debug=True)
+        self.current_scene: GenericScene = HomeScreen(screen, self)
+        #self.current_scene: GenericScene = PlayScene(screen, self, "ascension-to-heaven", time.time() + 5, debug=True)
+        #self.current_scene: GenericScene = PlayScene(screen, self, "cover-femboy-friday", time.time() + 5, debug=True)
         #self.current_scene: GenericScene = LevelEditor(screen, self, "anybody-can-find-love")
         self.dt = 0
 
@@ -95,7 +96,7 @@ class MainLoop():
                 # input boxes handle events differently
                 if isinstance(self.current_scene, ConnectScene):
                     self.current_scene.handle_menu_input(event)
-                
+
                 # Clicks
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
