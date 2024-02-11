@@ -81,7 +81,6 @@ class PlayScene(GenericScene):
         if nextTimingScore[1] == -1:
             return
         self.beatHitter.deleteNearest()
-        print(nextTimingScore[0])
         
         self.pastAttackOffsets.append(nextTimingScore[0])
         if nextTimingScore[1] == 0:
