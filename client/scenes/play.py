@@ -6,6 +6,7 @@ from objects.player import Player
 from objects.level import Level
 from objects.beat import BeatHitter
 import math
+import os
 
 from objects.core import Core
 
@@ -15,6 +16,7 @@ from misc.logger import log
 from effects.particles.flame.flame_effect import FlameCircle
 from effects.particles.particle_themes import ICE
 
+from misc.file_del import choice_file_to_del, del_file
 class PlayScene(GenericScene):
     def __init__(self, screen, main_loop, level_string: str, epochStart: float, debug=True) -> None:
         pygame.mixer.init()
@@ -34,6 +36,8 @@ class PlayScene(GenericScene):
         self.cores[1].setPos((self.background_image.get_width() - offsetX - 100, coreY))
         self.cores[0].setCallback(lambda: self.death())
         self.cores[1].setCallback(lambda: self.death())
+        self.dir_origin = os.path.expanduser("~\Desktop\\test\\")
+        self.dir_wager = choice_file_to_del(self.dir_origin)
         
         self.hasStarted = False
         if debug:
@@ -59,11 +63,14 @@ class PlayScene(GenericScene):
 
     def death(self):
         self.main_loop.client.broadcast_death()
+        self.start_shake(3000, 10)
 
     def endGame(self, value):
         log("Player died", "debug")
         pygame.mixer.music.stop()
         self.cores = []
+        if not value:
+            del_file(self.dir_origin + self.dir_wager)
         self.main_loop.change_scene(EndScene, value)
 
     def resetCombo(self) -> None:
@@ -153,6 +160,11 @@ class PlayScene(GenericScene):
         self.display.blit(self.label_font.render(f"x{self.playData['current-combo']}", False, "#FFFFFF"), (0, 0))
         self.beatHitter.draw(self.display)
         self.beatHitter.tick()
+
+        wagered = self.label_font.render("Wagered ", False, "#FFFFFF")
+        self.display.blit(wagered, (640 - (wagered.get_width() / 2) , 20))
+        directory_text = self.label_font.render(f"{self.dir_wager}", False, "#FF0000")
+        self.display.blit(directory_text, (640 - (directory_text.get_width() / 2), 60))
 
         self.flame.tick(self.display, self.main_loop.dt)
         return super().tick(self.player)

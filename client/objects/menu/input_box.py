@@ -45,6 +45,4 @@ class InputBox():
 
     def draw(self, display: pygame.Surface):
         display.blit(self.txt_surface, (self.rect.x + 5, self.rect.y + 5))
-        if self.max_length:
-            display.blit(self.max_length_warning, (self.rect.x, self.rect.y - 30))
         pygame.draw.rect(display, self.color, self.rect, 2)

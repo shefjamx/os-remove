@@ -23,6 +23,7 @@ class Core:
 
     def dealDamage(self, damage: float) -> None:
         self.currentHealth -= damage
+        self.main_loop.current_scene.start_shake(500, 5)
 
     def getX(self) -> float:
         return self.pos[0]

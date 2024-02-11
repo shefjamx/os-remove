@@ -45,7 +45,7 @@ class ConnectScene(GenericScene):
         self.create_button(390, 420, 500, 60, "JOIN PARTY", 520, 430, lambda: self.switch_party())
         self.create_button(900, 600, 325, 60, "LEAVE PARTY", 925, 610, lambda: self.leave_party())
         self.create_button(80, 600, 300, 60, "START GAME", 105, 610, lambda: self.begin_level())
-        self.create_button(440, 470, 250, 60, "JOIN GAME", 445, 480, lambda: self.join_party())
+        self.create_button((SCREEN_WIDTH / 2) - 105, 470, 250, 60, "JOIN GAME", (SCREEN_WIDTH / 2) - 100, 480, lambda: self.join_party())
 
 
     def leave_party(self) -> None:
