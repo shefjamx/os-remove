@@ -80,7 +80,6 @@ class PlayScene(GenericScene):
 
     def doPlayerAttack(self) -> None:
         self.player.setAttackAnimation()
-        self.beatHitter.deleteNearest()
         if not self.hitTimings:
             self.player.attack(0.25)
             return
