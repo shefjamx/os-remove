@@ -33,7 +33,7 @@ class Player(pygame.sprite.Sprite):
 
         # Attacking
         self.time_since_last_attack = 0
-        self.min_attack_time = 0.1
+        self.min_attack_time = 0.05
         self.attack_amount = 100
 
         # Movement callbacks
