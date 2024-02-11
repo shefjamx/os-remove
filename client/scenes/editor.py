@@ -191,9 +191,9 @@ class Timeline:
     def tick(self) -> None:
         if self.isPlaying:
             currentTickTimes = self.level.getNextHitTimings(self.getTrueCurrentPosition()-self.level.offset, 500)
-            for tick in self.previousRelevantHitObjects:
-                if tick not in currentTickTimes:
-                    self.hitSound.play()
+            # for tick in self.previousRelevantHitObjects:
+            #     if tick not in currentTickTimes:
+            #         self.hitSound.play()
             self.previousRelevantHitObjects = currentTickTimes
 
     def resolveTimingPoint(self, point) -> float:
