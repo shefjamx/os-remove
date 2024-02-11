@@ -7,9 +7,9 @@ from misc.logger import log
 from objects.zone import Zone
 
 class HitTiming:
-
-    def __init__(self, timing: float):
-        self.__TIMING_WINDOWS = self.TIMING_WINDOWS = [(50, 5), (125, 2), (175, 0)]
+    def __init__(self, timing: float, bpm: int):
+        self.timePerBeat = 60/bpm*1000
+        self.__TIMING_WINDOWS = self.TIMING_WINDOWS = [(self.timePerBeat*0.25, 5), (self.timePerBeat*0.5, 2), (self.timePerBeat*1, 0)]
         self.__timing = timing
 
     def getScore(self, timing: float) -> tuple[float, int]:
