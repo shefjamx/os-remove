@@ -32,8 +32,8 @@ class PlayScene(GenericScene):
         offsetX, coreY = self.background_image.get_width() / 2.5, 2162 / 2 - self.cores[0].sprite.get_height() / 1.5
         self.cores[0].setPos((offsetX, coreY))
         self.cores[1].setPos((self.background_image.get_width() - offsetX - 100, coreY))
-        self.cores[0].setCallback(lambda: self.endGame())
-        self.cores[1].setCallback(lambda: self.endGame())
+        self.cores[0].setCallback(lambda: self.death())
+        self.cores[1].setCallback(lambda: self.death())
         
         self.hasStarted = False
         if debug:
@@ -56,11 +56,14 @@ class PlayScene(GenericScene):
         self.beatHitter = BeatHitter(main_loop, main_loop.screen, self, self.level.bpm)
         self.pastAttackOffsets = []
 
-    def endGame(self):
+    def death(self):
+        self.main_loop.client.broadcast_death(self)
+
+    def endGame(self, value):
         log("Player died", "debug")
         pygame.mixer.music.stop()
         self.cores = []
-        self.main_loop.change_scene(EndScene, False)
+        self.main_loop.change_scene(EndScene, value)
 
     def resetCombo(self) -> None:
         self.playData["highest-combo"] = max(self.playData["highest-combo"], self.playData["current-combo"])

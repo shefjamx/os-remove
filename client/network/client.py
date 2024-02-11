@@ -61,6 +61,13 @@ class Client():
                     value = float(json_data['value'])
                     print(json_data['value'])
                     self.main_loop.current_scene.enemyHandler.updateSpawnRate(value)
+                elif json_data['type'] == "end":
+                    value = json_data['win']
+                    # 0 for loss, 1 for win
+                    res = False
+                    if (value == "1"):
+                        res = True
+                    self.main_loop.current_scene.endGame(res)
 
     def get_party_code(self):
         return str(self.party_code)
@@ -71,7 +78,7 @@ class Client():
     def update_song(self, new_song: str):
         try:
             self.socket.send(
-                '{"endpoint": "update-song", C}'.replace("C", f'"song" : "{new_song}", "code": "{self.get_party_code}"').encode()
+                '{"endpoint": "update-song", C}'.replace("C", f'"song" : "{new_song}", "code": "{self.get_party_code()}"').encode()
             )
         except Exception as e:
             log(f"Failed to update song. Traceback:\n {str(e)}", type="ERROR")
@@ -119,6 +126,14 @@ class Client():
             )
         except Exception as e:
             log(f"Failed to update spawn rate\n {str(e)}")
+
+    def broadcast_death(self):
+        try:
+            self.socket.send(
+                '{"endpoint" : "death"}'.encode()
+            )
+        except Exception as e:
+            log(f"Failed to die.")
 
 
     def set_is_listening(self, val: bool):
