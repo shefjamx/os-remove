@@ -2,7 +2,6 @@ import pygame
 from misc.animator import Tileset
 
 class Core:
-
     def __init__(self, health: int, x: float, y: float, main_loop):
         self.main_loop = main_loop
         self.maxHealth = health
@@ -10,13 +9,14 @@ class Core:
         self.currentHealth = health
         self.tilesets = {
             "idle": Tileset(main_loop, "assets\\images\\core\\FlyingObelisk_no_lightnings_no_letter.png", (200, 400), 0, 12),
-            "death": Tileset(main_loop, "assets\\images\\core\\FlyingObelisk_Destruction.png", (200, 400), 0, 15)
+            "death": Tileset(main_loop, "assets\\images\\core\\FlyingObelisk_Destruction.png", (200, 400), 0, 15, callback=lambda: self.runCallback())
         }
         self.tile_fps = {
             "idle": 12,
             "death": 8,
             "attack": 36
         }
+        self.callback = None
         self.tileset = "idle"
         self.sprite = self.tilesets[self.tileset].increment()
         self.time_since_last_tile = 0
@@ -69,3 +69,11 @@ class Core:
             self.sprite = self.tilesets[self.tileset].increment()
         if self.currentHealth <= 0:
             self.tileset = "death"
+            
+    def setCallback(self, callback):
+        self.callback = callback
+
+    def runCallback(self):
+        if self.callback is not None:
+            self.callback()
+

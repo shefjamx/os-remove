@@ -9,6 +9,7 @@ import math
 from objects.core import Core
 
 from handlers.enemy import EnemyHandler
+from misc.logger import log
 
 from effects.particles.flame.flame_effect import FlameCircle
 from effects.particles.particle_themes import ICE
@@ -25,10 +26,14 @@ class PlayScene(GenericScene):
         self.background_image = pygame.image.load("assets/images/main_level_3x.png")
         self.player = Player(main_loop, self)
         self.player.min_attack_time = self.level.playerAttackSpeed
-        self.cores = (Core(10e3, 0, 0, self.main_loop), Core(10e3, 0, 0, self.main_loop))
+        
+        self.cores = [Core(10e3, 0, 0, self.main_loop), Core(10e3, 0, 0, self.main_loop)]
         offsetX, coreY = self.background_image.get_width() / 2.5, 2162 / 2 - self.cores[0].sprite.get_height() / 1.5
         self.cores[0].setPos((offsetX, coreY))
         self.cores[1].setPos((self.background_image.get_width() - offsetX - 100, coreY))
+        self.cores[0].setCallback(lambda: self.endGame())
+        self.cores[1].setCallback(lambda: self.endGame())
+        
         self.hasStarted = False
         if debug:
             self.musicChannel.play()
@@ -49,6 +54,10 @@ class PlayScene(GenericScene):
         self.hitTimings = self.level.getHitTimings().copy()
         self.beatHitter = BeatHitter(main_loop, main_loop.screen, self, self.level.bpm)
         self.pastAttackOffsets = []
+
+    def endGame(self):
+        self.cores = []
+        log("Player died", "debug")
 
     def resetCombo(self) -> None:
         self.playData["highest-combo"] = max(self.playData["highest-combo"], self.playData["current-combo"])
