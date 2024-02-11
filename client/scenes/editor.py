@@ -256,13 +256,12 @@ class LevelEditor(GenericScene):
 
     def newMap(self) -> None:
         # get name of map
-        name = "test-new-map"
-        _dir = f"levels/{name}"
         # copy audio file and set path
         top = Tk()
         top.withdraw()  # hide window
         file_name = filedialog.askopenfile(filetypes=[("Audio Files", ".mp3 .ogg .wav")], parent=top).name
-        print(file_name)
+        name = f"{os.path.basename(file_name).split('.')[0]}"
+        _dir = f"levels/{name}"
         top.destroy()
         newAudio = f"{_dir}/audio.{file_name.split('/')[-1].split('.')[-1]}"
         # create level object

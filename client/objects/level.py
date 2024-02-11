@@ -40,12 +40,14 @@ class Level:
         self.timingPoints = []
         self.zones = []
         self.bpm = 0
+        self.playerAttackSpeed = 0.0
         # To add an attribute to the file schema,
         self.__FILE_SCHEMA = {
             "audio-path": ("songPath", str),
             "timing-points": ("timingPoints", self.timingPointsFromString),
             "zones": ("zones", lambda x: [Zone.from_string(dat) for dat in x.strip('][').split(', ')]),
-            "bpm": ("bpm", int)
+            "bpm": ("bpm", int),
+            "player-attack-timing": ("playerAttackSpeed", float)
         }
         self.__loadFromPath(self.__levelPath)
 
@@ -79,6 +81,7 @@ class Level:
             f.write("timing-points=[]\n")
             f.write(f"zones=[(default 0 {pygame.mixer.Sound(audioFile).get_length()*1e3} 1.0)]\n")
             f.write("bpm=120")
+            f.write("player-attack-timing=0.1")
         return Level(directory.split("/")[-1])
 
     def saveToPath(self, path: str = "") -> None:
