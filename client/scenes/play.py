@@ -54,6 +54,7 @@ class PlayScene(GenericScene):
 
     def doPlayerAttack(self) -> None:
         self.player.attack()
+        self.beatHitter.deleteNearest()
         if not self.hitTimings:
             return
         currentSongTime = self.musicChannel.get_pos()
