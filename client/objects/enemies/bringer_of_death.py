@@ -70,4 +70,3 @@ class BringerOfDeath(GenericEnemy):
 
     def draw(self, surface: pygame.Surface, playerPos) -> None:
         surface.blit(pygame.transform.flip(self.sprite, self.isFlipped, False), (self.pos[0] - playerPos[0], self.pos[1] - playerPos[1]))
-        super().draw(surface, playerPos)
