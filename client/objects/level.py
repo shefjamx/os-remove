@@ -7,17 +7,18 @@ from misc.logger import log
 from objects.zone import Zone
 
 class HitTiming:
-    def __init__(self, timing: float, bpm: int):
-        self.timePerBeat = 60/bpm
-        self.__TIMING_WINDOWS = self.TIMING_WINDOWS = [(self.timePerBeat*0.25*2, 5), (self.timePerBeat*0.5*2, 2), (self.timePerBeat*1*2, 0)]
-        print(self.__TIMING_WINDOWS)
+    def __init__(self, timing: float):
         self.__timing = timing
+
+    def setup(self, bpm):
+        self.timePerBeat = 60/bpm*1000
+        self.__TIMING_WINDOWS = self.TIMING_WINDOWS = [(self.timePerBeat*0.25, 5), (self.timePerBeat*0.5, 2), (self.timePerBeat*1, 0)]
 
     def getScore(self, timing: float) -> tuple[float, int]:
         """
         Returns the score for the given hit timing
         """
-        difference = abs(self.__timing - timing)
+        difference = abs(timing - self.__timing)
         for window in self.__TIMING_WINDOWS:
             if difference <= window[0]:
                 return difference, window[1]
@@ -40,7 +41,7 @@ class Level:
         self.songPath = ""
         self.timingPoints = []
         self.zones = []
-        self.bpm = 1
+        self.bpm = 0
         self.playerAttackSpeed = 0.0
         # To add an attribute to the file schema,
         self.__FILE_SCHEMA = {
@@ -48,16 +49,17 @@ class Level:
             "audio-path": ("songPath", str),
             "timing-points": ("timingPoints", self.timingPointsFromString),
             "zones": ("zones", lambda x: [Zone.from_string(dat) for dat in x.strip('][').split(', ')]),
-            "bpm": ("bpm", int),
             "player-attack-timing": ("playerAttackSpeed", float)
         }
         self.__loadFromPath(self.__levelPath)
+        for timingPoint in self.timingPoints:
+            timingPoint.setup(self.bpm)
 
     def timingPointsFromString(self, data) -> list[HitTiming]:
         timings = data.strip('][').split(', ')
         if '' in timings:
             timings.remove('')
-        return [HitTiming(float(i), self.bpm) for i in timings]
+        return [HitTiming(float(i)) for i in timings]
 
     def __loadFromPath(self, path: str) -> None:
         if not os.path.isfile(path):
