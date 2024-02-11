@@ -32,7 +32,7 @@ class Timeline:
         self.musicChannel.load(level.getSongPath())
         self.hitSound = pygame.mixer.Sound("assets\\sound\\hitsound.ogg")
 
-        self.snapTo = 1/2
+        self.snapTo = 4
 
         self.previousRelevantHitObjects = self.level.getNextHitTimings(self.currentTime, 0.5)
         self.editingMode = self.EditingMode.E_NORMAL
@@ -67,10 +67,14 @@ class Timeline:
 
 
     def getTrueCurrentPosition(self) -> float:
-        return self.totalOffsetTime + self.musicChannel.get_pos()
+        if self.isPlaying:
+            return self.totalOffsetTime + self.musicChannel.get_pos()
+        else:
+            return self.totalOffsetTime
 
     def incrementOffset(self, offset) -> None:
         self.level.offset += offset
+        print(f"Offset: {self.level.offset}")
 
     def toggleZoneMode(self) -> None:
         if self.editingMode == self.EditingMode.E_ZONES:
@@ -85,7 +89,7 @@ class Timeline:
     def resetSong(self) -> float:
         self.totalOffsetTime = 0
         if self.isPlaying:
-            self.musicChannel.play(self.level.offset)
+            self.musicChannel.play()
 
     def resume(self) -> None:
         self.isPlaying = not self.isPlaying
@@ -168,14 +172,15 @@ class Timeline:
             pygame.draw.rect(surface, "#FF0000", (x + ratio*self.width, y+25, 1, 50))
 
 
-        ratio = (self.getTrueCurrentPosition() if self.isPlaying else self.totalOffsetTime) / self.duration
+        print(self.totalOffsetTime, self.getTrueCurrentPosition())
+        ratio = self.getTrueCurrentPosition() / self.duration
         pygame.draw.rect(surface, "#00FF00", (1280/2, y + 25, 2, 50))
 
         self.drawButtons(surface)
 
     def tick(self) -> None:
         if self.isPlaying:
-            currentTickTimes = self.level.getNextHitTimings(self.getTrueCurrentPosition(), 500)
+            currentTickTimes = self.level.getNextHitTimings(self.getTrueCurrentPosition()-self.level.offset, 500)
             for tick in self.previousRelevantHitObjects:
                 if tick not in currentTickTimes:
                     self.hitSound.play()
@@ -245,8 +250,8 @@ class LevelEditor(GenericScene):
         self.main_loop.add_key_callback(K_SPACE, self.timeline.resume, False)
         self.main_loop.add_key_callback(K_RIGHT, lambda: self.timeline.incrementSong(100))
         self.main_loop.add_key_callback(K_LEFT, lambda: self.timeline.incrementSong(-100))
-        self.main_loop.add_key_callback(pygame.locals.K_UP, lambda: self.timeline.incrementOffset(10))
-        self.main_loop.add_key_callback(pygame.locals.K_DOWN, lambda: self.timeline.incrementOffset(-10))
+        self.main_loop.add_key_callback(pygame.locals.K_UP, lambda: self.timeline.incrementOffset(10), False)
+        self.main_loop.add_key_callback(pygame.locals.K_DOWN, lambda: self.timeline.incrementOffset(-10), False)
 
 
     def save(self) -> None:
