@@ -3,9 +3,10 @@ from misc.animator import Tileset
 
 class Core:
 
-    def __init__(self, health: int, main_loop):
+    def __init__(self, health: int, x: float, y: float, main_loop):
         self.main_loop = main_loop
         self.maxHealth = health
+        self.pos = (x, y)
         self.currentHealth = health
         self.tilesets = {
             "idle": Tileset(main_loop, "assets\\images\\core\\FlyingObelisk_no_lightnings_no_letter.png", (200, 400), 0, 12),
@@ -24,10 +25,15 @@ class Core:
         self.currentHealth -= damage
 
     def getX(self) -> float:
+        return self.pos[0]
         return 3842 / 2 - self.sprite.get_width() / 2
 
     def getY(self) -> float:
+        return self.pos[1]
         return 2162 / 2 - self.sprite.get_height() / 1.5
+    
+    def setPos(self, pos) -> tuple[float, float]:
+        self.pos = pos
 
     def getWidth(self) -> int:
         return self.sprite.get_width()
