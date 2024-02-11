@@ -117,7 +117,6 @@ class ConnectScene(GenericScene):
         rect = self.background_image.get_rect()
         self.display.blit(self.background_image, rect)
 
-
         if self.current_screen == 2:
             party_code = self.font.render(f"Party Code: ", True, "#D6D5D4")
             code = self.font.render(f"{self.main_loop.client.party_code}", False, "#DB2D20")
@@ -143,5 +142,5 @@ class ConnectScene(GenericScene):
             self.render_buttons(["CREATE PARTY", "JOIN PARTY"])
 
         #self.input_box.draw(self.display)
-
+        self.y_tween.update()
         return super().tick(),
