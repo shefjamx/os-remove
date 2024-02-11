@@ -17,7 +17,7 @@ class LevelHandler:
     def incrementSelection(self, amt) -> None:
         self.currentLevel += amt
         self.currentLevel = self.currentLevel % len(self.allLevels)
-        self.mainLoop.client.update_song(self.allLevels[self.currentLevel].name)
+        self.mainLoop.client.update_song(self.allLevels[self.currentLevel].directory)
         pygame.mixer.music.load(self.allLevels[self.currentLevel].getSongPath())
         pygame.mixer.music.play()
 
