@@ -58,13 +58,18 @@ class EnemyHandler:
             self.nextSpawn += 4e3 * self.currentZone.getSpawnRate()
 
         toRemove = []
+        toPurge = []
         for enemy in self.enemies:
             if enemy.currentHealth <= 0 and enemy not in self.enemies_dying:
                 self.enemies_dying.append(enemy)
                 toRemove.append(enemy)
             enemy.tick()
+            if enemy.markedForInstantDeletion:
+                toPurge.append(enemy)
         for enemy in toRemove:
             enemy.kill(lambda: self.deleteEnemy(enemy))
+        for enemy in toPurge:
+            self.enemies.remove(enemy)
 
     def deleteEnemy(self, enemy):
         if enemy in self.enemies:

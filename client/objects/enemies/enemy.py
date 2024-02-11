@@ -16,19 +16,24 @@ class GenericEnemy:
         self.time_since_last_tile = 0
         self.speed = 1
         self.has_attacked = False
+        self.markedForInstantDeletion = False
 
     def tick(self):
         """Tick the player class, used to animate the player"""
         self.time_since_last_tile += self.main_loop.dt
         if self.time_since_last_tile >= 1 / self.tile_fps[self.tileset]:
             self.time_since_last_tile = 0
-            self.sprite = self.tilesets[self.tileset].increment()
+            self.sprite = self.tilesets[self.tileset].increment(self)
 
     def kill(self, callback=None) -> None:
         """Kill the enemy and use a callback afterwards"""
         self.currentHealth = 0
         if callback is not None:
             callback()
+    
+    def forceKill(self):
+        # I fucking hate this entity please kill it
+        self.markedForInstantDeletion = True
 
     def draw(self, surface, playerPos) -> None:
         # draw da enemy

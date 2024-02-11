@@ -50,7 +50,7 @@ class Tileset:
 
         self.mainLoop.cachedImages.addImage(self.file, {"image": self.image, "tiles": self.tiles})
 
-    def increment(self) -> pygame.Surface:
+    def increment(self, poggersEntity=None) -> pygame.Surface:
         """Incrementally go through all tiles. Return the current tile"""
         tile = self.tiles[self.stop - self.current_tile_index] if self.reverse else self.tiles[self.current_tile_index]
         if self.current_tile_index + 1 <= self.stop:
@@ -63,7 +63,8 @@ class Tileset:
         
         if self.repeats >= self.max_repeat and self.max_repeat > 0:
             log("Hit max repeats", "warning")
-            self.callback()
+            if poggersEntity:
+                poggersEntity.forceKill()
         
         return tile
     
