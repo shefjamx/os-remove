@@ -36,7 +36,8 @@ class HomeScreen(GenericScene):
     def create_button_dict(self):
         """Create buttons and add them to the dictionary to be later used"""
         self.create_button(490, 320, 300, 60, "PLAY", 580, 330, lambda: self.main_loop.change_scene(ConnectScene))
-        self.create_button(490, 420, 300, 60, "LEAVE", 575, 430, sys.exit)
+        self.create_button(490, 420, 300, 60, "EDIT", 575, 430, lambda: self.main_loop.change_scene())
+        self.create_button(490, 520, 300, 60, "LEAVE", 575, 430, sys.exit)
 
     def create_button(self, x, y, w, h, text, tx, ty, callback):
         """

@@ -5,6 +5,7 @@ from scenes.play import PlayScene
 from objects.menu.input_box import InputBox
 from misc.settings import SCREEN_HEIGHT, SCREEN_WIDTH, ADDRESS, PORT
 from misc.logger import log
+from handlers.level import LevelHandler
 from objects.level import Level
 
 from network.client import Client
@@ -27,7 +28,7 @@ class ConnectScene(GenericScene):
             boomerang=True,
             loop=True
         )
-        self.allLevels = sorted(Level.allLevels(), key=lambda x: x.name)
+        self.levelHandler = LevelHandler(self.main_loop, lambda x: self.begin_level(x))
         self.y_tween.start()
         self.input_box = InputBox((SCREEN_WIDTH / 2) - 50, (SCREEN_HEIGHT / 2) - 25, 100,50,32)
         self.buttons = {}
@@ -39,20 +40,18 @@ class ConnectScene(GenericScene):
         self.client.connect()
         self.is_in_party = False
         self.currentLevel = 0
-        self.main_loop.add_key_callback(pygame.locals.K_RIGHT, lambda: self.increment_selection(1), False)
-        self.main_loop.add_key_callback(pygame.locals.K_LEFT, lambda: self.increment_selection(-1), False)
-        self.main_loop.add_key_callbacl(pygame.locals.K_ENTER, lambda: self.begin_level())
+
 
     def create_button_dict(self):
         """Create buttons and add them to the dictionary to be later used"""
         self.create_button(390, 320, 500, 60, "CREATE PARTY", 490, 330, lambda: self.create_party())
         self.create_button(390, 420, 500, 60, "JOIN PARTY", 520, 430, lambda: self.join_party())
+        self.create_button(1000, 600, 500, 60, "LEAVE PARTY", 1100, 610, lambda: self.leave_party())
 
-    def increment_selection(self, amt) -> None:
-        self.currentLevel += amt
-        self.currentLevel = self.currentLevel % len(self.allLevels)
-        pygame.mixer.music.load(self.allLevels[self.currentLevel].getSongPath())
-        pygame.mixer.music.play()
+    def leave_party(self) -> None:
+        #TODO: please implement :D
+        self.is_in_party = False
+        pass
 
     def create_button(self, x, y, w, h, text, tx, ty, callback):
         """
@@ -63,21 +62,28 @@ class ConnectScene(GenericScene):
         label = self.label_font.render(text, True, "#1F284D")
         self.buttons[text] = [rect, [label, tx, ty], callback]
 
-    def begin_level(self) -> None:
+    def begin_level(self, level: Level) -> None:
         #TODO: no idea how to do this can somebody else do it
         # Send notification to server to broadcast start message to clients
         # also send the name of the folder
-        levelName = self.allLevels[self.currentLevel].directory
+        levelName = level.directory
+        log("Telling server to begin level")
 
-    def render_buttons(self):
-        for button in self.buttons:
+    def render_buttons(self, buttons):
+        buttons = buttons or self.buttons
+        for button in buttons:
             pygame.draw.rect(self.display, "#BED9E5", self.buttons[button][0])
             self.display.blit(self.buttons[button][1][0], (self.buttons[button][1][1], self.buttons[button][1][2]))
 
     def handle_click(self, mouse_pos):
         for button in self.buttons:
             if self.buttons[button][0].collidepoint(mouse_pos):
-                self.buttons[button][2]()
+                if not self.is_in_party:
+                    if (button == "CREATE PARTY" or button == "JOIN PARTY"):
+                        self.buttons[button][2]()
+                else:
+                    if button == "LEAVE PARTY":
+                        self.buttons[button][2]()
 
     def handle_menu_input(self, event):
         self.input_box.handle_event(event)
@@ -96,11 +102,7 @@ class ConnectScene(GenericScene):
         self.is_in_party = True
 
 
-    def createLevelRect(self, level, i) -> pygame.Rect:
-        LEVEL_WIDTH = 500
-        LEVEL_HEIGHT = 100
-        LEVEL_MARGIN = 10
-        return pygame.Rect((self.display.get_width() - LEVEL_WIDTH ) / 2, 200 + (LEVEL_HEIGHT + LEVEL_MARGIN)*i, LEVEL_WIDTH, LEVEL_HEIGHT)
+
 
     def tick(self):
         # Background
@@ -115,12 +117,8 @@ class ConnectScene(GenericScene):
             self.display.blit(party_code, (x, 25))
             self.display.blit(code, (x + party_code.get_width(), 25))
 
-            for i,level in enumerate(self.allLevels):
-                rect = self.createLevelRect(level, i)
-                color = "#FF0000" if not self.currentLevel == i else "#00FF00"
-                pygame.draw.rect(self.display, color, rect)
-                title = self.label_font.render(level.name, False, "#FFFFFF")
-                self.display.blit(title, (rect.x + (rect.w - title.get_width()) / 2, rect.y + 10))
+            self.levelHandler.draw(self.display)
+            self.render_buttons(["LEAVE PARTY"])
         else:
             # If we are not in a party then display the defaults :D
             os = self.font.render("OS, ", True, "#D6D5D4")
@@ -130,7 +128,7 @@ class ConnectScene(GenericScene):
             self.display.blit(os, (388, self.y_tween.value))
             self.display.blit(remove, (550, self.y_tween.value))
             self.display.blit(question_mark, (850, self.y_tween.value))
-            self.render_buttons()
+            self.render_buttons(["CREATE PARTY", "JOIN PARTY"])
 
         #self.input_box.draw(self.display)
 
