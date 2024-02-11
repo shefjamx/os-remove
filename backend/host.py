@@ -3,6 +3,7 @@ import random
 import string
 import json
 import threading
+import time
 
 class Server:
     def __init__(self, host, port):
@@ -43,6 +44,10 @@ class Server:
                 elif json_data['endpoint'] == 'join-party':
                     print("joined party")
                     self.join_party(json_data['code'], clientsocket)
+                elif json_data['endpoint'] == 'start-game':
+                    print("starting game...")
+                    for party in self.parties:
+                        party.start_game()
             
     def remove_party(self, leader: str):
         for party in self.parties:
@@ -53,11 +58,13 @@ class Server:
         # check if leader not in party
         for party in self.parties:
             if party.get_leader() == leader:
-                self.conn.send("Leader already in party".encode())
+                clientsocket.send("Leader already in party".encode())
                 return
             
         self.parties.append(Party(clientsocket))
-        clientsocket.send(f"Party code is: {self.parties[-1].get_code()}".encode())
+        clientsocket.send(
+            '{"type" : "code", "code": "C"}'.replace("C", str(self.parties[-1].get_code())).encode()
+        )
 
     def join_party(self, code: str, player):
         for party in self.parties:
@@ -66,14 +73,12 @@ class Server:
                 print("Code: " + party.get_code())
                 print("Party Leader: " + party.get_leader())
                 print("Member: " + party.get_player())
-                party.test_send_leader("from client")
-                party.test_send_client("from leader")
                 return
         self.conn.send("Party doesn't exist".encode())
 
 class Party():
     def __init__(self, leader, player = None):
-        self.leader = leader # ip of leader
+        self.leader = leader # conn of leader
         self.code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
         self.player = player
 
@@ -117,6 +122,20 @@ class Party():
         """
         if self.is_empty():
             self.player = player
+
+    def start_game(self):
+        # send ready message
+        # if both ready, send run game()
+        offset = 4
+        if self.player == None:
+            print("Could not start game, not enough players")
+            return
+        message = '{"type": "start", "timestamp": "C" }'.replace("C", str(time.time() + offset)).encode()
+        self.leader.send(message)
+        self.player.send(message)
+
+    def game(self):
+        return
     
 server = Server('0.0.0.0', 3000)
 server.run()
