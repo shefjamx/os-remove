@@ -14,6 +14,7 @@ class ConnectScene(GenericScene):
         self.party_leader = False
         self.font = pygame.font.Font("assets/fonts/Abaddon Bold.ttf", 96)
         self.menu_options = []
+        self.selected_song_name = ""
         self.current_option = 0 
         self.y_tween = Tween(
             begin=140,

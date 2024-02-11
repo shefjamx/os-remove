@@ -69,10 +69,10 @@ class Client():
         except Exception as e:
             log(f"Failed to join party. Traceback:\n {str(e)}", type="ERROR")
 
-    def create_party(self):
+    def create_party(self, songname: str):
         try:
             self.socket.send(
-                '{"endpoint" : "create-party"}'.encode()
+                '{"endpoint" : "create-party", "song": "C"}'.replace("C", songname).encode()
             )
         except Exception as e:
             log(f"Failed to create party. Traceback: \n {str(e)}", type="ERROR")
