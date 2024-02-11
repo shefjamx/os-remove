@@ -34,7 +34,8 @@ class PlayScene(GenericScene):
             self.musicChannel.play()
         self.label_font = pygame.font.Font("assets/fonts/Abaddon Bold.ttf", 48)
 
-        self.enemyHandler = EnemyHandler(1.0, self.level.zones[0], self.main_loop, self.player, self.cores)
+        self.currentZone = 0
+        self.enemyHandler = EnemyHandler(1.0, self.level.zones[self.currentZone], self.main_loop, self.player, self.cores)
         self.playData = {
             "num-misses": 0,
             "total-score": 0,
@@ -83,10 +84,6 @@ class PlayScene(GenericScene):
         mult = 1 + 0.05 * math.e ** (0.9*avgHitTime - 4)
         print(f"Enemy spawn multiplier: {mult}")
 
-
-
-
-
     def removeHitTimings(self, songPos: float) -> None:
         toRemove = []
         for timing in self.hitTimings:
@@ -109,6 +106,10 @@ class PlayScene(GenericScene):
             self.hasStarted = True
         currentSongPos = self.musicChannel.get_pos()
         self.enemyHandler.tick(currentSongPos)
+        zoneTime = self.level.zones[self.currentZone].getTimings()[1]
+        if zoneTime <= currentSongPos and zoneTime != -1:
+            self.currentZone = min(self.currentZone + 1, len(self.level.zones))
+            self.enemyHandler.setZone(self.level.zones[self.currentZone])
         self.removeHitTimings(currentSongPos)
         # Background
         self.display.blit(self.background_image, (-self.player.x, -self.player.y))
