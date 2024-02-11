@@ -35,12 +35,14 @@ class BeatHitter:
 
     def deleteNearest(self):
         closest = 9999999999999999999
+        closestBeat = None
         for beat in self.beats:
-            if abs(beat) + self.baseImage.get_rect().w / 2 < closest: 
-                closest = beat
-        if closest is not None and closest in self.beats:
-            self.beats.remove(closest)
-            self.deadBeats.append(closest)
+            if abs(pygame.mixer.music.get_pos() - beat) < closest: 
+                closest = abs(pygame.mixer.music.get_pos() - beat)
+                closestBeat = beat
+        if closestBeat is not None and closestBeat in self.beats:
+            self.beats.remove(closestBeat)
+            self.deadBeats.append(closestBeat)
 
     def tick(self):
         # Get all beats

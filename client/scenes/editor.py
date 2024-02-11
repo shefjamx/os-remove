@@ -27,12 +27,12 @@ class Timeline:
         self.level = level
         self.duration = pygame.mixer.Sound(level.getSongPath()).get_length() * 1e3
         self.currentTime = 0
-        self.pauseTime = 0
+        self.totalOffsetTime = 0
         self.musicChannel = pygame.mixer.music
         self.musicChannel.load(level.getSongPath())
         self.hitSound = pygame.mixer.Sound("assets\\sound\\hitsound.ogg")
 
-        self.snapTo = 1
+        self.snapTo = 1/2
 
         self.previousRelevantHitObjects = self.level.getNextHitTimings(self.currentTime, 0.5)
         self.editingMode = self.EditingMode.E_NORMAL
@@ -59,12 +59,19 @@ class Timeline:
         self.graphicsData = {
             "button-offset-y": 600,
             "button-margin-x": 20,
-            "button-container-size": 75*3 + 40
+            "button-container-size": 75*6 + 20*6
         }
 
         self.isPlaying = False
         self.currentScale = 1.0
-    
+
+
+    def getTrueCurrentPosition(self) -> float:
+        return self.totalOffsetTime + self.musicChannel.get_pos()
+
+    def incrementOffset(self, offset) -> None:
+        self.level.offset += offset
+
     def toggleZoneMode(self) -> None:
         if self.editingMode == self.EditingMode.E_ZONES:
             self.editingMode = self.EditingMode.E_NORMAL
@@ -76,50 +83,44 @@ class Timeline:
         self.currentScale*=amt
 
     def resetSong(self) -> float:
-        self.currentTime = 0
-        self.pauseTime = 0
+        self.totalOffsetTime = 0
         if self.isPlaying:
-            self.musicChannel.play()
-
-
-    def getTrueCurrentTime(self) -> float:
-        return self.musicChannel.get_pos() + self.pauseTime
+            self.musicChannel.play(self.level.offset)
 
     def resume(self) -> None:
         self.isPlaying = not self.isPlaying
         if self.isPlaying:
-            print(self.pauseTime)
-            self.musicChannel.play(0, self.pauseTime/1e3)
+            self.musicChannel.play(0, self.totalOffsetTime/1e3)
         else:
-            self.pauseTime = self.getTrueCurrentTime()
+            self.totalOffsetTime += self.musicChannel.get_pos()
             self.musicChannel.pause()
-    
+
     def incrementSong(self, amt) -> None:
         if self.isPlaying:
             return
-        self.pauseTime += amt
+        self.totalOffsetTime += amt
 
     def drawButtons(self, surface: pygame.Surface) -> None:
         for i,b in enumerate(self.audioButtons):
             xPos = 1280 / 2 - self.graphicsData["button-container-size"] / 2 + (95)*i
             surface.blit(b[0], (xPos,self.graphicsData["button-offset-y"]))
-    
+
     def getZoneRect(self, startX, startY, zone) -> pygame.Rect:
         start, end = zone.getTimings()
         if int(end) == -1:
             end = self.duration
         start, end = (start / self.duration) * self.width, (end/self.duration) * self.width
         return pygame.Rect(startX + start, startY, end-start, 60)
-    
+
     def getMsPerBeat(self, bpm) -> float:
         bps = bpm / 60
         beatsPerMs = bps / 1e3
         msPerBeat = 1 / beatsPerMs
         return msPerBeat
-    
+
     def getIntervalForNote(self, note: int, bpm: int) -> float:
         return (1/note) * self.getMsPerBeat(bpm)
-    
+
     def drawCurrentZone(self, surface) -> None:
         title = self.title_font.render(f"Zone: {self.currentZone.name}", False, "#FFFFFF")
         surface.blit(title, ((surface.get_width() - title.get_width()) / 2, 0))
@@ -147,7 +148,7 @@ class Timeline:
         self.width, self.height = 1000*scale, 10
 
         x, y = 1280 / 2, 450
-        cursorX = self.width * (self.getTrueCurrentTime() / self.duration)
+        cursorX = self.width * (self.getTrueCurrentPosition() / self.duration)
         x -= cursorX
         if self.editingMode == self.EditingMode.E_ZONES:
             for zone in self.level.zones:
@@ -157,7 +158,7 @@ class Timeline:
                 if self.editingMode == self.EditingMode.E_ZONES:
                     text = self.label_font.render(zone.name, False, "#FFFFFF")
                     surface.blit(text, (rect.left + (rect.width - text.get_width()) / 2, y + 20 - text.get_height()))
-        
+
         pygame.draw.rect(surface, "#FFFFFF", (x, y + 50, self.width, self.height))
         pygame.draw.rect(surface, "#FFFFFF", (x, y, 2, 100))
         pygame.draw.rect(surface, "#FFFFFF", (x + self.width, y, 2, 100))
@@ -167,18 +168,16 @@ class Timeline:
             pygame.draw.rect(surface, "#FF0000", (x + ratio*self.width, y+25, 1, 50))
 
 
-        ratio = self.currentTime / self.duration
+        ratio = (self.getTrueCurrentPosition() if self.isPlaying else self.totalOffsetTime) / self.duration
         pygame.draw.rect(surface, "#00FF00", (1280/2, y + 25, 2, 50))
 
         self.drawButtons(surface)
 
     def tick(self) -> None:
         if self.isPlaying:
-            self.currentTime = self.getTrueCurrentTime()
-            currentTickTimes = self.level.getNextHitTimings(self.currentTime, 500)
+            currentTickTimes = self.level.getNextHitTimings(self.getTrueCurrentPosition(), 500)
             for tick in self.previousRelevantHitObjects:
                 if tick not in currentTickTimes:
-                    print(self.musicChannel.get_pos())
                     self.hitSound.play()
             self.previousRelevantHitObjects = currentTickTimes
 
@@ -190,13 +189,11 @@ class Timeline:
             return msPerNote * round(point / msPerNote)
 
     def click(self, pos) -> None:
-        x = 1280 / 2 - self.width * (self.getTrueCurrentTime() / self.duration)
+        x = 1280 / 2 - self.width * (self.getTrueCurrentPosition() / self.duration)
         if self.editingMode == self.EditingMode.E_NORMAL:
             if 475 <= pos[1] <= 525:
                 timingPoint = (pos[0] - x) * self.duration / self.width
-                print(timingPoint)
                 timingPoint = self.resolveTimingPoint(timingPoint)
-                print(timingPoint)
                 self.level.addHitTiming(timingPoint)
         elif self.editingMode == self.EditingMode.E_ZONES:
             for zone in self.level.zones:
@@ -248,6 +245,8 @@ class LevelEditor(GenericScene):
         self.main_loop.add_key_callback(K_SPACE, self.timeline.resume, False)
         self.main_loop.add_key_callback(K_RIGHT, lambda: self.timeline.incrementSong(100))
         self.main_loop.add_key_callback(K_LEFT, lambda: self.timeline.incrementSong(-100))
+        self.main_loop.add_key_callback(pygame.locals.K_UP, lambda: self.timeline.incrementOffset(10))
+        self.main_loop.add_key_callback(pygame.locals.K_DOWN, lambda: self.timeline.incrementOffset(-10))
 
 
     def save(self) -> None:

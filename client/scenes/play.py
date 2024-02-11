@@ -1,13 +1,16 @@
 import pygame
 import time
 from scenes.generic_scene import GenericScene
+from scenes.end import EndScene
 from objects.player import Player
 from objects.level import Level
 from objects.beat import BeatHitter
+import math
 
 from objects.core import Core
 
 from handlers.enemy import EnemyHandler
+from misc.logger import log
 
 from effects.particles.flame.flame_effect import FlameCircle
 from effects.particles.particle_themes import ICE
@@ -24,10 +27,14 @@ class PlayScene(GenericScene):
         self.background_image = pygame.image.load("assets/images/main_level_3x.png")
         self.player = Player(main_loop, self)
         self.player.min_attack_time = self.level.playerAttackSpeed
-        self.cores = (Core(10e3, 0, 0, self.main_loop), Core(10e3, 0, 0, self.main_loop))
+        
+        self.cores = [Core(10e3, 0, 0, self.main_loop), Core(10e3, 0, 0, self.main_loop)]
         offsetX, coreY = self.background_image.get_width() / 2.5, 2162 / 2 - self.cores[0].sprite.get_height() / 1.5
         self.cores[0].setPos((offsetX, coreY))
         self.cores[1].setPos((self.background_image.get_width() - offsetX - 100, coreY))
+        self.cores[0].setCallback(lambda: self.endGame())
+        self.cores[1].setCallback(lambda: self.endGame())
+        
         self.hasStarted = False
         if debug:
             self.musicChannel.play()
@@ -49,6 +56,12 @@ class PlayScene(GenericScene):
         self.beatHitter = BeatHitter(main_loop, main_loop.screen, self, self.level.bpm)
         self.pastAttackOffsets = []
 
+    def endGame(self):
+        log("Player died", "debug")
+        pygame.mixer.music.stop()
+        self.cores = []
+        self.main_loop.change_scene(EndScene, False)
+
     def resetCombo(self) -> None:
         self.playData["highest-combo"] = max(self.playData["highest-combo"], self.playData["current-combo"])
         self.playData["current-combo"] = 0
@@ -60,7 +73,7 @@ class PlayScene(GenericScene):
             return
         currentSongTime = self.musicChannel.get_pos()
         nextTiming = self.hitTimings[0]
-        
+
         nextTimingScore = nextTiming.getScore(currentSongTime)
         # 0 indicates a miss, -1 indicates not hitting
         if nextTimingScore[1] == -1:
@@ -71,8 +84,14 @@ class PlayScene(GenericScene):
             self.resetCombo()
         self.hitTimings.remove(nextTiming)
         self.playData["current-combo"] += 1
-        print("Removed timing")
-        
+
+        self.updateEnemySpawnMultiplier()
+
+    def updateEnemySpawnMultiplier(self):
+        avgHitTime = sum(self.pastAttackOffsets) / len(self.pastAttackOffsets)
+        avgHitTime = 10 - max(min(avgHitTime, 75), 25) / 10
+        mult = 1 + 0.05 * math.e ** (0.9*avgHitTime - 4)
+        print(f"Enemy spawn multiplier: {mult}")
 
     def removeHitTimings(self, songPos: float) -> None:
         toRemove = []

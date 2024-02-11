@@ -15,6 +15,7 @@ from scenes.generic_scene import GenericScene
 from scenes.home import HomeScreen
 from scenes.editor import LevelEditor
 from scenes.play import PlayScene
+from scenes.end import EndScene
 from scenes.connect import ConnectScene
 from misc.settings import ADDRESS, PORT
 import time
@@ -34,9 +35,10 @@ class MainLoop():
         self.clock = pygame.time.Clock()
         self.cachedImages: CachedImages = CachedImages()
 
-        self.current_scene: GenericScene = HomeScreen(screen, self)
-        #self.current_scene: GenericScene = PlayScene(screen, self, "ascension-to-heaven", time.time() + 5, debug=True)
-        #self.current_scene: GenericScene = PlayScene(screen, self, "cover-femboy-friday", time.time() + 5, debug=True)
+        # self.current_scene: GenericScene = HomeScreen(screen, self)
+        # self.current_scene: GenericScene = EndScene(screen, self)
+        self.current_scene: GenericScene = PlayScene(screen, self, "ascension-to-heaven", time.time() + 5, debug=True)
+        # self.current_scene: GenericScene = PlayScene(screen, self, "cover-femboy-friday", time.time() + 5, debug=True)
         #self.current_scene: GenericScene = LevelEditor(screen, self, "anybody-can-find-love")
         self.dt = 0
 
