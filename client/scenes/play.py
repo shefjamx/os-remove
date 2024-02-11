@@ -69,16 +69,25 @@ class PlayScene(GenericScene):
     def resetCombo(self) -> None:
         self.playData["highest-combo"] = max(self.playData["highest-combo"], self.playData["current-combo"])
         self.playData["current-combo"] = 0
+    
+    def getNearestTiming(self):
+        prevTimingDiff = 99999999999
+        for i,timing in enumerate(self.hitTimings):
+            timingDiff = abs(timing.getTiming() - self.musicChannel.get_pos())
+            if timingDiff > prevTimingDiff:
+                return self.hitTimings[i-1]
+            prevTimingDiff = timingDiff
 
     def doPlayerAttack(self) -> None:
         self.player.setAttackAnimation()
+        self.beatHitter.deleteNearest()
         if not self.hitTimings:
             self.player.attack(0.25)
             return
         currentSongTime = self.musicChannel.get_pos()
-        nextTiming = self.hitTimings[0]
+        timingToHit = self.getNearestTiming()
 
-        nextTimingScore = nextTiming.getScore(currentSongTime)
+        nextTimingScore = timingToHit.getScore(currentSongTime)
         # 0 indicates a miss, -1 indicates not hitting
         self.player.attack()
         if nextTimingScore[1] == -1:
@@ -89,7 +98,7 @@ class PlayScene(GenericScene):
         if nextTimingScore[1] == 0:
             self.shake()
             self.resetCombo()
-        self.hitTimings.remove(nextTiming)
+        self.hitTimings.remove(timingToHit)
         self.playData["current-combo"] += 1
 
         self.updateEnemySpawnMultiplier()

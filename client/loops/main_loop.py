@@ -113,6 +113,9 @@ class MainLoop():
                 # call held down keys
                 # Keydown / up commands
                 if event.type == KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        sys.exit()
+
                     self.dispatchKeyCallback(event.key)
                     if event.key in self.keyMap and self.keyMap[event.key][1]:
                         self.pressedKeys.append(event.key)
