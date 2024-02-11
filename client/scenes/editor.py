@@ -32,6 +32,8 @@ class Timeline:
         self.musicChannel.load(level.getSongPath())
         self.hitSound = pygame.mixer.Sound("assets\\sound\\hitsound.ogg")
 
+        self.snapTo = 1
+
         self.previousRelevantHitObjects = self.level.getNextHitTimings(self.currentTime, 0.5)
         self.editingMode = self.EditingMode.E_NORMAL
 
@@ -109,6 +111,15 @@ class Timeline:
         start, end = (start / self.duration) * self.width, (end/self.duration) * self.width
         return pygame.Rect(startX + start, startY, end-start, 60)
     
+    def getMsPerBeat(self, bpm) -> float:
+        bps = bpm / 60
+        beatsPerMs = bps / 1e3
+        msPerBeat = 1 / beatsPerMs
+        return msPerBeat
+    
+    def getIntervalForNote(self, note: int, bpm: int) -> float:
+        return (1/note) * self.getMsPerBeat(bpm)
+    
     def drawCurrentZone(self, surface) -> None:
         title = self.title_font.render(f"Zone: {self.currentZone.name}", False, "#FFFFFF")
         surface.blit(title, ((surface.get_width() - title.get_width()) / 2, 0))
@@ -171,11 +182,21 @@ class Timeline:
                     self.hitSound.play()
             self.previousRelevantHitObjects = currentTickTimes
 
+    def resolveTimingPoint(self, point) -> float:
+        if not self.snapTo:
+            return point
+        else:
+            msPerNote = self.getIntervalForNote(self.snapTo, self.level.bpm)
+            return msPerNote * round(point / msPerNote)
+
     def click(self, pos) -> None:
-        x = 1280 / 2 - self.width * (self.currentTime / self.duration)
+        x = 1280 / 2 - self.width * (self.getTrueCurrentTime() / self.duration)
         if self.editingMode == self.EditingMode.E_NORMAL:
             if 475 <= pos[1] <= 525:
                 timingPoint = (pos[0] - x) * self.duration / self.width
+                print(timingPoint)
+                timingPoint = self.resolveTimingPoint(timingPoint)
+                print(timingPoint)
                 self.level.addHitTiming(timingPoint)
         elif self.editingMode == self.EditingMode.E_ZONES:
             for zone in self.level.zones:

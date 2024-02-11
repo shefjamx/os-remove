@@ -1,4 +1,5 @@
 import pygame
+import time
 from scenes.generic_scene import GenericScene
 from objects.player import Player
 from objects.level import Level
@@ -12,16 +13,20 @@ from effects.particles.flame.flame_effect import FlameCircle
 from effects.particles.particle_themes import ICE
 
 class PlayScene(GenericScene):
-    def __init__(self, screen, main_loop, level_string: str) -> None:
+    def __init__(self, screen, main_loop, level_string: str, epochStart: float, debug=True) -> None:
         pygame.mixer.init()
         super().__init__(screen, main_loop)
         self.level = Level(level_string)
+        self.startMapAt = epochStart
+        self.isDebug = debug
         self.musicChannel = pygame.mixer.music
         self.musicChannel.load(self.level.getSongPath())
         self.background_image = pygame.image.load("assets/images/main_level_3x.png")
         self.player = Player(main_loop, self)
         self.core = Core(10e3, self.main_loop)
-        self.musicChannel.play()
+        self.hasStarted = False
+        if debug:
+            self.musicChannel.play()
         self.label_font = pygame.font.Font("assets/fonts/Abaddon Bold.ttf", 48)
 
         self.enemyHandler = EnemyHandler(1.0, self.level.zones[0], self.main_loop, self.player, self.core)
@@ -36,7 +41,7 @@ class PlayScene(GenericScene):
         self.main_loop.add_key_callback(pygame.locals.K_k, self.doPlayerAttack, False)
 
         self.flame = FlameCircle(25, 5, [self.player.getX(),self.player.getY()], 1, ICE)
-        self.hitTimings = self.level.getHitTimings()
+        self.hitTimings = self.level.getHitTimings().copy()
         self.beatHitter = BeatHitter(main_loop, main_loop.screen, self, 80)
         self.pastAttackOffsets = []
 
@@ -75,6 +80,15 @@ class PlayScene(GenericScene):
             self.hitTimings.remove(timing)
 
     def tick(self):
+        if not self.isDebug and time.time() < self.startMapAt:
+            timeToStart = self.startMapAt - time.time()
+            self.display.fill("#000000")
+            text = self.label_font.render(f"{timeToStart:.2f}s till start", False, "#FFFFFF")
+            self.display.blit(text, (0, 0))
+            return super().tick()
+        if not self.hasStarted:
+            self.musicChannel.play()
+            self.hasStarted = True
         currentSongPos = self.musicChannel.get_pos()
         self.enemyHandler.tick(currentSongPos)
         self.removeHitTimings(currentSongPos)

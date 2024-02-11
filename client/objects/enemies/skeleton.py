@@ -6,7 +6,7 @@ import pygame
 class Skeleton(GenericEnemy):
     def __init__(self, x: float, y: float, mainLoop, desireableEntity) -> None:
         super().__init__(x, y, 100, 1, mainLoop)
-        self.pyro = 2.5
+        self.pyro = 3.5
         self.mainLoop = mainLoop
         self.tilesets = {
             "run": Tileset(mainLoop, "assets/images/skeleton/run.png", (64, 64), 0, 11, self.pyro),
@@ -18,6 +18,7 @@ class Skeleton(GenericEnemy):
             "death": 12,
             "attack": 12
         }
+        self.isFlipped = False
         self.tileset = "run"
         self.speed = 1.1
 
@@ -28,6 +29,8 @@ class Skeleton(GenericEnemy):
         rayCast = Ray(centerPos, self.desireableEntity.getRect())
         self.targetPoint = rayCast.cast() # This is a stupid AI that does not change the point it wants to go to
         self.targetPoint = (self.targetPoint[0], self.targetPoint[1])
+        if self.targetPoint[0] < self.pos[0]:
+            self.isFlipped = True
 
     def tick(self):
         centerPos = (self.pos[0] + self.sprite.get_width() / 2, self.pos[1] + self.sprite.get_height() / 2)
@@ -68,5 +71,5 @@ class Skeleton(GenericEnemy):
         return newBoundingBox
 
     def draw(self, surface: pygame.Surface, playerPos) -> None:
-        surface.blit(self.sprite, (self.pos[0] - playerPos[0], self.pos[1] - playerPos[1]))
+        surface.blit(pygame.transform.flip(self.sprite, self.isFlipped, False), (self.pos[0] - playerPos[0], self.pos[1] - playerPos[1]))
         super().draw(surface, playerPos)
