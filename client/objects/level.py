@@ -38,11 +38,13 @@ class Level:
         self.songPath = ""
         self.timingPoints = []
         self.zones = []
+        self.bpm = 0
         # To add an attribute to the file schema,
         self.__FILE_SCHEMA = {
             "audio-path": ("songPath", str),
             "timing-points": ("timingPoints", lambda x: [HitTiming(float(i)) for i in x.strip('][').split(', ')]),
-            "zones": ("zones", lambda x: [Zone.from_string(dat) for dat in x.strip('][').split(', ')])
+            "zones": ("zones", lambda x: [Zone.from_string(dat) for dat in x.strip('][').split(', ')]),
+            "bpm": ("bpm", int)
         }
         self.__loadFromPath(self.__levelPath)
 
