@@ -4,6 +4,7 @@ from scenes.generic_scene import GenericScene
 from objects.player import Player
 from objects.level import Level
 from objects.beat import BeatHitter
+import math
 
 from objects.core import Core
 
@@ -60,7 +61,7 @@ class PlayScene(GenericScene):
             return
         currentSongTime = self.musicChannel.get_pos()
         nextTiming = self.hitTimings[0]
-        
+
         nextTimingScore = nextTiming.getScore(currentSongTime)
         # 0 indicates a miss, -1 indicates not hitting
         if nextTimingScore[1] == -1:
@@ -71,8 +72,18 @@ class PlayScene(GenericScene):
             self.resetCombo()
         self.hitTimings.remove(nextTiming)
         self.playData["current-combo"] += 1
-        print("Removed timing")
-        
+
+        self.updateEnemySpawnMultiplier()
+
+    def updateEnemySpawnMultiplier(self):
+        avgHitTime = sum(self.pastAttackOffsets) / len(self.pastAttackOffsets)
+        avgHitTime = 10 - max(min(avgHitTime, 75), 25) / 10
+        mult = 1 + 0.05 * math.e ** (0.9*avgHitTime - 4)
+        print(f"Enemy spawn multiplier: {mult}")
+
+
+
+
 
     def removeHitTimings(self, songPos: float) -> None:
         toRemove = []
