@@ -58,7 +58,9 @@ class Client():
                     self.is_in_party = False
                     log("Left party")
                 elif json_data['type'] == "update-spawn-rate":
+                    value = float(json_data['value'])
                     print(json_data['value'])
+                    self.main_loop.current_scene.enemyHandler.updateSpawnRate(value)
 
     def get_party_code(self):
         return str(self.party_code)

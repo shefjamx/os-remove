@@ -94,6 +94,8 @@ class PlayScene(GenericScene):
         avgHitTime = sum(self.pastAttackOffsets) / len(self.pastAttackOffsets)
         avgHitTime = 10 - max(min(avgHitTime, 75), 25) / 10
         mult = 1 + 0.05 * math.e ** (0.9*avgHitTime - 4)
+        self.main_loop.client.send_spawn_rate(mult)
+        print(f"Enemy spawn multiplier: {mult}")
 
     def removeHitTimings(self, songPos: float) -> None:
         toRemove = []
