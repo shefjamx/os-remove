@@ -70,8 +70,8 @@ class Level:
         pathlib.Path.mkdir(directory)
         with open(f"{directory}\\level.dat", "w+") as f:
             f.writeline(f"audio-path=audio.{audioFile}")
-            f.writeline(f"timing-points=[]")
-            f.writeline(f"spawn-rate=1.0")
+            f.writeline("timing-points=[]")
+            f.writeline("spawn-rate=1.0")
         return Level(directory.split(",")[-1])
 
     def saveToPath(self, path: str = "") -> None:

@@ -37,7 +37,7 @@ class PlayScene(GenericScene):
 
         self.flame = FlameCircle(25, 5, [self.player.getX(),self.player.getY()], 1, ICE)
         self.hitTimings = self.level.getHitTimings()
-        self.beatHitter = BeatHitter(main_loop, main_loop.screen)
+        self.beatHitter = BeatHitter(main_loop, main_loop.screen, self, 80)
         self.pastAttackOffsets = []
 
     def resetCombo(self) -> None:

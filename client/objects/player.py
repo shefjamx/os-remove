@@ -74,14 +74,14 @@ class Player(pygame.sprite.Sprite):
         x_diff *= self.main_loop.dt
         y_diff *= self.main_loop.dt
 
-        if self.x >= -600 and x_diff < 0:
+        if self.x >= -580 and x_diff < 0:
             self.x += x_diff
-        elif self.x <= 1880 and x_diff > 0:
+        elif self.x <= 3140 and x_diff > 0:
             self.x += x_diff
 
         if self.y >= -320 and y_diff < 0:
             self.y += y_diff
-        elif self.y <= 1040 and y_diff > 0:
+        elif self.y <= 1720 and y_diff > 0:
             self.y += y_diff
 
         # Directions and animations
