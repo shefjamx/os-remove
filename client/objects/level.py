@@ -45,13 +45,15 @@ class Level:
         self.zones = []
         self.bpm = 0
         self.playerAttackSpeed = 0.0
+        self.offset = 0
         # To add an attribute to the file schema,
         self.__FILE_SCHEMA = {
             "bpm": ("bpm", int),
             "audio-path": ("songPath", str),
             "timing-points": ("timingPoints", self.timingPointsFromString),
             "zones": ("zones", lambda x: [Zone.from_string(dat) for dat in x.strip('][').split(', ')]),
-            "player-attack-timing": ("playerAttackSpeed", float)
+            "player-attack-timing": ("playerAttackSpeed", float),
+            "initial-offset": ("offset", float)
         }
         self.__loadFromPath(self.__levelPath)
         for timingPoint in self.timingPoints:
@@ -70,6 +72,8 @@ class Level:
         with open(path, "r") as f:
             attributes = f.read().split("\n")
             for attribute in attributes:
+                if not attribute:
+                    continue
                 name, value = attribute.split("=")
                 if name in self.__FILE_SCHEMA:
                     setattr(self, self.__FILE_SCHEMA[name][0], self.__FILE_SCHEMA[name][1](value))
@@ -86,8 +90,9 @@ class Level:
             f.write(f"audio-path={audioFile}\n")
             f.write("timing-points=[]\n")
             f.write(f"zones=[(default 0 {pygame.mixer.Sound(audioFile).get_length()*1e3} 1.0)]\n")
-            f.write("bpm=120")
-            f.write("player-attack-timing=0.1")
+            f.write("bpm=120\n")
+            f.write("player-attack-timing=0.1\n")
+            f.write("initial-offset=0")
         return Level(directory.split("/")[-1])
 
     def saveToPath(self, path: str = "") -> None:
@@ -124,8 +129,12 @@ class Level:
         """
         return list(filter(lambda x: currentTime <= x.getTiming() < currentTime + numTime, self.timingPoints))
 
-    def addHitTiming(self, float) -> None:
-        self.timingPoints.append(HitTiming(float))
+    def addHitTiming(self, tp: float) -> None:
+        for i in self.timingPoints:
+            if i.getTiming() == tp:
+                log("discarded timing point!")
+                return
+        self.timingPoints.append(HitTiming(tp))
         self.timingPoints.sort(key=lambda x: x.getTiming())
 
     def getSongPath(self) -> str:
