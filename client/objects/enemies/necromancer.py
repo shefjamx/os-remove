@@ -5,6 +5,8 @@ import pygame
 
 from effects.particles.flame.flame_effect import FlameCircle
 from effects.particles.particle_themes import ICE
+
+
 class Necromancer(GenericEnemy):
     def __init__(self, x, y, mainLoop, desireableEntity):
         super().__init__(x, y, 200, 1, mainLoop)
