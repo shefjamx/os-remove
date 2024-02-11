@@ -12,7 +12,7 @@ class HitTiming:
 
     def setup(self, bpm):
         self.timePerBeat = 60/bpm*1000
-        self.__TIMING_WINDOWS = self.TIMING_WINDOWS = [(self.timePerBeat*0.25, 5), (self.timePerBeat*0.5, 2), (self.timePerBeat*1, 0)]
+        self.__TIMING_WINDOWS = self.TIMING_WINDOWS = [(self.timePerBeat*0.25, 5), (self.timePerBeat*0.75, 2), (self.timePerBeat*1.25, 0)]
 
     def getScore(self, timing: float) -> tuple[float, int]:
         """
