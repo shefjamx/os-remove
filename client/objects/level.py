@@ -75,8 +75,8 @@ class Level:
 
 
     @staticmethod
-    def allLevels(self) -> list[Level]:
-        return os.walk("levels")
+    def allLevels() -> list[Level]:
+        return [Level(x) for x in list(os.walk("levels"))[0][1]]
 
     @staticmethod
     def newLevel(directory: str, audioFile: str) -> Level:
