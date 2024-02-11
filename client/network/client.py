@@ -77,7 +77,7 @@ class Client():
     def join_party(self, party_code: str):
         try:
             self.socket.send(
-                '{"endpoint": "join-party, "code" : "C" }'.replace("C", party_code).encode()
+                '{"endpoint": "join-party", "code" : "C"}'.replace("C", party_code).encode()
             )  
             log("JOINED PARTY.", type="INFO") 
             self.is_in_party = True
