@@ -46,7 +46,7 @@ class ConnectScene(GenericScene):
         """Create buttons and add them to the dictionary to be later used"""
         self.create_button(390, 320, 500, 60, "CREATE PARTY", 490, 330, lambda: self.create_party())
         self.create_button(390, 420, 500, 60, "JOIN PARTY", 520, 430, lambda: self.join_party())
-        self.create_button(1000, 600, 500, 60, "LEAVE PARTY", 1100, 610, lambda: self.leave_party())
+        self.create_button(900, 600, 325, 60, "LEAVE PARTY", 925, 610, lambda: self.leave_party())
 
     def leave_party(self) -> None:
         #TODO: please implement :D
