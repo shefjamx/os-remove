@@ -5,7 +5,7 @@ import pygame
 
 class BringerOfDeath(GenericEnemy):
     def __init__(self, x: float, y: float, mainLoop, desireableEntity) -> None:
-        super().__init__(x, y, 1000, 1, mainLoop)
+        super().__init__(x, y, 1000, 150, mainLoop)
         self.pyro = 2
         self.mainLoop = mainLoop
         self.tilesets = {
@@ -28,6 +28,7 @@ class BringerOfDeath(GenericEnemy):
         rayCast = Ray(centerPos, self.desireableEntity.getRect())
         self.targetPoint = rayCast.cast() # This is a stupid AI that does not change the point it wants to go to
         self.targetPoint = (self.targetPoint[0], self.targetPoint[1])
+        self.isFlipped = self.targetPoint[0] <= self.pos[0]
 
     def tick(self):
         centerPos = (self.pos[0] + self.sprite.get_width() / 2, self.pos[1] + self.sprite.get_height() / 2)
@@ -68,5 +69,4 @@ class BringerOfDeath(GenericEnemy):
         return newBoundingBox
 
     def draw(self, surface: pygame.Surface, playerPos) -> None:
-        surface.blit(self.sprite, (self.pos[0] - playerPos[0], self.pos[1] - playerPos[1]))
-        super().draw(surface, playerPos)
+        surface.blit(pygame.transform.flip(self.sprite, self.isFlipped, False), (self.pos[0] - playerPos[0], self.pos[1] - playerPos[1]))

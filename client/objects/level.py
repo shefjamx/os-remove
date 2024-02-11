@@ -77,7 +77,6 @@ class Level:
                 name, value = attribute.split("=")
                 if name in self.__FILE_SCHEMA:
                     setattr(self, self.__FILE_SCHEMA[name][0], self.__FILE_SCHEMA[name][1](value))
-            print(self.zones)
 
 
     @staticmethod

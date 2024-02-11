@@ -40,7 +40,8 @@ class PlayScene(GenericScene):
             self.musicChannel.play()
         self.label_font = pygame.font.Font("assets/fonts/Abaddon Bold.ttf", 48)
 
-        self.enemyHandler = EnemyHandler(1.0, self.level.zones[0], self.main_loop, self.player, self.cores)
+        self.currentZone = 0
+        self.enemyHandler = EnemyHandler(1.0, self.level.zones[self.currentZone], self.main_loop, self.player, self.cores)
         self.playData = {
             "num-misses": 0,
             "total-score": 0,
@@ -70,17 +71,21 @@ class PlayScene(GenericScene):
         self.playData["current-combo"] = 0
 
     def doPlayerAttack(self) -> None:
-        self.player.attack()
-        self.beatHitter.deleteNearest()
+        self.player.setAttackAnimation()
         if not self.hitTimings:
+            self.player.attack(0.25)
             return
         currentSongTime = self.musicChannel.get_pos()
         nextTiming = self.hitTimings[0]
 
         nextTimingScore = nextTiming.getScore(currentSongTime)
         # 0 indicates a miss, -1 indicates not hitting
+        self.player.attack()
         if nextTimingScore[1] == -1:
             return
+        self.beatHitter.deleteNearest()
+        print(nextTimingScore[0])
+        
         self.pastAttackOffsets.append(nextTimingScore[0])
         if nextTimingScore[1] == 0:
             self.shake()
@@ -91,7 +96,8 @@ class PlayScene(GenericScene):
         self.updateEnemySpawnMultiplier()
 
     def updateEnemySpawnMultiplier(self):
-        avgHitTime = sum(self.pastAttackOffsets) / len(self.pastAttackOffsets)
+        NUM_POINTS = min(6, len(self.pastAttackOffsets))
+        avgHitTime = sum(self.pastAttackOffsets[-NUM_POINTS:]) / NUM_POINTS
         avgHitTime = 10 - max(min(avgHitTime, 75), 25) / 10
         mult = 1 + 0.05 * math.e ** (0.9*avgHitTime - 4)
         self.main_loop.client.send_spawn_rate(mult)
@@ -119,6 +125,10 @@ class PlayScene(GenericScene):
             self.hasStarted = True
         currentSongPos = self.musicChannel.get_pos()
         self.enemyHandler.tick(currentSongPos)
+        zoneTime = self.level.zones[self.currentZone].getTimings()[1]
+        if zoneTime <= currentSongPos and zoneTime != -1:
+            self.currentZone = min(self.currentZone + 1, len(self.level.zones))
+            self.enemyHandler.setZone(self.level.zones[self.currentZone])
         self.removeHitTimings(currentSongPos)
         # Background
         self.display.blit(self.background_image, (-self.player.x, -self.player.y))
