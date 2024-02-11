@@ -16,8 +16,10 @@ from scenes.home import HomeScreen
 from scenes.editor import LevelEditor
 from scenes.play import PlayScene
 from scenes.connect import ConnectScene
+from misc.settings import ADDRESS, PORT
 import time
 
+from network.client import Client
 
 class MainLoop():
     """Main Loop class, this will handle all keyboard inputs and generic stuff (that i've not figured out yet)"""
@@ -37,6 +39,10 @@ class MainLoop():
         #self.current_scene: GenericScene = PlayScene(screen, self, "cover-femboy-friday", time.time() + 5, debug=True)
         #self.current_scene: GenericScene = LevelEditor(screen, self, "anybody-can-find-love")
         self.dt = 0
+
+        log("Creating client")
+        self.client = Client(ADDRESS, PORT, self)
+        log("Created client")
 
     def change_scene(self, scene: GenericScene, *args):
         log(f"Changing scenes to: {scene}", type="debug")
