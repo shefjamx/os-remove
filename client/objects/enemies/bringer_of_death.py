@@ -5,7 +5,7 @@ import pygame
 
 class BringerOfDeath(GenericEnemy):
     def __init__(self, x: float, y: float, mainLoop, desireableEntity) -> None:
-        super().__init__(x, y, 500, 1, mainLoop)
+        super().__init__(x, y, 1000, 1, mainLoop)
         self.pyro = 2
         self.mainLoop = mainLoop
         self.tilesets = {
