@@ -88,7 +88,7 @@ class Level:
         with open(f"{directory}\\level.dat", "w+") as f:
             f.write(f"audio-path={audioFile}\n")
             f.write("timing-points=[]\n")
-            f.write(f"zones=[(default 0 {pygame.mixer.Sound(audioFile).get_length()*1e3} 1.0)]\n")
+            f.write(f"zones=[(default 0 {pygame.mixer.Sound(audioFile).get_length()*1e3} 1.0 skeleton)]\n")
             f.write("bpm=120\n")
             f.write("player-attack-timing=0.1\n")
             f.write("initial-offset=0")

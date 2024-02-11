@@ -84,6 +84,10 @@ class PlayScene(GenericScene):
             if timingDiff > prevTimingDiff:
                 return self.hitTimings[i-1]
             prevTimingDiff = timingDiff
+    
+    def songEnded(self) -> None:
+        print("You fucking suck")
+        pass
 
     def doPlayerAttack(self) -> None:
         self.player.setAttackAnimation()
@@ -94,6 +98,8 @@ class PlayScene(GenericScene):
         timingToHit = self.getNearestTiming()
 
         nextTimingScore = timingToHit.getScore(currentSongTime)
+        if not nextTimingScore:
+            self.songEnded()
         # 0 indicates a miss, -1 indicates not hitting
         self.player.attack()
         if nextTimingScore[1] == -1:
