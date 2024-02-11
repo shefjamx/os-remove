@@ -81,6 +81,7 @@ class PlayScene(GenericScene):
         if nextTimingScore[1] == -1:
             return
         self.beatHitter.deleteNearest()
+        print(nextTimingScore[0])
         self.pastAttackOffsets.append(nextTimingScore[0])
         if nextTimingScore[1] == 0:
             self.shake()
@@ -91,7 +92,8 @@ class PlayScene(GenericScene):
         self.updateEnemySpawnMultiplier()
 
     def updateEnemySpawnMultiplier(self):
-        avgHitTime = sum(self.pastAttackOffsets) / len(self.pastAttackOffsets)
+        NUM_POINTS = min(6, len(self.pastAttackOffsets))
+        avgHitTime = sum(self.pastAttackOffsets[-NUM_POINTS:]) / NUM_POINTS
         avgHitTime = 10 - max(min(avgHitTime, 75), 25) / 10
         mult = 1 + 0.05 * math.e ** (0.9*avgHitTime - 4)
         self.main_loop.client.send_spawn_rate(mult)
