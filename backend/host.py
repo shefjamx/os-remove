@@ -88,7 +88,7 @@ class Server:
     def create_party(self, song: str, leader: str, clientsocket):
         # check if leader not in party
         for party in self.parties:
-            if party.get_leader() == leader:
+            if party.get_leader_str() == leader:
                 clientsocket.send("Leader already in party".encode())
                 return
             
