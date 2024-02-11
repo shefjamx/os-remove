@@ -37,7 +37,7 @@ class LevelHandler:
     def draw(self, surface):
         for i,level in enumerate(self.allLevels[self.currentPage*3:min((self.currentPage+1)*3, len(self.allLevels))]):
             rect = self.createLevelRect(level, i)
-            color = "#FF0000" if not (self.currentLevel + self.currentPage*3) == i else "#00FF00"
+            color = "#FF0000" if not (self.currentLevel % self.maxLevels) == i else "#00FF00"
             pygame.draw.rect(surface, color, rect)
             title = self.label_font.render(level.name, False, "#FFFFFF")
             surface.blit(title, (rect.x + (rect.w - title.get_width()) / 2, rect.y + 10))
