@@ -49,7 +49,8 @@ class Server:
                     code = json_data['code']
                     # find party
                     for party in self.parties:
-                        if party.get_code == code:
+                        print("reached")
+                        if party.get_code() == code:
                             party.set_song(new_song)
                 elif json_data['endpoint'] == 'leave-party':
                     self.leave_or_remove_party(clientsocket)
