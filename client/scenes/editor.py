@@ -184,6 +184,9 @@ class Timeline:
         surface.blit(signatureText, (100, 500))
 
         self.drawButtons(surface)
+    
+    def placeMarkerAtCursor(self) -> None:
+        self.level.addHitTiming(self.getTrueCurrentPosition())
 
     def tick(self) -> None:
         if self.isPlaying:
@@ -261,6 +264,7 @@ class LevelEditor(GenericScene):
         self.main_loop.add_key_callback(pygame.locals.K_o, lambda: self.timeline.decrementSignature(), False)
         self.main_loop.add_key_callback(pygame.locals.K_UP, lambda: self.timeline.incrementOffset(10), False)
         self.main_loop.add_key_callback(pygame.locals.K_DOWN, lambda: self.timeline.incrementOffset(-10), False)
+        self.main_loop.add_key_callback(pygame.locals.K_g, lambda: self.timeline.placeMarkerAtCursor(), False)
 
 
     def save(self) -> None:
