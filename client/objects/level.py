@@ -38,6 +38,8 @@ class Level:
     """
     def __init__(self, level_string: str):
         self.__levelPath = f"levels\\{level_string}\\level.dat"
+        self.directory = level_string
+        self.name = level_string.replace("-", " ").capitalize()
         self.songPath = ""
         self.timingPoints = []
         self.zones = []

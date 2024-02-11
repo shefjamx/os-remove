@@ -1,6 +1,7 @@
 import pygame
 from tweener import *
 from scenes.generic_scene import GenericScene
+from scenes.play import PlayScene
 from objects.menu.input_box import InputBox
 from misc.settings import SCREEN_HEIGHT, SCREEN_WIDTH, ADDRESS, PORT
 from misc.logger import log
@@ -26,7 +27,7 @@ class ConnectScene(GenericScene):
             boomerang=True,
             loop=True
         )
-        self.allLevels = Level.allLevels()
+        self.allLevels = sorted(Level.allLevels(), key=lambda x: x.name)
         self.y_tween.start()
         self.input_box = InputBox((SCREEN_WIDTH / 2) - 50, (SCREEN_HEIGHT / 2) - 25, 100,50,32)
         self.buttons = {}
@@ -40,6 +41,7 @@ class ConnectScene(GenericScene):
         self.currentLevel = 0
         self.main_loop.add_key_callback(pygame.locals.K_RIGHT, lambda: self.increment_selection(1), False)
         self.main_loop.add_key_callback(pygame.locals.K_LEFT, lambda: self.increment_selection(-1), False)
+        self.main_loop.add_key_callbacl(pygame.locals.K_ENTER, lambda: self.begin_level())
 
     def create_button_dict(self):
         """Create buttons and add them to the dictionary to be later used"""
@@ -60,6 +62,12 @@ class ConnectScene(GenericScene):
         rect = pygame.Rect(x, y, w, h)
         label = self.label_font.render(text, True, "#1F284D")
         self.buttons[text] = [rect, [label, tx, ty], callback]
+
+    def begin_level(self) -> None:
+        #TODO: no idea how to do this can somebody else do it
+        # Send notification to server to broadcast start message to clients
+        # also send the name of the folder
+        levelName = self.allLevels[self.currentLevel].directory
 
     def render_buttons(self):
         for button in self.buttons:
@@ -101,13 +109,18 @@ class ConnectScene(GenericScene):
 
 
         if self.is_in_party:
-            party_code = self.font.render(f"Party Code: {self.client.get_party_code()}", True, pygame.Color("white"))
-            self.display.blit(party_code, ((self.display.get_width() - party_code.get_width()) / 2, 0))
+            party_code = self.font.render(f"Party Code: ", True, "#D6D5D4")
+            code = self.font.render(f"{self.client.party_code}", False, "#DB2D20")
+            x = (self.display.get_width() - (party_code.get_width() + code.get_width())) / 2
+            self.display.blit(party_code, (x, 25))
+            self.display.blit(code, (x + party_code.get_width(), 25))
 
             for i,level in enumerate(self.allLevels):
                 rect = self.createLevelRect(level, i)
                 color = "#FF0000" if not self.currentLevel == i else "#00FF00"
                 pygame.draw.rect(self.display, color, rect)
+                title = self.label_font.render(level.name, False, "#FFFFFF")
+                self.display.blit(title, (rect.x + (rect.w - title.get_width()) / 2, rect.y + 10))
         else:
             # If we are not in a party then display the defaults :D
             os = self.font.render("OS, ", True, "#D6D5D4")
