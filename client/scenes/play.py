@@ -1,6 +1,7 @@
 import pygame
 import time
 from scenes.generic_scene import GenericScene
+from scenes.end import EndScene
 from objects.player import Player
 from objects.level import Level
 from objects.beat import BeatHitter
@@ -57,8 +58,10 @@ class PlayScene(GenericScene):
         self.pastAttackOffsets = []
 
     def endGame(self):
-        self.cores = []
         log("Player died", "debug")
+        pygame.mixer.music.stop()
+        self.cores = []
+        self.main_loop.change_scene(EndScene, False)
 
     def resetCombo(self) -> None:
         self.playData["highest-combo"] = max(self.playData["highest-combo"], self.playData["current-combo"])
