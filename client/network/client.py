@@ -1,4 +1,7 @@
 import socket
+import json
+import time
+import threading
 #from misc.logger import log
 #from misc.settings import ADDRESS, PORT
 
@@ -16,7 +19,7 @@ class Client():
         self.port = port
         self.is_connected = False
         self.is_listening = True # listens by default
-        
+        self.party_code = ""
 
     def connect(self):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -25,6 +28,9 @@ class Client():
             self.socket.connect((self.host, self.port))
             self.is_connected = True
             log("Connected to server.", type="INFO")
+            # start listening thread
+            thread = threading.Thread(target=self.run)
+            thread.start()
         except Exception as e:
             log(f"Failed to connect to socket. Traceback:\n {str(e)}", type="ERROR")
         
@@ -42,7 +48,17 @@ class Client():
             # as soon as connection is estanlished and sockets 
             data = self.socket.recv(1024)
             if data:
-                print(data.decode())
+                json_data = json.loads(data.decode())
+                if json_data['type'] == "start":
+                   epoch_start_time = json_data['timestamp']
+                   print(epoch_start_time)
+                elif json_data['type'] == "code":
+                   party_code = json_data['code']
+                   print(party_code)
+                   self.party_code = party_code
+
+    def get_party_code(self):
+        return str(self.party_code)
 
     def join_party(self, party_code: str):
         try:
@@ -61,13 +77,13 @@ class Client():
         except Exception as e:
             log(f"Failed to create party. Traceback: \n {str(e)}", type="ERROR")
 
+    def start_game(self):
+        try:
+            self.socket.send(
+                '{"endpoint" : "start-game"}'.encode()
+            )
+        except Exception as e:
+            log(f"Failed to start game. Might be caused by sudden disconnection.")
+
     def set_is_listening(self, val: bool):
         self.is_listening = val
-
-    # communication
-
-
-client = Client(ADDRESS, PORT)
-client.connect()
-client.create_party()
-client.run() # watch for messages

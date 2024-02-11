@@ -2,7 +2,9 @@ import pygame
 from tweener import *
 from scenes.generic_scene import GenericScene
 from objects.menu.input_box import InputBox
-from misc.settings import SCREEN_HEIGHT, SCREEN_WIDTH
+from misc.settings import SCREEN_HEIGHT, SCREEN_WIDTH, ADDRESS, PORT
+
+from network.client import Client
 
 class ConnectScene(GenericScene):
     def __init__(self, screen, main_loop) -> None:
@@ -26,6 +28,10 @@ class ConnectScene(GenericScene):
         self.input_box = InputBox((SCREEN_WIDTH / 2) - 50, (SCREEN_HEIGHT / 2) - 25, 100,50,32)
         self.buttons = {}
         self.create_button_dict()
+        # init network client
+        self.client = Client(ADDRESS, PORT)
+        self.client.connect()
+        self.is_in_party = False
         #self.main_loop.change_scene(PlayScene, "anybody-can-find-love")
 
     def create_button_dict(self):
@@ -65,7 +71,8 @@ class ConnectScene(GenericScene):
 
     def create_party(self):
         print("Create party")
-        return
+        self.client.create_party()
+        self.is_in_party = True
 
     def tick(self):
         # Background
@@ -76,13 +83,18 @@ class ConnectScene(GenericScene):
         os = self.font.render("OS, ", True, "#D6D5D4")
         remove = self.font.render("REMOVE", True, "#DB2D20")
         question_mark = self.font.render("?", True, "#D6D5D4")
+        party_code = self.font.render(str(self.client.get_party_code()), True, pygame.Color("white"))
+
         self.display.blit(os, (388, self.y_tween.value))
         self.display.blit(remove, (550, self.y_tween.value))
         self.display.blit(question_mark, (850, self.y_tween.value))
 
+        if self.is_in_party:
+            print(self.client.get_party_code())
+            self.display.blit(party_code, (640, 640))
         # two options
         self.render_buttons()
 
         #self.input_box.draw(self.display)
 
-        return super().tick()
+        return super().tick(),

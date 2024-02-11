@@ -7,9 +7,10 @@ from misc.logger import log
 from objects.zone import Zone
 
 class HitTiming:
-
-    def __init__(self, timing: float):
-        self.__TIMING_WINDOWS = self.TIMING_WINDOWS = [(50, 5), (125, 2), (175, 0)]
+    def __init__(self, timing: float, bpm: int):
+        self.timePerBeat = 60/bpm
+        self.__TIMING_WINDOWS = self.TIMING_WINDOWS = [(self.timePerBeat*0.25*2, 5), (self.timePerBeat*0.5*2, 2), (self.timePerBeat*1*2, 0)]
+        print(self.__TIMING_WINDOWS)
         self.__timing = timing
 
     def getScore(self, timing: float) -> tuple[float, int]:
@@ -39,10 +40,11 @@ class Level:
         self.songPath = ""
         self.timingPoints = []
         self.zones = []
-        self.bpm = 0
+        self.bpm = 1
         self.playerAttackSpeed = 0.0
         # To add an attribute to the file schema,
         self.__FILE_SCHEMA = {
+            "bpm": ("bpm", int),
             "audio-path": ("songPath", str),
             "timing-points": ("timingPoints", self.timingPointsFromString),
             "zones": ("zones", lambda x: [Zone.from_string(dat) for dat in x.strip('][').split(', ')]),
@@ -55,7 +57,7 @@ class Level:
         timings = data.strip('][').split(', ')
         if '' in timings:
             timings.remove('')
-        return [HitTiming(float(i)) for i in timings]
+        return [HitTiming(float(i), self.bpm) for i in timings]
 
     def __loadFromPath(self, path: str) -> None:
         if not os.path.isfile(path):
