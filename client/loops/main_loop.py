@@ -39,7 +39,7 @@ class MainLoop():
         # self.current_scene: GenericScene = EndScene(screen, self)
         #self.current_scene: GenericScene = PlayScene(screen, self, "ascension-to-heaven", time.time() + 5, debug=True)
         # self.current_scene: GenericScene = PlayScene(screen, self, "cover-femboy-friday", time.time() + 5, debug=True)
-        self.current_scene: GenericScene = PlayScene(screen, self, "loser-baby", time.time() + 5, debug=True)
+        # self.current_scene: GenericScene = PlayScene(screen, self, "loser-baby", time.time() + 5, debug=True)
         # self.current_scene: GenericScene = LevelEditor(screen, self, "loser-baby")
         self.dt = 0
 
