@@ -115,7 +115,7 @@ class Client():
     def send_spawn_rate(self, new_spawn_rate):
         try:
             self.socket.send(
-                '{"endpoint" : "update-spawn-rate", "value": "C"}'.replace("C", new_spawn_rate).encode()
+                '{"endpoint" : "update-spawn-rate", "value": "C"}'.replace("C", str(new_spawn_rate)).encode()
             )
         except Exception as e:
             log(f"Failed to update spawn rate\n {str(e)}")
