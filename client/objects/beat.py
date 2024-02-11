@@ -27,14 +27,16 @@ class BeatHitter:
         for beat in self.beats:
             beatTime = beat - pygame.mixer.music.get_pos()
             beatOffset = beatTime / (self.beatsPerBar * self.timePerBeat) * baseImageRect.w
-            screen.blit(self.baseBeatImage, pygame.Rect(baseImageCoords[0] + (baseImageRect.w / 2) - 15 + beatOffset, baseImageCoords[1] - 35, 1, 1))
+            if beatOffset <= -baseImageRect.w / 2:
+                self.beats.remove(beat)
+            else:
+                screen.blit(self.baseBeatImage, pygame.Rect(baseImageCoords[0] + (baseImageRect.w / 2) - 15 + beatOffset, baseImageCoords[1] - 35, 1, 1))
 
 
     def tick(self):
         # Get all beats
-        beatsBefore = self.scene.level.getNextHitTimings(pygame.mixer.music.get_pos() - self.timePerBeat * (self.beatsPerBar / 2), self.timePerBeat * (self.beatsPerBar / 2))
+        # beatsBefore = self.scene.level.getNextHitTimings(pygame.mixer.music.get_pos() - self.timePerBeat * (self.beatsPerBar / 2), self.timePerBeat * (self.beatsPerBar / 2))
         beatsAfter = self.scene.level.getNextHitTimings(pygame.mixer.music.get_pos(), self.timePerBeat * (self.beatsPerBar / 2))
-        # Let joe know his function doesnt work for beats before
 
         # self.beats = [-x.getTiming() for x in beatsBefore]
         for x in beatsAfter:
