@@ -36,7 +36,7 @@ class BeatHitter:
         beatsAfter = self.scene.level.getNextHitTimings(pygame.mixer.music.get_pos(), self.timePerBeat * (self.beatsPerBar / 2))
         # Let joe know his function doesnt work for beats before
 
-        self.beats = [-x.getTiming() for x in beatsBefore]
+        # self.beats = [-x.getTiming() for x in beatsBefore]
         self.beats.append(x.getTiming() for x in beatsAfter)
 
 
