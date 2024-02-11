@@ -55,17 +55,19 @@ class PlayScene(GenericScene):
         self.playData["current-combo"] = 0
 
     def doPlayerAttack(self) -> None:
-        self.player.attack()
-        self.beatHitter.deleteNearest()
+        self.player.setAttackAnimation()
         if not self.hitTimings:
+            self.player.attack(0.25)
             return
         currentSongTime = self.musicChannel.get_pos()
         nextTiming = self.hitTimings[0]
 
         nextTimingScore = nextTiming.getScore(currentSongTime)
         # 0 indicates a miss, -1 indicates not hitting
+        self.player.attack()
         if nextTimingScore[1] == -1:
             return
+        self.beatHitter.deleteNearest()
         self.pastAttackOffsets.append(nextTimingScore[0])
         if nextTimingScore[1] == 0:
             self.shake()

@@ -92,22 +92,24 @@ class Player(pygame.sprite.Sprite):
         if self.tileset != "run" and self.tileset != "attack":
             self.tileset = "run"
 
-    def attack(self):
-        """Run the attack animation to attack and send a message to any enemy in the collision area"""
-        if self.time_since_last_attack >= self.min_attack_time:
-            self.time_since_last_attack = 0
 
+    def setAttackAnimation(self) -> None:
+        if self.time_since_last_attack >= self.min_attack_time:
             # Animations
             if self.tileset == "attack":
                 self.tilesets[self.tileset].reset()
             self.tileset = "attack"
             self.speed = 200
             
+    def attack(self, damageMultiplier=1.0):
+        """Run the attack animation to attack and send a message to any enemy in the collision area"""
+        if self.time_since_last_attack >= self.min_attack_time:
+            self.time_since_last_attack = 0
             # Attempt to attack the enemies
             attack_rect = pygame.rect.Rect(535, 310, 210, 150)
             enemies_hit = self.scene.enemyHandler.detect_hit(attack_rect, (self.x, self.y))
             if len(enemies_hit) >= 1:
-                enemies_hit[-1].takeDamage(self.attack_amount)
+                enemies_hit[-1].takeDamage(self.attack_amount * damageMultiplier)
 
     def tick(self):
         """Tick the player class, used to animate the player"""
