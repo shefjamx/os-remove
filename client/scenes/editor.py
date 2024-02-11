@@ -104,6 +104,12 @@ class Timeline:
             return
         self.totalOffsetTime += amt
 
+    def incrementSignature(self) -> None:
+        self.snapTo += 1
+
+    def decrementSignature(self) -> None:
+        self.snapTo = max(1, self.snapTo - 1)
+
     def drawButtons(self, surface: pygame.Surface) -> None:
         for i,b in enumerate(self.audioButtons):
             xPos = 1280 / 2 - self.graphicsData["button-container-size"] / 2 + (95)*i
@@ -171,10 +177,11 @@ class Timeline:
             ratio = point.getTiming() / self.duration
             pygame.draw.rect(surface, "#FF0000", (x + ratio*self.width, y+25, 1, 50))
 
-
-        print(self.totalOffsetTime, self.getTrueCurrentPosition())
         ratio = self.getTrueCurrentPosition() / self.duration
         pygame.draw.rect(surface, "#00FF00", (1280/2, y + 25, 2, 50))
+
+        signatureText = self.subtitle_font.render(f"1/{int(self.snapTo)}", False, "#FFFFFF")
+        surface.blit(signatureText, (100, 500))
 
         self.drawButtons(surface)
 
@@ -250,6 +257,8 @@ class LevelEditor(GenericScene):
         self.main_loop.add_key_callback(K_SPACE, self.timeline.resume, False)
         self.main_loop.add_key_callback(K_RIGHT, lambda: self.timeline.incrementSong(100))
         self.main_loop.add_key_callback(K_LEFT, lambda: self.timeline.incrementSong(-100))
+        self.main_loop.add_key_callback(pygame.locals.K_p, lambda: self.timeline.incrementSignature(), False)
+        self.main_loop.add_key_callback(pygame.locals.K_o, lambda: self.timeline.decrementSignature(), False)
         self.main_loop.add_key_callback(pygame.locals.K_UP, lambda: self.timeline.incrementOffset(10), False)
         self.main_loop.add_key_callback(pygame.locals.K_DOWN, lambda: self.timeline.incrementOffset(-10), False)
 
@@ -269,9 +278,7 @@ class LevelEditor(GenericScene):
         top.destroy()
         newAudio = f"{_dir}/audio.{file_name.split('/')[-1].split('.')[-1]}"
         # create level object
-        print(_dir)
         directory = f"./{_dir}/"
-        print(f"{directory}")
         os.mkdir(f"{directory}")
         shutil.copy(file_name, f"{_dir}/audio.mp3")
         self.level = Level.newLevel(_dir, newAudio)
