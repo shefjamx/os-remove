@@ -5,6 +5,8 @@ import pygame
 
 from effects.particles.flame.flame_effect import FlameCircle
 from effects.particles.particle_themes import ICE
+
+
 class Necromancer(GenericEnemy):
     def __init__(self, x, y, mainLoop, desireableEntity):
         super().__init__(x, y, 200, 1, mainLoop)
@@ -13,7 +15,7 @@ class Necromancer(GenericEnemy):
         self.mainLoop = mainLoop
         self.tilesets = {
             "run": Tileset(mainLoop, "assets/images/necromancer/run.png", (160, 128), 0, 5, self.pyro),
-            "death": Tileset(mainLoop, "assets/images/necromancer/death.png", (160, 128), 0, 8, self.pyro),
+            "death": Tileset(mainLoop, "assets/images/necromancer/death.png", (160, 128), 0, 8, self.pyro, max_repeat=2),
             "attack": Tileset(mainLoop, "assets/images/necromancer/attack.png", (160, 128), 0, 12, self.pyro)
         }
         self.tile_fps = {
@@ -25,11 +27,15 @@ class Necromancer(GenericEnemy):
 
         self.sprite = self.tilesets[self.tileset].increment()
         self.desireableEntity = desireableEntity
+
+        self.isFlipped = False
         
         centerPos = (self.pos[0] + self.sprite.get_width() / 2, self.pos[1] + self.sprite.get_height() / 2)
         rayCast = Ray(centerPos, self.desireableEntity.getRect())
         self.targetPoint = rayCast.cast() # This is a stupid AI that does not change the point it wants to go to
         self.targetPoint = (self.targetPoint[0], self.targetPoint[1])
+
+        self.isFlipped = self.targetPoint[0] < self.pos[0]
 
 
     def tick(self):
@@ -72,5 +78,5 @@ class Necromancer(GenericEnemy):
     
 
     def draw(self, surface: pygame.Surface, playerPos) -> None:
-        surface.blit(self.sprite, (self.pos[0] - playerPos[0], self.pos[1] - playerPos[1]))
+        surface.blit(pygame.transform.flip(self.sprite, self.isFlipped, False), (self.pos[0] - playerPos[0], self.pos[1] - playerPos[1]))
         super().draw(surface, playerPos)

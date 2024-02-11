@@ -16,6 +16,7 @@ from scenes.home import HomeScreen
 from scenes.editor import LevelEditor
 from scenes.play import PlayScene
 from scenes.connect import ConnectScene
+import time
 
 
 class MainLoop():
@@ -31,9 +32,9 @@ class MainLoop():
         self.clock = pygame.time.Clock()
         self.cachedImages: CachedImages = CachedImages()
 
-        self.current_scene: GenericScene = HomeScreen(screen, self)
-        #self.current_scene: GenericScene = PlayScene(screen, self, "anybody-can-find-love")
-        # self.current_scene: GenericScene = LevelEditor(screen, self, "anybody-can-find-love")
+        # self.current_scene: GenericScene = HomeScreen(screen, self)
+        self.current_scene: GenericScene = PlayScene(screen, self, "ascension-to-heaven", time.time() + 5, debug=True)
+        #self.current_scene: GenericScene = LevelEditor(screen, self, "anybody-can-find-love")
         self.dt = 0
 
     def change_scene(self, scene: GenericScene, *args):
@@ -41,7 +42,6 @@ class MainLoop():
         print(args)
         self.current_scene = scene(self.screen, self, *args)
         pygame.display.flip()
-
 
     def add_key_binding(self, key: int, callback) -> None:
         self.keyBindingMap[key] = callback

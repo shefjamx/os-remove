@@ -11,17 +11,18 @@ class EnemyHandler:
 
     NUM_SPAWNS = 4
 
-    def __init__(self, initialSpawnRate: float, initialZone: Zone, mainLoop, player, core) -> None:
+    def __init__(self, initialSpawnRate: float, initialZone: Zone, mainLoop, player, cores) -> None:
         self.initialSpawnRate = initialSpawnRate
         self.enemies: list[GenericEnemy] = []
         self.enemies_dying: list[GenericEnemy] = []
-        self.enemySpawnPoints = [(591, 718), (812, 267), (1258, 44), (1714, 267), (1931, 720), (1712, 1158), (1267, 1385), (815, 1162)] # there are 8 of these :D
+        self.enemySpawnPoints = [(880, 1076), (1220, 404), (1900, 79), (2570, 404), (2902, 1076), (2558, 1754), (1886, 2090), (1216, 1745)] # there are 8 of these :D
         self.mainLoop = mainLoop
         self.setZone(initialZone)
+        self.cores = cores
         self.pathfindingTargets = {
-            "necromancer": core,
-            "bod": core,
-            "skeleton": core
+            "necromancer": self.getRandomCore,
+            "bod": self.getRandomCore,
+            "skeleton": self.getRandomCore
         }
         self.ENEMY_LIST = {
             "necromancer": Necromancer,
@@ -29,6 +30,9 @@ class EnemyHandler:
             "skeleton": Skeleton
         }
         self.nextSpawn = 0
+    
+    def getRandomCore(self):
+        return random.choice(self.cores)
 
     def updateSpawnRate(self, mult: float) -> None:
         self.initialSpawnRate *= mult
@@ -40,7 +44,7 @@ class EnemyHandler:
 
     def spawnRandomEnemy(self, x: float, y: float) -> None:
         toSpawn = random.choice(self.currentZone.getAllowedEnemies())
-        self.enemies.append(self.ENEMY_LIST[toSpawn](x, y, self.mainLoop, self.pathfindingTargets[toSpawn]))
+        self.enemies.append(self.ENEMY_LIST[toSpawn](x, y, self.mainLoop, self.pathfindingTargets[toSpawn]()))
 
     def purgeEnemies(self) -> None:
         for e in self.enemies:
@@ -58,13 +62,18 @@ class EnemyHandler:
             self.nextSpawn += 4e3 * self.currentZone.getSpawnRate()
 
         toRemove = []
+        toPurge = []
         for enemy in self.enemies:
             if enemy.currentHealth <= 0 and enemy not in self.enemies_dying:
                 self.enemies_dying.append(enemy)
                 toRemove.append(enemy)
             enemy.tick()
+            if enemy.markedForInstantDeletion:
+                toPurge.append(enemy)
         for enemy in toRemove:
             enemy.kill(lambda: self.deleteEnemy(enemy))
+        for enemy in toPurge:
+            self.enemies.remove(enemy)
 
     def deleteEnemy(self, enemy):
         if enemy in self.enemies:

@@ -10,7 +10,7 @@ class BringerOfDeath(GenericEnemy):
         self.mainLoop = mainLoop
         self.tilesets = {
             "run": Tileset(mainLoop, "assets/images/bod/walk.png", (140, 93), 0, 7, self.pyro),
-            "death": Tileset(mainLoop, "assets/images/bod/death.png", (140, 93), 1, 7, self.pyro, reverse=True),
+            "death": Tileset(mainLoop, "assets/images/bod/death.png", (140, 93), 1, 7, self.pyro, reverse=True, max_repeat=2),
             "attack": Tileset(mainLoop, "assets/images/bod/attack.png", (140, 93), 0, 7, self.pyro)
         }
         self.tile_fps = {

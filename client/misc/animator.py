@@ -2,7 +2,7 @@ import pygame
 from misc.logger import log
 
 class Tileset:
-    def __init__(self, mainLoop, file, size=(64, 64), start=0, stop=0, upscale=1, callback=None, reverse=False) -> None:
+    def __init__(self, mainLoop, file, size=(64, 64), start=0, stop=0, upscale=1, callback=None, reverse=False, max_repeat=0) -> None:
         """
         Init a tile set
             file: file path relative to client (actual images must be on 1 line)
@@ -20,6 +20,8 @@ class Tileset:
         self.callback = callback
         self.reverse = reverse
         self.current_tile_index = start
+        self.max_repeat = max_repeat
+        self.repeats = 0
 
         if mainLoop.cachedImages.getImage(file) is None:
             self.image = pygame.image.load(file)
@@ -48,7 +50,7 @@ class Tileset:
 
         self.mainLoop.cachedImages.addImage(self.file, {"image": self.image, "tiles": self.tiles})
 
-    def increment(self) -> pygame.Surface:
+    def increment(self, poggersEntity=None) -> pygame.Surface:
         """Incrementally go through all tiles. Return the current tile"""
         tile = self.tiles[self.stop - self.current_tile_index] if self.reverse else self.tiles[self.current_tile_index]
         if self.current_tile_index + 1 <= self.stop:
@@ -57,6 +59,12 @@ class Tileset:
             if self.callback:
                 self.callback()
             self.current_tile_index = self.start
+            self.repeats += 1
+        
+        if self.repeats >= self.max_repeat and self.max_repeat > 0:
+            log("Hit max repeats", "warning")
+            if poggersEntity:
+                poggersEntity.forceKill()
         
         return tile
     
