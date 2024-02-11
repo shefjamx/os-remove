@@ -37,7 +37,8 @@ class BeatHitter:
         # Let joe know his function doesnt work for beats before
 
         # self.beats = [-x.getTiming() for x in beatsBefore]
-        self.beats.append(x.getTiming() for x in beatsAfter)
+        for x in beatsAfter:
+            self.beats.append(x.getTiming())
 
 
 
