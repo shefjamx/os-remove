@@ -9,7 +9,7 @@ from effects.particles.particle_themes import ICE
 
 class Necromancer(GenericEnemy):
     def __init__(self, x, y, mainLoop, desireableEntity):
-        super().__init__(x, y, 400, 100, mainLoop)
+        super().__init__(x, y, 800, 100, mainLoop)
         self.enemyName = "necromancer"
         self.pyro = 3
         self.mainLoop = mainLoop

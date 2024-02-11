@@ -70,6 +70,7 @@ class ConnectScene(GenericScene):
         #TODO: no idea how to do this can somebody else do it
         log("Telling server to begin level")
         self.main_loop.client.start_game()
+        pygame.mixer.music.stop()
         #self.main_loop.client.send_spawn_rate("2.03")
 
     def render_buttons(self, buttons):

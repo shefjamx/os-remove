@@ -5,7 +5,7 @@ import pygame
 
 class BringerOfDeath(GenericEnemy):
     def __init__(self, x: float, y: float, mainLoop, desireableEntity) -> None:
-        super().__init__(x, y, 1000, 150, mainLoop)
+        super().__init__(x, y, 2000, 150, mainLoop)
         self.pyro = 2
         self.mainLoop = mainLoop
         self.tilesets = {
@@ -63,10 +63,11 @@ class BringerOfDeath(GenericEnemy):
         bbWidth = 80
         bbHeight = 125
         oldBoundingBox = super().getBoundingBox()
-        newBoundingBox = pygame.Rect(oldBoundingBox.x + bbWidth*0.25, 
+        newBoundingBox = pygame.Rect(oldBoundingBox.x + bbWidth*0.25 + (150 if self.isFlipped else 0), 
                                      oldBoundingBox.y + (oldBoundingBox.height - bbHeight),
                                        bbWidth, bbHeight)
         return newBoundingBox
 
     def draw(self, surface: pygame.Surface, playerPos) -> None:
         surface.blit(pygame.transform.flip(self.sprite, self.isFlipped, False), (self.pos[0] - playerPos[0], self.pos[1] - playerPos[1]))
+        super().draw(surface, playerPos)
