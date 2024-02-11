@@ -86,6 +86,7 @@ class PlayScene(GenericScene):
         self.enemyHandler.draw(self.display, self.player.x, self.player.y)
         self.display.blit(self.label_font.render(f"x{self.playData['current-combo']}", False, "#FFFFFF"), (0, 0))
         self.beatHitter.draw(self.display)
+        self.beatHitter.tick()
 
         self.flame.tick(self.display, self.main_loop.dt)
         return super().tick(self.player)
