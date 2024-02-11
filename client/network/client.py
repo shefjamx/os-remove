@@ -14,7 +14,7 @@ class Client():
         self.is_listening = True # listens by default
         self.party_code = ""
         self.is_in_party = False
-        self.song = ""
+        self.song = "ascension-to-heaven"
         self.start_epoch = 0
 
     def connect(self):
@@ -71,7 +71,7 @@ class Client():
     def update_song(self, new_song: str):
         try:
             self.socket.send(
-                '{"endpoint": "update-song", C}'.replace("C", f'"song" : "{new_song}", "code": "{self.get_party_code}"')
+                '{"endpoint": "update-song", C}'.replace("C", f'"song" : "{new_song}", "code": "{self.get_party_code}"').encode()
             )
         except Exception as e:
             log(f"Failed to update song. Traceback:\n {str(e)}", type="ERROR")
@@ -86,10 +86,10 @@ class Client():
         except Exception as e:
             log(f"Failed to join party. Traceback:\n {str(e)}", type="ERROR")
 
-    def create_party(self, songname = "ascension-to-heaven"):
+    def create_party(self):
         try:
             self.socket.send(
-                '{"endpoint" : "create-party", "song": "C"}'.replace("C", songname).encode()
+                '{"endpoint" : "create-party", "song": "C"}'.replace("C", self.song).encode()
             )
             self.is_in_party = True
         except Exception as e:
