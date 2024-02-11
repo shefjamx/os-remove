@@ -58,7 +58,7 @@ class PlayScene(GenericScene):
         self.pastAttackOffsets = []
 
     def death(self):
-        self.main_loop.client.broadcast_death(self)
+        self.main_loop.client.broadcast_death()
 
     def endGame(self, value):
         log("Player died", "debug")
