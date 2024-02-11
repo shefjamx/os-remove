@@ -33,8 +33,8 @@ class MainLoop():
         self.cachedImages: CachedImages = CachedImages()
 
         # self.current_scene: GenericScene = HomeScreen(screen, self)
-        #self.current_scene: GenericScene = PlayScene(screen, self, "anybody-can-find-love", time.time() + 5, debug=False)
-        self.current_scene: GenericScene = LevelEditor(screen, self, "anybody-can-find-love")
+        self.current_scene: GenericScene = PlayScene(screen, self, "anybody-can-find-love", time.time() + 5, debug=True)
+        #self.current_scene: GenericScene = LevelEditor(screen, self, "anybody-can-find-love")
         self.dt = 0
 
     def change_scene(self, scene: GenericScene, *args):
